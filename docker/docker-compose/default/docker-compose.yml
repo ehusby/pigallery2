@@ -19,10 +19,10 @@ services:
     environment:
       - NODE_ENV=production
     volumes:
-      - "./pigallery2/config:/app/data/config" # CHANGE ME
+      - "/media/pi/CRUST/config:/app/data/config" # CHANGE ME
       - "db-data:/app/data/db"
-      - "./pigallery2/images:/app/data/images" # CHANGE ME
-      - "./pigallery2/tmp:/app/data/tmp" # CHANGE ME
+      - "/media/pi/CRUST/images:/app/data/images" # CHANGE ME
+      - "/media/pi/CRUST/tmp:/app/data/tmp" # CHANGE ME
     expose:
       - "80"
     restart: always
