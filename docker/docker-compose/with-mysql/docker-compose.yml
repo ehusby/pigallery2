@@ -26,7 +26,7 @@ services:
 
   pigallery2:
     image: bpatrik/pigallery2:latest
-    command: --Server-Database-mysql-host=pigallery-db --Server-Database-mysql-username=pigallery2 --Server-Database-mysql-password=pigallery2_pass--Server-Database-mysql-database=pigallery2
+    command: sh -c 'bin/wait-for pigallery-db:3306 -- --Server-Database-mysql-host=pigallery-db --Server-Database-mysql-username=pigallery2 --Server-Database-mysql-password=pigallery2_pass --Server-Database-mysql-database=pigallery2'
     container_name: pigallery2
     environment:
       - NODE_ENV=production

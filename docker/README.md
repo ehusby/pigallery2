@@ -20,7 +20,7 @@ curl -sSL https://get.docker.com | sh
 It is recommended to use [docker-compose](https://docs.docker.com/compose/) to run pigallery2.
 
 ### I.0 Install docker-compose
-Official dokcer-compose installation guide [here](https://docs.docker.com/compose/install/),
+Official docker-compose installation guide [here](https://docs.docker.com/compose/install/),
 but this will  most likely  do the trick ([source](https://dev.to/rohansawant/installing-docker-and-docker-compose-on-the-raspberry-pi-in-5-simple-steps-3mgl)): 
 Install dependencies:
 ```bash
@@ -53,6 +53,7 @@ Than get your certificate:
 ```bash
 certbot certonly --standalone -d yourdomain.com
 ```
+**Note:** if you get an error like `Problem binding to port 80: Could not bind to IPv4 or IPv6.` THen a service is running on port 80. If it's a fresh raspberry install, it's potentially nginx, you can disable it with `sudo systemctl disable nginx` [details here](https://askubuntu.com/questions/177041/nginx-disable-autostart)
 
 #### I.1.b start docker-compose
 In the folder that has `docker-compose.yml`:
@@ -82,7 +83,7 @@ If you want to run the container by yourself, here you go:
 docker run \
    -p 80:80 \
    -e NODE_ENV=production \
-   -v <path to your config file folder>/config.json:/app/data/config/config.json \
+   -v <path to your config file folder>:/app/data/config \
    -v <path to your db file folder>:/app/data/db \
    -v <path to your images folder>:/app/data/images \
    -v <path to your temp folder>:/app/data/tmp \

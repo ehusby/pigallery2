@@ -82,7 +82,7 @@ export class PublicRouter {
             res.tpl.user.csrfToken = req.csrfToken();
           }
         }
-        res.tpl.clientConfig = {Client: Config.Client.toJSON({attachVolatile: true})};
+        res.tpl.Config = {Client: Config.Client.toJSON({attachVolatile: true})};
 
         return next();
       });
@@ -90,6 +90,25 @@ export class PublicRouter {
     app.get('/heartbeat',
       (req: Request, res: Response, next: NextFunction) => {
         res.sendStatus(200);
+      }
+    );
+
+    app.get('/manifest.json',
+      (req: Request, res: Response, next: NextFunction) => {
+        res.send({
+          name: Config.Client.applicationTitle,
+          icons: [
+            {
+              src: 'assets/icon_inv.png',
+              sizes: '48x48 72x72 96x96 128x128 256x256'
+            }
+          ],
+          display: 'standalone',
+          orientation: 'any',
+          start_url: Config.Client.publicUrl,
+          background_color: '#000000',
+          theme_color: '#000000'
+        });
       }
     );
 

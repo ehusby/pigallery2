@@ -1,5 +1,4 @@
 import {Metadata, Sharp} from 'sharp';
-import {Dimensions, State} from 'gm';
 import {Logger} from '../../Logger';
 import {FfmpegCommand, FfprobeData} from 'fluent-ffmpeg';
 import {FFmpegFactory} from '../FFmpegFactory';
@@ -123,8 +122,6 @@ export class ImageRendererFactory {
     switch (renderer) {
       case ServerConfig.PhotoProcessingLib.Jimp:
         return ImageRendererFactory.Jimp();
-      case ServerConfig.PhotoProcessingLib.gm:
-        return ImageRendererFactory.Gm();
       case ServerConfig.PhotoProcessingLib.sharp:
         return ImageRendererFactory.Sharp();
     }
@@ -217,54 +214,9 @@ export class ImageRendererFactory {
             fit: 'cover'
           });
       }
-      await image.jpeg().toFile(input.outPath);
+      await image.withMetadata().jpeg().toFile(input.outPath);
     };
   }
 
 
-  public static Gm() {
-    const gm = require('gm');
-    return (input: RendererInput): Promise<void> => {
-      return new Promise((resolve, reject) => {
-        Logger.silly('[GMThRenderer] rendering thumbnail:' + input.mediaPath);
-        let image: State = gm(input.mediaPath);
-        image.size((err, value: Dimensions) => {
-          if (err) {
-            return reject('[GMThRenderer] ' + err.toString());
-          }
-
-          /**
-           * newWidth * newHeight = size*size
-           * newHeight/newWidth = height/width
-           *
-           * newHeight = (height/width)*newWidth
-           * newWidth * newWidth = (size*size) / (height/width)
-           *
-           * @type {number}
-           */
-          try {
-            const ratio = value.height / value.width;
-            const filter = input.qualityPriority === true ? 'Lanczos' : 'Point';
-            image.filter(filter);
-
-            if (input.makeSquare === false) {
-              const newWidth = Math.round(Math.sqrt((input.size * input.size) / ratio));
-              image = image.resize(newWidth);
-            } else {
-              image = image.resize(input.size, input.size)
-                .crop(input.size, input.size);
-            }
-            image.write(input.outPath, (e) => {
-              if (e) {
-                return reject('[GMThRenderer] ' + e.toString());
-              }
-              return resolve();
-            });
-          } catch (err) {
-            return reject('[GMThRenderer] ' + err.toString());
-          }
-        });
-      });
-    };
-  }
 }

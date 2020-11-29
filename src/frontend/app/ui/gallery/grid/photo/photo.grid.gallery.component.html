@@ -1,7 +1,7 @@
 <div #photoContainer class="photo-container" (mouseover)="mouseOver()" (mouseout)="mouseOut()">
 
 
-  <img alt="{{gridMedia.media.name}}" #img [src]="thumbnail.Src | fixOrientation:gridMedia.Orientation | async"
+  <img alt="{{gridMedia.media.name}}" #img [src]="thumbnail.Src"
        *ngIf="thumbnail.Available">
 
   <app-gallery-grid-photo-loading

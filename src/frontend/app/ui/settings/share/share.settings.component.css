@@ -1,3 +1,7 @@
 .panel-info {
   text-align: center;
 }
+
+.share-settings-save-buttons .btn{
+  margin-bottom: 10px;
+}

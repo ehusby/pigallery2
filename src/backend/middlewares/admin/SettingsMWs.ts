@@ -3,7 +3,6 @@ import {NextFunction, Request, Response} from 'express';
 import {ErrorCodes, ErrorDTO} from '../../../common/entities/Error';
 import {ObjectManagers} from '../../model/ObjectManagers';
 import {Logger} from '../../Logger';
-import {SQLConnection} from '../../model/database/sql/SQLConnection';
 import {Config} from '../../../common/config/private/Config';
 import {ConfigDiagnostics} from '../../model/diagnostics/ConfigDiagnostics';
 import {BasicConfigDTO} from '../../../common/entities/settings/BasicConfigDTO';
@@ -27,7 +26,7 @@ export class SettingsMWs {
 
     try {
       if (databaseSettings.type !== ServerConfig.DatabaseType.memory) {
-        await SQLConnection.tryConnection(databaseSettings);
+        await ConfigDiagnostics.testDatabase(databaseSettings);
       }
       Config.Server.Database = databaseSettings;
       // only updating explicitly set config (not saving config set by the diagnostics)

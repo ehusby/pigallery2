@@ -5,6 +5,7 @@ import {ErrorCodes, ErrorDTO} from '../../common/entities/Error';
 import {Config} from '../../common/config/private/Config';
 import {QueryParams} from '../../common/QueryParams';
 import * as path from 'path';
+import {UserRoles} from '../../common/entities/UserDTO';
 
 
 export class SharingMWs {
@@ -91,12 +92,44 @@ export class SharingMWs {
     };
 
     try {
-      req.resultPipe = await ObjectManagers.getInstance().SharingManager.updateSharing(sharing);
+      const forceUpdate = req.session.user.role >= UserRoles.Admin;
+      req.resultPipe = await ObjectManagers.getInstance().SharingManager.updateSharing(sharing, forceUpdate);
       return next();
     } catch (err) {
       return next(new ErrorDTO(ErrorCodes.GENERAL_ERROR, 'Error during updating sharing link', err));
     }
 
+  }
+
+
+  public static async deleteSharing(req: Request, res: Response, next: NextFunction) {
+    if (Config.Client.Sharing.enabled === false) {
+      return next();
+    }
+    if ((typeof req.params === 'undefined') || (typeof req.params.sharingKey === 'undefined')) {
+      return next(new ErrorDTO(ErrorCodes.INPUT_ERROR, 'sharingKey is missing'));
+    }
+    const sharingKey: string = req.params.sharingKey;
+
+    try {
+      req.resultPipe = await ObjectManagers.getInstance().SharingManager.deleteSharing(sharingKey);
+      return next();
+    } catch (err) {
+      return next(new ErrorDTO(ErrorCodes.GENERAL_ERROR, 'Error during deleting sharing', err));
+    }
+
+  }
+
+  public static async listSharing(req: Request, res: Response, next: NextFunction) {
+    if (Config.Client.Sharing.enabled === false) {
+      return next();
+    }
+    try {
+      req.resultPipe = await ObjectManagers.getInstance().SharingManager.listAll();
+      return next();
+    } catch (err) {
+      return next(new ErrorDTO(ErrorCodes.GENERAL_ERROR, 'Error during listing shares', err));
+    }
   }
 
   private static generateKey(): string {

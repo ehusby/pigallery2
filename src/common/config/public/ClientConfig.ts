@@ -35,6 +35,10 @@ export module ClientConfig {
     searchCacheTimeout: number = 1000 * 60 * 60;
     @ConfigProperty()
     AutoComplete: AutoCompleteConfig = new AutoCompleteConfig();
+    @ConfigProperty({type: 'unsignedInt'})
+    maxMediaResult: number = 2000;
+    @ConfigProperty({type: 'unsignedInt'})
+    maxDirectoryResult: number = 200;
   }
 
   @SubConfigClass()
@@ -149,6 +153,8 @@ export module ClientConfig {
     keywordsToPersons: boolean = true;
     @ConfigProperty({type: UserRoles})
     writeAccessMinRole: UserRoles = UserRoles.Admin;
+    @ConfigProperty({type: UserRoles})
+    readAccessMinRole: UserRoles = UserRoles.User;
   }
 
   @SubConfigClass()

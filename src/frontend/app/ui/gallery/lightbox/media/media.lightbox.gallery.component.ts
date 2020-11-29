@@ -1,6 +1,5 @@
 import {Component, ElementRef, EventEmitter, Input, OnChanges, Output, ViewChild} from '@angular/core';
 import {GridMedia} from '../../grid/GridMedia';
-import {FixOrientationPipe} from '../../../../pipes/FixOrientationPipe';
 import {MediaDTO} from '../../../../../../common/entities/MediaDTO';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 import {SupportedFormats} from '../../../../../../common/SupportedFormats';
@@ -111,11 +110,10 @@ export class GalleryLightboxMediaComponent implements OnChanges {
       this.setImageSize();
     }
     if (this.thumbnailSrc == null && this.gridMedia && this.ThumbnailUrl !== null) {
-      FixOrientationPipe.transform(this.ThumbnailUrl, this.gridMedia.Orientation)
-        .then((src) => this.thumbnailSrc = src);
+      this.thumbnailSrc = this.ThumbnailUrl;
     }
 
-    this.loadPhoto().catch(console.error);
+    this.loadPhoto();
 
   }
 
@@ -161,7 +159,7 @@ export class GalleryLightboxMediaComponent implements OnChanges {
     this.videoSourceError.emit();
   }
 
-  private async loadPhoto() {
+  private loadPhoto() {
     if (!this.gridMedia || !this.loadMedia || !this.gridMedia.isPhoto()) {
       return;
     }
@@ -169,16 +167,16 @@ export class GalleryLightboxMediaComponent implements OnChanges {
     if (this.zoom === 1) {
       if (this.photo.src == null) {
         if (Config.Client.Media.Photo.Converting.enabled === true) {
-          this.photo.src = await FixOrientationPipe.transform(this.gridMedia.getBestFitMediaPath(), this.gridMedia.Orientation);
+          this.photo.src = this.gridMedia.getBestFitMediaPath();
           this.photo.isBestFit = true;
         } else {
-          this.photo.src = await FixOrientationPipe.transform(this.gridMedia.getMediaPath(), this.gridMedia.Orientation);
+          this.photo.src = this.gridMedia.getMediaPath();
           this.photo.isBestFit = false;
         }
       }
       // on zoom load high res photo
     } else if ((this.photo.isBestFit === true || this.photo.src == null)) {
-      this.photo.src = await FixOrientationPipe.transform(this.gridMedia.getMediaPath(), this.gridMedia.Orientation);
+      this.photo.src = this.gridMedia.getMediaPath();
       this.photo.isBestFit = false;
     }
   }
@@ -194,7 +192,7 @@ export class GalleryLightboxMediaComponent implements OnChanges {
     }
 
 
-    const photoAspect = MediaDTO.calcRotatedAspectRatio(this.gridMedia.media);
+    const photoAspect = MediaDTO.calcAspectRatio(this.gridMedia.media);
 
     if (photoAspect < this.windowAspect) {
       this.imageSize.height = '100';

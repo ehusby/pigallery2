@@ -8,14 +8,8 @@ describe('MetadataLoader', () => {
   it('should load png', async () => {
     const data = await MetadataLoader.loadPhotoMetadata(path.join(__dirname, '/../../../assets/test_png.png'));
     delete data.creationDate; // creation time for png not supported
-    expect(Utils.clone(data)).to.be.deep.equal(Utils.clone({
-      fileSize: 2155,
-      orientation: 1,
-      size: {
-        height: 26,
-        width: 26
-      }
-    }));
+    const expected = require(path.join(__dirname, '/../../../assets/test_png.json'));
+    expect(Utils.clone(data)).to.be.deep.equal(expected);
   });
 
   it('should load jpg', async () => {
@@ -44,5 +38,10 @@ describe('MetadataLoader', () => {
     expect(Utils.clone(data)).to.be.deep.equal(expected);
   });
 
+  it('should respect mp4 rotate transformation', async () => {
+    const data = await MetadataLoader.loadVideoMetadata(path.join(__dirname, '/../../../assets/video_rotate.mp4'));
+    const expected = require(path.join(__dirname, '/../../../assets/video_rotate.json'));
+    expect(Utils.clone(data)).to.be.deep.equal(expected);
+  });
 
 });

@@ -1,26 +1,31 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {CameraMetadata, PhotoDTO, PositionMetaData} from '../../../../../../common/entities/PhotoDTO';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {CameraMetadata, PhotoDTO, PhotoMetadata, PositionMetaData} from '../../../../../../common/entities/PhotoDTO';
 import {Config} from '../../../../../../common/config/public/Config';
 import {MediaDTO} from '../../../../../../common/entities/MediaDTO';
 import {VideoDTO, VideoMetadata} from '../../../../../../common/entities/VideoDTO';
 import {Utils} from '../../../../../../common/Utils';
 import {QueryService} from '../../../../model/query.service';
 import {MapService} from '../../map/map.service';
+import {SearchTypes} from '../../../../../../common/entities/AutoCompleteItem';
 
 @Component({
   selector: 'app-info-panel',
   styleUrls: ['./info-panel.lightbox.gallery.component.css'],
   templateUrl: './info-panel.lightbox.gallery.component.html',
 })
-export class InfoPanelLightboxComponent {
+export class InfoPanelLightboxComponent implements OnInit {
   @Input() media: MediaDTO;
   @Output() closed = new EventEmitter();
 
   public readonly mapEnabled: boolean;
+  public readonly searchEnabled: boolean;
+  keywords: { value: string, type: SearchTypes }[] = null;
+  readonly SearchTypes: typeof SearchTypes = SearchTypes;
 
   constructor(public queryService: QueryService,
               public mapService: MapService) {
     this.mapEnabled = Config.Client.Map.enabled;
+    this.searchEnabled = Config.Client.Search.enabled;
   }
 
   get FullPath(): string {
@@ -44,6 +49,21 @@ export class InfoPanelLightboxComponent {
 
   get CameraData(): CameraMetadata {
     return (<PhotoDTO>this.media).metadata.cameraData;
+  }
+
+  ngOnInit() {
+    const metadata = this.media.metadata as PhotoMetadata;
+    if ((metadata.keywords && metadata.keywords.length > 0) ||
+      (metadata.faces && metadata.faces.length > 0)) {
+      this.keywords = [];
+      if (Config.Client.Faces.enabled) {
+        const names: string[] = (metadata.faces || []).map(f => f.name);
+        this.keywords = names.filter((name, index) => names.indexOf(name) === index)
+          .map(n => ({value: n, type: SearchTypes.person}));
+      }
+      this.keywords = this.keywords.concat((metadata.keywords || []).map(k => ({value: k, type: SearchTypes.keyword})));
+    }
+
   }
 
   isPhoto() {

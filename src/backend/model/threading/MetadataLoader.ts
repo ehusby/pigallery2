@@ -19,7 +19,7 @@ const ffmpeg = FFmpegFactory.get();
 export class MetadataLoader {
 
   public static loadVideoMetadata(fullPath: string): Promise<VideoMetadata> {
-    return new Promise<VideoMetadata>((resolve, reject) => {
+    return new Promise<VideoMetadata>((resolve) => {
       const metadata: VideoMetadata = {
         size: {
           width: 1,
@@ -49,6 +49,14 @@ export class MetadataLoader {
               if (data.streams[i].width) {
                 metadata.size.width = data.streams[i].width;
                 metadata.size.height = data.streams[i].height;
+
+                if (Utils.isInt32(parseInt(data.streams[i].rotation, 10)) &&
+                  (Math.abs(parseInt(data.streams[i].rotation, 10)) / 90) % 2 === 1) {
+                  // noinspection JSSuspiciousNameCombination
+                  metadata.size.width = data.streams[i].height;
+                  // noinspection JSSuspiciousNameCombination
+                  metadata.size.height = data.streams[i].width;
+                }
 
                 if (Utils.isInt32(Math.floor(parseFloat(data.streams[i].duration) * 1000))) {
                   metadata.duration = Math.floor(parseFloat(data.streams[i].duration) * 1000);
@@ -240,6 +248,8 @@ export class MetadataLoader {
               } catch (err) {
               }
             }
+
+
             return resolve(metadata);
           } catch (err) {
             return reject({file: fullPath, error: err});

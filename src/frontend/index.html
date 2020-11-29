@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <base href="<%= clientConfig.urlBase %>/"/>
+  <base href="<%= Config.Client.urlBase %>/"/>
   <meta charset="UTF-8">
   <title>Loading..</title>
   <link rel="shortcut icon" href="assets/icon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="theme-color" content="#000000" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="manifest" crossorigin="use-credentials" href="manifest.json">
 
   <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.css">
@@ -14,7 +19,7 @@
         crossorigin=""/>
 
   <script>
-    var ServerInject = {user:  <%- JSON.stringify(user); %>, ConfigInject: <%- JSON.stringify(clientConfig); %>}
+    var ServerInject = {user:  <%- JSON.stringify(user); %>, ConfigInject: <%- JSON.stringify(Config); %>}
   </script>
 
 </head>

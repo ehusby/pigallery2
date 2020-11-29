@@ -20,7 +20,6 @@ export class FrameComponent {
   public readonly authenticationRequired = Config.Client.authenticationRequired;
   public readonly title = Config.Client.applicationTitle;
   collapsed = true;
-  facesEnabled = Config.Client.Faces.enabled;
 
   constructor(private _authService: AuthenticationService,
               public notificationService: NotificationService,
@@ -31,6 +30,10 @@ export class FrameComponent {
 
   isAdmin() {
     return this.user.value && this.user.value.role >= UserRoles.Admin;
+  }
+
+  isFacesAvailable() {
+    return Config.Client.Faces.enabled && this.user.value && this.user.value.role >= Config.Client.Faces.readAccessMinRole;
   }
 
 

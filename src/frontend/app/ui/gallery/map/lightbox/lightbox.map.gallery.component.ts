@@ -6,15 +6,12 @@ import {IconThumbnail, Thumbnail, ThumbnailManagerService} from '../../thumbnail
 import {MediaIcon} from '../../MediaIcon';
 import {Media} from '../../Media';
 import {PageHelper} from '../../../../model/page.helper';
-import {OrientationTypes} from 'ts-exif-parser';
-import {MediaDTO} from '../../../../../../common/entities/MediaDTO';
 import {FileDTO} from '../../../../../../common/entities/FileDTO';
 import {Utils} from '../../../../../../common/Utils';
 import {Config} from '../../../../../../common/config/public/Config';
 import {MapService} from '../map.service';
 import {LatLng, Point} from 'leaflet';
 import {MapComponent} from '@yaga/leaflet-ng2';
-import {FixOrientationPipe} from '../../../../pipes/FixOrientationPipe';
 
 @Component({
   selector: 'app-gallery-map-lightbox',
@@ -144,11 +141,11 @@ export class GalleryMapLightboxComponent implements OnChanges, AfterViewInit {
     }).map(p => {
       let width = 500;
       let height = 500;
-      const rotatedSize = MediaDTO.getRotatedSize(p);
-      if (rotatedSize.width > rotatedSize.height) {
-        height = width * (rotatedSize.height / rotatedSize.width);
+      const size = p.metadata.size;
+      if (size.width > size.height) {
+        height = width * (size.height / size.width);
       } else {
-        width = height * (rotatedSize.width / rotatedSize.height);
+        width = height * (size.width / size.height);
       }
       const iconTh = this.thumbnailService.getIcon(new MediaIcon(p));
       iconTh.Visible = true;
@@ -157,7 +154,6 @@ export class GalleryMapLightboxComponent implements OnChanges, AfterViewInit {
         lat: p.metadata.positionData.GPSData.latitude,
         lng: p.metadata.positionData.GPSData.longitude,
         iconThumbnail: iconTh,
-        orientation: p.metadata.orientation,
         preview: {
           width: width,
           height: height,
@@ -167,14 +163,10 @@ export class GalleryMapLightboxComponent implements OnChanges, AfterViewInit {
       };
       if (Config.Client.Map.useImageMarkers === true) {
         if (iconTh.Available === true) {
-          FixOrientationPipe.transform(iconTh.Src, p.metadata.orientation).then((icon) => {
-            obj.iconUrl = icon;
-          });
+          obj.iconUrl = iconTh.Src;
         } else {
           iconTh.OnLoad = () => {
-            FixOrientationPipe.transform(iconTh.Src, p.metadata.orientation).then((icon) => {
-              obj.iconUrl = icon;
-            });
+            obj.iconUrl = iconTh.Src;
           };
         }
       }
@@ -258,7 +250,6 @@ export interface MapPhoto {
   lng: number;
   iconUrl?: string;
   iconThumbnail: IconThumbnail;
-  orientation: OrientationTypes;
   preview: {
     width: number;
     height: number;

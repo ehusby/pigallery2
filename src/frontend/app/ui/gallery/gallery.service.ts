@@ -10,6 +10,7 @@ import {ShareService} from './share.service';
 import {NavigationService} from '../../model/navigation.service';
 import {SortingMethods} from '../../../../common/entities/SortingMethods';
 import {QueryParams} from '../../../../common/QueryParams';
+import {PG2ConfMap} from '../../../../common/PG2ConfMap';
 
 
 @Injectable()
@@ -40,10 +41,21 @@ export class GalleryService {
     this.sorting = new BehaviorSubject<SortingMethods>(Config.Client.Other.defaultPhotoSortingMethod);
   }
 
+  getDefaultSorting(directory: DirectoryDTO): SortingMethods {
+    if (directory && directory.metaFile) {
+      for (const file in PG2ConfMap.sorting) {
+        if (directory.metaFile.some(f => f.name === file)) {
+          return (<any>PG2ConfMap.sorting)[file];
+        }
+      }
+    }
+    return Config.Client.Other.defaultPhotoSortingMethod;
+  }
+
   setSorting(sorting: SortingMethods): void {
     this.sorting.next(sorting);
     if (this.content.value.directory) {
-      if (sorting !== Config.Client.Other.defaultPhotoSortingMethod) {
+      if (sorting !== this.getDefaultSorting(this.content.value.directory)) {
         this.galleryCacheService.setSorting(this.content.value.directory, sorting);
       } else {
         this.galleryCacheService.removeSorting(this.content.value.directory);
@@ -59,7 +71,7 @@ export class GalleryService {
       if (sort !== null) {
         this.sorting.next(sort);
       } else {
-        this.sorting.next(Config.Client.Other.defaultPhotoSortingMethod);
+        this.sorting.next(this.getDefaultSorting(content.directory));
       }
     }
   }
@@ -197,7 +209,6 @@ export class GalleryService {
     return cw;
 
   }
-
 
 
   isSearchResult(): boolean {

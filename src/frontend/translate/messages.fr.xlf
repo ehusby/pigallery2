@@ -477,6 +477,10 @@
           <context context-type="sourcefile">app/ui/gallery/lightbox/infopanel/info-panel.lightbox.gallery.component.html</context>
           <context context-type="linenumber">51</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/ui/settings/jobs/progress/job-progress.settings.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
         <target>durée</target>
       </trans-unit>
       <trans-unit id="b00f6ce63441c0057013e41ad97b15383f0b17ae" datatype="html">
@@ -832,7 +836,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/ui/settings/photo/photo.settings.component.html</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">61</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/ui/settings/metafiles/metafile.settings.component.html</context>
@@ -841,10 +845,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/ui/settings/search/search.settings.component.html</context>
           <context context-type="linenumber">53</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/ui/settings/share/share.settings.component.html</context>
-          <context context-type="linenumber">43</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/ui/settings/random-photo/random-photo.settings.component.html</context>
@@ -889,7 +889,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/ui/settings/photo/photo.settings.component.html</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">65</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/ui/settings/metafiles/metafile.settings.component.html</context>
@@ -898,10 +898,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/ui/settings/search/search.settings.component.html</context>
           <context context-type="linenumber">57</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/ui/settings/share/share.settings.component.html</context>
-          <context context-type="linenumber">47</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/ui/settings/random-photo/random-photo.settings.component.html</context>
@@ -1131,7 +1127,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/ui/settings/photo/photo.settings.component.html</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">49</context>
         </context-group>
         <target>Resolution</target>
       </trans-unit>
@@ -1244,22 +1240,6 @@
         </context-group>
         <target>Assurez-vous que le module de nœud sharp est installé.</target>
       </trans-unit>
-      <trans-unit id="becf05481d292e5e206fda4b7d67d8fac4e85c93" datatype="html">
-        <source>Make sure that gm node module and</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/ui/settings/photo/photo.settings.component.html</context>
-          <context context-type="linenumber">27</context>
-        </context-group>
-        <target>Assurez-vous que le module de noeud gm et</target>
-      </trans-unit>
-      <trans-unit id="b3dc2b50f4949565d88efab1f3ebd4236e16a082" datatype="html">
-        <source>are installed (npm install sharp).</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/ui/settings/photo/photo.settings.component.html</context>
-          <context context-type="linenumber">29</context>
-        </context-group>
-        <target>sont installés (npm install sharp).</target>
-      </trans-unit>
       <trans-unit id="6f49ee2673fb82fe8dd1a7da0bada14a4156bf30" datatype="html">
         <source>Thumbnail generation library</source>
         <context-group purpose="location">
@@ -1272,7 +1252,7 @@
         <source>Photo converting:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/ui/settings/photo/photo.settings.component.html</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">30</context>
         </context-group>
         <target>Photo converting:</target>
       </trans-unit>
@@ -1280,7 +1260,7 @@
         <source>Converting</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/ui/settings/photo/photo.settings.component.html</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">33</context>
         </context-group>
         <target>Converting</target>
       </trans-unit>
@@ -1288,7 +1268,7 @@
         <source>Downsizes photos for faster preview loading. (Zooming in to the photo loads the original).</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/ui/settings/photo/photo.settings.component.html</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">34</context>
         </context-group>
         <target>Downsizes photos for faster preview loading. (Zooming in to the photo loads the original).</target>
       </trans-unit>
@@ -1296,7 +1276,7 @@
         <source>On the fly converting</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/ui/settings/photo/photo.settings.component.html</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">40</context>
         </context-group>
         <target>On the fly converting</target>
       </trans-unit>
@@ -1304,7 +1284,7 @@
         <source>Converts photos on the fly, when they are requested.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/ui/settings/photo/photo.settings.component.html</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">41</context>
         </context-group>
         <target>Converts photos on the fly, when they are requested.</target>
       </trans-unit>
@@ -1312,7 +1292,7 @@
         <source>The shorter edge of the converted photo will be scaled down to this, while keeping the aspect ratio.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/ui/settings/photo/photo.settings.component.html</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">50</context>
         </context-group>
         <target>The shorter edge of the converted photo will be scaled down to this, while keeping the aspect ratio.</target>
       </trans-unit>
@@ -1391,6 +1371,82 @@
           <context context-type="linenumber">38</context>
         </context-group>
         <target>Le partage n'est pas supporté avec ces paramètres</target>
+      </trans-unit>
+      <trans-unit id="b8f78167ef95c21d032b15614e8239cc033a0fd2" datatype="html">
+        <source>Save
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/ui/settings/share/share.settings.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+        <target>Enregistrer</target>
+      </trans-unit>
+      <trans-unit id="ae9e824f2eaba4400a5cb66ad946c433dc45b3d5" datatype="html">
+        <source>Reset
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/ui/settings/share/share.settings.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+        <target>Réinitialiser</target>
+      </trans-unit>
+      <trans-unit id="ec4a974407cc4ee8128ffc3ec50f6effd1b197ec" datatype="html">
+        <source>Shared links:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/ui/settings/share/share.settings.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <target>Shared links:</target>
+      </trans-unit>
+      <trans-unit id="a6493c6ca346cd052da40423eda9c132de2b2002" datatype="html">
+        <source>Key</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/ui/settings/share/share.settings.component.html</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <target>Key</target>
+      </trans-unit>
+      <trans-unit id="d8e057d4fa08fbdb6f98af2073eff5ae0b47f5e1" datatype="html">
+        <source>Folder</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/ui/settings/share/share.settings.component.html</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+        <target>Folder</target>
+      </trans-unit>
+      <trans-unit id="a20424156b8816671f61879f0574a4f27d7b16b9" datatype="html">
+        <source>Creator</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/ui/settings/share/share.settings.component.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <target>Creator</target>
+      </trans-unit>
+      <trans-unit id="010f9db84d98441fa1e899158f1e1536b02ed4fb" datatype="html">
+        <source>Expires</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/ui/settings/share/share.settings.component.html</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <target>Expires</target>
+      </trans-unit>
+      <trans-unit id="872dd821d70fa57f36740b19aaed7a2228ff1388" datatype="html">
+        <source>
+          No sharing was created.
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/ui/settings/share/share.settings.component.html</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+        <target>No sharing was created.</target>
       </trans-unit>
       <trans-unit id="445a71ab2f91f21a6d54acf86fb9796b1ac20bbb" datatype="html">
         <source>
@@ -1812,24 +1868,6 @@
         </context-group>
         <target>Exclude File List</target>
       </trans-unit>
-      <trans-unit id="b8f78167ef95c21d032b15614e8239cc033a0fd2" datatype="html">
-        <source>Save
-        </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/ui/settings/indexing/indexing.settings.component.html</context>
-          <context context-type="linenumber">72</context>
-        </context-group>
-        <target>Enregistrer</target>
-      </trans-unit>
-      <trans-unit id="ae9e824f2eaba4400a5cb66ad946c433dc45b3d5" datatype="html">
-        <source>Reset
-        </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/ui/settings/indexing/indexing.settings.component.html</context>
-          <context context-type="linenumber">76</context>
-        </context-group>
-        <target>Réinitialiser</target>
-      </trans-unit>
       <trans-unit id="b0eaa3abce5af3b71c03fe678062333b7b950430" datatype="html">
         <source>If you add a new folder to your gallery, the site indexes it automatically.</source>
         <context-group purpose="location">
@@ -1937,14 +1975,6 @@
           <context context-type="linenumber">43</context>
         </context-group>
         <target>time elapsed</target>
-      </trans-unit>
-      <trans-unit id="35511807089eb9a1864bec06e28d57e04b4c8f87" datatype="html">
-        <source>time left</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/ui/settings/jobs/progress/job-progress.settings.component.html</context>
-          <context context-type="linenumber">45</context>
-        </context-group>
-        <target>time left</target>
       </trans-unit>
       <trans-unit id="84b516c4d38a09d8bbe8312569aeddfac65cdf6a" datatype="html">
         <source>Processed</source>

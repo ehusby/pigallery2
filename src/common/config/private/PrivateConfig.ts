@@ -21,8 +21,7 @@ export module ServerConfig {
 
   export enum PhotoProcessingLib {
     sharp = 3,
-    Jimp = 1,
-    gm = 2,
+    Jimp = 1
   }
 
   export enum ReIndexingSensitivity {
@@ -103,7 +102,7 @@ export module ServerConfig {
         ' If it doesn\'t start with \'/\' but contains a \'/\', the path is relative to the image directory.' +
         ' If it doesn\'t contain a \'/\', any folder with this name will be excluded.'
     })
-    excludeFolderList: string[] = [];
+    excludeFolderList: string[] = ['.Trash-1000', '.dtrash', '$RECYCLE.BIN'];
     @ConfigProperty({arrayType: 'string', description: 'Any folder that contains a file with this name will be excluded from indexing.'})
     excludeFileList: string[] = [];
   }
@@ -224,22 +223,22 @@ export module ServerConfig {
       new JobScheduleConfig(DefaultsJobs[DefaultsJobs['Thumbnail Generation']],
         DefaultsJobs[DefaultsJobs['Thumbnail Generation']],
         false,
-        new AfterJobTrigger(DefaultsJobs[DefaultsJobs.Indexing]), {sizes: [240]}
+        new AfterJobTrigger(DefaultsJobs[DefaultsJobs.Indexing]), {sizes: [240], indexedOnly: true}
       ),
       new JobScheduleConfig(DefaultsJobs[DefaultsJobs['Photo Converting']],
         DefaultsJobs[DefaultsJobs['Photo Converting']],
         false,
-        new AfterJobTrigger(DefaultsJobs[DefaultsJobs['Thumbnail Generation']]), {}
+        new AfterJobTrigger(DefaultsJobs[DefaultsJobs['Thumbnail Generation']]), {indexedOnly: true}
       ),
       new JobScheduleConfig(DefaultsJobs[DefaultsJobs['Video Converting']],
         DefaultsJobs[DefaultsJobs['Video Converting']],
         false,
-        new AfterJobTrigger(DefaultsJobs[DefaultsJobs['Photo Converting']]), {}
+        new AfterJobTrigger(DefaultsJobs[DefaultsJobs['Photo Converting']]), {indexedOnly: true}
       ),
       new JobScheduleConfig(DefaultsJobs[DefaultsJobs['Temp Folder Cleaning']],
         DefaultsJobs[DefaultsJobs['Temp Folder Cleaning']],
         false,
-        new AfterJobTrigger(DefaultsJobs[DefaultsJobs['Video Converting']]), {}
+        new AfterJobTrigger(DefaultsJobs[DefaultsJobs['Video Converting']]), {indexedOnly: true}
       ),
     ];
   }

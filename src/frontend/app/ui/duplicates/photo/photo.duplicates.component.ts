@@ -1,8 +1,6 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {MediaDTO} from '../../../../../common/entities/MediaDTO';
 import {IconThumbnail, ThumbnailManagerService} from '../../gallery/thumbnailManager.service';
-import {PhotoDTO} from '../../../../../common/entities/PhotoDTO';
-import {OrientationTypes} from 'ts-exif-parser';
 import {MediaIcon} from '../../gallery/MediaIcon';
 
 @Component({
@@ -19,12 +17,6 @@ export class DuplicatesPhotoComponent implements OnInit, OnDestroy {
   constructor(private thumbnailService: ThumbnailManagerService) {
   }
 
-  get Orientation() {
-    if (!this.media) {
-      return OrientationTypes.TOP_LEFT;
-    }
-    return (<PhotoDTO>this.media).metadata.orientation || OrientationTypes.TOP_LEFT;
-  }
 
   ngOnInit() {
     this.thumbnail = this.thumbnailService.getIcon(new MediaIcon(this.media));

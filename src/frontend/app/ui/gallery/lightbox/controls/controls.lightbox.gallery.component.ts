@@ -307,7 +307,7 @@ export class ControlsLightboxComponent implements OnDestroy, OnInit, OnChanges {
         return;
       }
 
-      const photoAspect = MediaDTO.calcRotatedAspectRatio(this.activePhoto.gridMedia.media);
+      const photoAspect = MediaDTO.calcAspectRatio(this.activePhoto.gridMedia.media);
       const widthFilled = photoAspect > this.photoFrameDim.aspect;
       const divWidth = this.photoFrameDim.width;
       const divHeight = this.photoFrameDim.height;
@@ -368,7 +368,7 @@ export class ControlsLightboxComponent implements OnDestroy, OnInit, OnChanges {
     }
 
 
-    const photoAspect = MediaDTO.calcRotatedAspectRatio(this.activePhoto.gridMedia.media);
+    const photoAspect = MediaDTO.calcAspectRatio(this.activePhoto.gridMedia.media);
 
     if (photoAspect < this.photoFrameDim.aspect) {
       this.faceContainerDim.height = this.photoFrameDim.height;

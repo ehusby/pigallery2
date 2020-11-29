@@ -33,7 +33,7 @@ export class PersonRouter {
     app.get(['/api/person'],
       // common part
       AuthenticationMWs.authenticate,
-      AuthenticationMWs.authorise(UserRoles.User),
+      AuthenticationMWs.authorise(Config.Client.Faces.readAccessMinRole),
       VersionMWs.injectGalleryVersion,
 
       // specific part

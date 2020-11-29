@@ -52,7 +52,7 @@ export class GridRowBuilder {
   public calcRowHeight(): number {
     let width = 0;
     for (let i = 0; i < this.photoRow.length; i++) {
-      const size = MediaDTO.getRotatedSize(this.photoRow[i]);
+      const size = this.photoRow[i].metadata.size;
       width += (size.width / size.height); // summing up aspect ratios
     }
     const height = (this.containerWidth - this.photoRow.length * (this.photoMargin * 2) - 1) / width; // cant be equal -> width-1

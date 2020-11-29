@@ -12,6 +12,8 @@ export class SharingRouter {
     this.addGetSharing(app);
     this.addCreateSharing(app);
     this.addUpdateSharing(app);
+    this.addListSharing(app);
+    this.addDeleteSharing(app);
   }
 
   private static addShareLogin(app: express.Express) {
@@ -46,6 +48,25 @@ export class SharingRouter {
       AuthenticationMWs.authorise(UserRoles.User),
       SharingMWs.updateSharing,
       RenderingMWs.renderSharing
+    );
+  }
+
+
+  private static addDeleteSharing(app: express.Express) {
+    app.delete(['/api/share/:sharingKey'],
+      AuthenticationMWs.authenticate,
+      AuthenticationMWs.authorise(UserRoles.Admin),
+      SharingMWs.deleteSharing,
+      RenderingMWs.renderOK
+    );
+  }
+
+  private static addListSharing(app: express.Express) {
+    app.get(['/api/share/list'],
+      AuthenticationMWs.authenticate,
+      AuthenticationMWs.authorise(UserRoles.User),
+      SharingMWs.listSharing,
+      RenderingMWs.renderSharingList
     );
   }
 

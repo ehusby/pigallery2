@@ -218,17 +218,18 @@ export class GalleryCacheService {
     }
 
     try {
+      // try to fit it
       localStorage.setItem(key, JSON.stringify(directory));
+      directory.directories.forEach((dir: DirectoryDTO) => {
+        const sub_key = GalleryCacheService.CONTENT_PREFIX + Utils.concatUrls(dir.path, dir.name);
+        if (localStorage.getItem(sub_key) == null) { // don't override existing
+          localStorage.setItem(sub_key, JSON.stringify(dir));
+        }
+      });
     } catch (e) {
       this.reset();
       console.error(e);
     }
-    directory.directories.forEach((dir: DirectoryDTO) => {
-      const sub_key = GalleryCacheService.CONTENT_PREFIX + Utils.concatUrls(dir.path, dir.name);
-      if (localStorage.getItem(sub_key) == null) { // don't override existing
-        localStorage.setItem(sub_key, JSON.stringify(dir));
-      }
-    });
 
   }
 
@@ -242,21 +243,26 @@ export class GalleryCacheService {
       return;
     }
 
-    const directoryName = Utils.concatUrls(media.directory.path, media.directory.name);
-    const value = localStorage.getItem(directoryName);
-    if (value != null) {
-      const directory: DirectoryDTO = JSON.parse(value);
-      directory.media.forEach((p) => {
-        if (p.name === media.name) {
-          // update data
-          p.metadata = media.metadata;
-          p.readyThumbnails = media.readyThumbnails;
+    try {
+      const directoryName = Utils.concatUrls(media.directory.path, media.directory.name);
+      const value = localStorage.getItem(directoryName);
+      if (value != null) {
+        const directory: DirectoryDTO = JSON.parse(value);
+        directory.media.forEach((p) => {
+          if (p.name === media.name) {
+            // update data
+            p.metadata = media.metadata;
+            p.readyThumbnails = media.readyThumbnails;
 
-          // save changes
-          localStorage.setItem(directoryName, JSON.stringify(directory));
-          return;
-        }
-      });
+            // save changes
+            localStorage.setItem(directoryName, JSON.stringify(directory));
+            return;
+          }
+        });
+      }
+    } catch (e) {
+      this.reset();
+      console.error(e);
     }
 
   }

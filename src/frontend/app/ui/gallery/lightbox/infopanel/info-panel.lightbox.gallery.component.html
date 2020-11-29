@@ -61,6 +61,7 @@
     </div>
   </div>
 
+
   <div class="row" *ngIf="CameraData">
     <div class="col-2">
       <span class="details-icon oi oi-camera-slr"></span>
@@ -82,6 +83,29 @@
       </div>
     </div>
   </div>
+
+
+  <div class="row" *ngIf="keywords">
+    <div class="col-2">
+      <span class="details-icon oi oi-tags"></span>
+    </div>
+    <div class="col-10 keywords">
+        <ng-template ngFor let-keyword [ngForOf]="keywords" let-last="last">
+          <a *ngIf="searchEnabled"
+             [routerLink]="['/search', keyword.value, {type: SearchTypes[keyword.type]}]" [ngSwitch]="keyword.type">
+            <ng-template [ngSwitchCase]="SearchTypes.keyword">#</ng-template><!--
+       -->
+            <ng-template [ngSwitchCase]="SearchTypes.person"><span class="oi oi-person"></span></ng-template><!--
+       -->{{keyword.value}}</a>
+          <span *ngIf="!searchEnabled" [ngSwitch]="keyword.type">
+          <ng-template [ngSwitchCase]="SearchTypes.keyword">#</ng-template><!--
+       --><ng-template [ngSwitchCase]="SearchTypes.person"><span class="oi oi-person"></span></ng-template><!--
+       -->{{keyword.value}}</span>
+          <ng-template [ngIf]="!last">,&#32;</ng-template>
+        </ng-template>
+    </div>
+  </div>
+
 
   <div class="row" *ngIf="hasPositionData()">
     <div class="col-2">

@@ -137,7 +137,7 @@ export class SearchManager implements ISearchManager {
       .innerJoin(q => {
           const subQuery = q.from(usedEntity, 'media')
             .select('distinct media.id')
-            .limit(2000);
+            .limit(Config.Client.Search.maxMediaResult + 1);
 
 
           if (!searchType || searchType === SearchTypes.directory) {
@@ -180,7 +180,7 @@ export class SearchManager implements ISearchManager {
 
     result.media = await this.loadMediaWithFaces(query);
 
-    if (result.media.length > 2000) {
+    if (result.media.length > Config.Client.Search.maxMediaResult) {
       result.resultOverflow = true;
     }
 
@@ -188,10 +188,10 @@ export class SearchManager implements ISearchManager {
       .getRepository(DirectoryEntity)
       .createQueryBuilder('dir')
       .where('dir.name LIKE :text COLLATE utf8_general_ci', {text: '%' + text + '%'})
-      .limit(201)
+      .limit(Config.Client.Search.maxMediaResult + 1)
       .getMany();
 
-    if (result.directories.length > 200) {
+    if (result.directories.length > Config.Client.Search.maxDirectoryResult) {
       result.resultOverflow = true;
     }
 

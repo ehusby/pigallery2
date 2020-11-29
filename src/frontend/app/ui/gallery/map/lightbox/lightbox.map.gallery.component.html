@@ -46,7 +46,7 @@
               <img *ngIf="photo.preview.thumbnail.Src"
                    [style.width.px]="photo.preview.width"
                    [style.height.px]="photo.preview.height"
-                   [src]="photo.preview.thumbnail.Src | fixOrientation:photo.orientation | async">
+                   [src]="photo.preview.thumbnail.Src">
               <div class="preview-loading"
                    *ngIf="!photo.preview.thumbnail.Src"
                    [style.width.px]="photo.preview.width"

@@ -56,3 +56,16 @@
 .modal-header {
   padding: 0.4rem 1rem;
 }
+
+
+.keywords a {
+  color: #212529;
+}
+
+.keywords a:hover {
+  text-decoration: underline;
+}
+
+.keywords .oi-person{
+  margin-right: 2px;
+}

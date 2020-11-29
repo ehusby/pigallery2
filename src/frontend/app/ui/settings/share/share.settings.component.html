@@ -38,14 +38,53 @@
       <div class="panel-info" *ngIf="(!states.enabled.value && !_settingsService.isSupported())" i18n>
         Sharing is not supported with these settings
       </div>
-      <button class="btn btn-success float-right"
-              [disabled]="!settingsForm.form.valid || !changed || inProgress"
-              (click)="save()" i18n>Save
-      </button>
-      <button class="btn btn-secondary float-right"
-              [disabled]=" !changed || inProgress"
-              (click)="reset()" i18n>Reset
-      </button>
+
+      <div class="share-settings-save-buttons">
+        <button class="btn btn-success float-right"
+                [disabled]="!settingsForm.form.valid || !changed || inProgress"
+                (click)="save()" i18n>Save
+        </button>
+        <button class="btn btn-secondary float-right"
+                [disabled]=" !changed || inProgress"
+                (click)="reset()" i18n>Reset
+        </button>
+      </div>
+
+      <br>
+      <br>
+      <hr/>
+      <p class="title" i18n>Shared links:</p>
+
+      <ng-container *ngIf="shares && shares.length >0">
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <th i18n>Key</th>
+            <th i18n>Folder</th>
+            <th i18n>Creator</th>
+            <th i18n>Expires</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tr *ngFor="let share of shares">
+            <td>{{share.sharingKey}}</td>
+            <td>{{share.path}}</td>
+            <td>{{share.creator.name}}</td>
+            <td>{{share.expires | date}}</td>
+            <td>
+              <button (click)="deleteSharing(share)" class="btn btn-danger float-right">
+                <span class="oi oi-trash" aria-hidden="true" aria-label="Delete"></span>
+              </button>
+            </td>
+          </tr>
+        </table>
+      </ng-container>
+
+      <ng-container *ngIf="!shares || shares.length  == 0">
+        <div class="panel-info" i18n>
+          No sharing was created.
+        </div>
+      </ng-container>
     </div>
   </div>
 

@@ -5,5 +5,9 @@ export interface ISharingManager {
 
   createSharing(sharing: SharingDTO): Promise<SharingDTO>;
 
-  updateSharing(sharing: SharingDTO): Promise<SharingDTO>;
+  updateSharing(sharing: SharingDTO, forceUpdate: boolean): Promise<SharingDTO>;
+
+  listAll(): Promise<SharingDTO[]>;
+
+  deleteSharing(sharingKey: string): Promise<void>;
 }

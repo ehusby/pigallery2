@@ -4,6 +4,7 @@ import {SettingsService} from '../settings.service';
 import {AbstractSettingsService} from '../_abstract/abstract.settings.service';
 import {ClientConfig} from '../../../../../common/config/public/ClientConfig';
 import {ServerConfig} from '../../../../../common/config/private/PrivateConfig';
+import {SharingDTO} from '../../../../../common/entities/SharingDTO';
 
 @Injectable()
 export class ShareSettingsService extends AbstractSettingsService<ClientConfig.SharingConfig> {
@@ -21,6 +22,16 @@ export class ShareSettingsService extends AbstractSettingsService<ClientConfig.S
 
   public updateSettings(settings: ClientConfig.SharingConfig): Promise<void> {
     return this._networkService.putJson('/settings/share', {settings: settings});
+  }
+
+
+  public getSharingList(): Promise<SharingDTO[]> {
+    return this._networkService.getJson('/share/list');
+  }
+
+
+  public deleteSharing(sharing: SharingDTO): Promise<void> {
+    return this._networkService.deleteJson('/share/' + sharing.sharingKey);
   }
 
 }

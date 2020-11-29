@@ -22,12 +22,6 @@
           <small *ngIf="states.photoProcessingLibrary.value==PhotoProcessingLib.sharp"
                  class="form-text text-muted" i18n>Make sure that sharp node module is installed (npm install sharp).
           </small>
-          <small *ngIf="states.photoProcessingLibrary.value==PhotoProcessingLib.gm"
-                 class="form-text text-muted">
-            <ng-container i18n>Make sure that gm node module and</ng-container>
-            <a href="http://www.graphicsmagick.org/">GraphicsMagick</a>
-            <ng-container i18n>are installed (npm install sharp).</ng-container>
-          </small>
         </app-settings-entry>
 
 

@@ -18,6 +18,7 @@ import {PhotoDTO} from '../../../../common/entities/PhotoDTO';
 import {QueryParams} from '../../../../common/QueryParams';
 import {SeededRandomService} from '../../model/seededRandom.service';
 import {take} from 'rxjs/operators';
+import {FileDTO} from '../../../../common/entities/FileDTO';
 
 @Component({
   selector: 'app-gallery',
@@ -56,6 +57,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
     this.SearchTypes = SearchTypes;
     PageHelper.showScrollY();
   }
+
 
   updateTimer(t: number) {
     if (this.shareService.sharingSubject.value == null) {
@@ -210,6 +212,5 @@ export class GalleryComponent implements OnInit, OnDestroy {
     }
 
   }
-
 }
 

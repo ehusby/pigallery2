@@ -24,6 +24,7 @@ import {LoginComponent} from './ui/login/login.component';
 import {AdminComponent} from './ui/admin/admin.component';
 import {GalleryComponent} from './ui/gallery/gallery.component';
 import {StringifyRole} from './pipes/StringifyRolePipe';
+import {GPXFilesFilterPipe} from './pipes/GPXFilesFilterPipe';
 import {GalleryMapComponent} from './ui/gallery/map/map.gallery.component';
 import {GalleryMapLightboxComponent} from './ui/gallery/map/lightbox/lightbox.map.gallery.component';
 import {ThumbnailManagerService} from './ui/gallery/thumbnailManager.service';
@@ -63,7 +64,6 @@ import {IconizeSortingMethod} from './pipes/IconizeSortingMethod';
 import {StringifySortingMethod} from './pipes/StringifySortingMethod';
 import {RandomQueryBuilderGalleryComponent} from './ui/gallery/random-query-builder/random-query-builder.gallery.component';
 import {RandomPhotoSettingsComponent} from './ui/settings/random-photo/random-photo.settings.component';
-import {FixOrientationPipe} from './pipes/FixOrientationPipe';
 import {VideoSettingsComponent} from './ui/settings/video/video.settings.component';
 import {DurationPipe} from './pipes/DurationPipe';
 import {MapService} from './ui/gallery/map/map.service';
@@ -211,9 +211,9 @@ export function translationsFactory(locale: string) {
     StringifyRole,
     IconizeSortingMethod,
     StringifySortingMethod,
-    FixOrientationPipe,
     DurationPipe,
-    FileSizePipe
+    FileSizePipe,
+    GPXFilesFilterPipe
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: CSRFInterceptor, multi: true},

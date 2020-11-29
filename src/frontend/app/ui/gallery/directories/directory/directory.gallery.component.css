@@ -54,28 +54,3 @@ a:hover .photo-container {
   width: 180px;
   white-space: normal;
 }
-
-/* transforming media, based on exif orientation*/
-.photo-orientation-1 {
-}
-.photo-orientation-2 {
-transform: rotateY(180deg);
-}
-.photo-orientation-3 {
-  transform: rotate(180deg);
-}
-.photo-orientation-4 {
-  transform: rotate(180deg) rotateY(180deg);
-}
-.photo-orientation-5 {
-  transform: rotate(270deg) rotateY(180deg);
-}
-.photo-orientation-6 {
-  transform: rotate(90deg);
-}
-.photo-orientation-7 {
-  transform: rotate(90deg) rotateY(180deg);
-}
-.photo-orientation-8 {
-  transform: rotate(270deg);
-}

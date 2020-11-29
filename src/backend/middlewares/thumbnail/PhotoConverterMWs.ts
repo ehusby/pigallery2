@@ -17,7 +17,7 @@ export class PhotoConverterMWs {
 
     const convertedVideo = PhotoProcessing.generateConvertedPath(fullMediaPath, Config.Server.Media.Photo.Converting.resolution);
 
-    // check if transcoded video exist
+    // check if converted photo exist
     if (fs.existsSync(convertedVideo) === true) {
       req.resultPipe = convertedVideo;
       return next();

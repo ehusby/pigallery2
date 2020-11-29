@@ -45,6 +45,7 @@ export class GalleryNavigatorComponent implements OnChanges {
 
   ngOnChanges() {
     this.getPath();
+    this.DefaultSorting = this.galleryService.getDefaultSorting(this.directory);
   }
 
   getPath(): any {

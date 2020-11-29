@@ -14,7 +14,7 @@ import {MapComponent} from '@yaga/leaflet-ng2';
 export class GalleryMapComponent implements OnChanges, IRenderable, AfterViewInit {
 
   @Input() photos: PhotoDTO[];
-  @Input() metaFiles: FileDTO[];
+  @Input() gpxFiles: FileDTO[];
   @ViewChild(GalleryMapLightboxComponent, {static: false}) mapLightbox: GalleryMapLightboxComponent;
 
   mapPhotos: Array<{ lat: number, lng: number }> = [];

@@ -24,13 +24,12 @@ export class GalleryPhotoComponent implements IRenderable, OnInit, OnDestroy {
   infoBarVisible = false;
   animationTimer: number = null;
 
-  readonly SearchTypes: typeof SearchTypes;
+  readonly SearchTypes: typeof SearchTypes = SearchTypes;
   searchEnabled = true;
 
   wasInView: boolean = null;
 
   constructor(private thumbnailService: ThumbnailManagerService) {
-    this.SearchTypes = SearchTypes;
     this.searchEnabled = Config.Client.Search.enabled;
   }
 

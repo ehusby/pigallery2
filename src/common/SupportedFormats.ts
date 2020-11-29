@@ -15,7 +15,7 @@ export const SupportedFormats = {
     'ogg'
   ],
   MetaFiles: [
-    'gpx'
+    'gpx', 'pg2conf'
   ],
   // These formats need to be transcoded (with the build-in ffmpeg support)
   TranscodeNeed: {

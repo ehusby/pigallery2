@@ -7,7 +7,7 @@
   <div class="photo-container"
        [style.width.px]="size"
        [style.height.px]="size">
-    <div [ngClass]="'photo photo-orientation-'+Orientation"
+    <div class="photo"
          *ngIf="thumbnail && thumbnail.Available"
          [style.background-image]="getSanitizedThUrl()"></div>
 

@@ -2,7 +2,7 @@
   <ng-template #popTemplate>
     <img alt="{{media.name}}"
          class="big-icon"
-         [src]="thumbnail.Src | fixOrientation:Orientation | async"
+         [src]="thumbnail.Src"
          *ngIf="thumbnail.Available">
   </ng-template>
 
@@ -10,6 +10,6 @@
        class="icon"
        [popover]="popTemplate"
        triggers="mouseenter:mouseleave"
-       [src]="thumbnail.Src | fixOrientation:Orientation | async"
+       [src]="thumbnail.Src"
        *ngIf="thumbnail.Available">
 </div>

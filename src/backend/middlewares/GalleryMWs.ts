@@ -16,6 +16,7 @@ import {VideoDTO} from '../../common/entities/VideoDTO';
 import {Utils} from '../../common/Utils';
 import {QueryParams} from '../../common/QueryParams';
 import {VideoProcessing} from '../model/fileprocessing/VideoProcessing';
+import {DiskMangerWorker} from '../model/threading/DiskMangerWorker';
 
 
 export class GalleryMWs {
@@ -120,7 +121,7 @@ export class GalleryMWs {
     try {
       const query: RandomQuery = {};
       if (req.query.directory) {
-        query.directory = req.query.directory;
+        query.directory = DiskMangerWorker.normalizeDirPath(req.query.directory);
       }
       if (req.query.recursive === 'true') {
         query.recursive = true;

@@ -8,6 +8,8 @@ import {ConfigProperty, IConfigClass} from 'typeconfig/common';
 
 declare const process: any;
 
+const upTime = (new Date()).toISOString();
+
 @ConfigClass({
   configPath: path.join(__dirname, './../../../../config.json'),
   saveIfNotExist: true,
@@ -46,7 +48,7 @@ export class PrivateConfigClass implements IPrivateConfig {
     this.Server.Environment.appVersion = require('../../../../package.json').version;
     this.Server.Environment.buildTime = require('../../../../package.json').buildTime;
     this.Server.Environment.buildCommitHash = require('../../../../package.json').buildCommitHash;
-    this.Server.Environment.upTime = (new Date()).toISOString();
+    this.Server.Environment.upTime = upTime;
     this.Server.Environment.isDocker = !!process.env['PI_DOCKER'];
   }
 

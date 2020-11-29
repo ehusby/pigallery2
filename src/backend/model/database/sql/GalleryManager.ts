@@ -100,7 +100,7 @@ export class GalleryManager implements IGalleryManager, ISQLGalleryManager {
         });
 
         if (queryFilter.recursive) {
-          qb.orWhere('directory.name LIKE :text COLLATE utf8_general_ci', {text: '%' + queryFilter.directory + '%'});
+          qb.orWhere('directory.path LIKE :text COLLATE utf8_general_ci', {text: queryFilter.directory + '%'});
         }
       }));
     }

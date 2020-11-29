@@ -1,0 +1,28 @@
+{
+  "faces": [
+    {
+      "box": {
+        "height": 18,
+        "left": 2.5,
+        "top": 8,
+        "width": 21
+      },
+      "name": "raspberry"
+    },
+    {
+      "box": {
+        "height": 7,
+        "left": 13.5,
+        "top": 0.5,
+        "width": 9
+      },
+      "name": "leaf"
+    }
+  ],
+  "fileSize": 4381,
+  "orientation": 1,
+  "size": {
+    "height": 26,
+    "width": 26
+  }
+}

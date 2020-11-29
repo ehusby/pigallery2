@@ -17,7 +17,7 @@
            [routerLink]="['/gallery']"
            [queryParams]="queryService.getParams()" i18n>Gallery</a>
       </li>
-      <li class="nav-item" [routerLinkActive]="['active']" *ngIf="facesEnabled">
+      <li class="nav-item" [routerLinkActive]="['active']" *ngIf="isFacesAvailable()">
         <a class="nav-link" [routerLink]="['/faces']" i18n>Faces</a>
       </li>
     </ul>

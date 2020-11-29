@@ -7,8 +7,7 @@ import {Media} from '../../Media';
 import {Thumbnail, ThumbnailManagerService} from '../../thumbnailManager.service';
 import {QueryService} from '../../../../model/query.service';
 import {MediaDTO} from '../../../../../../common/entities/MediaDTO';
-import {PhotoDTO} from '../../../../../../common/entities/PhotoDTO';
-import {OrientationTypes} from 'ts-exif-parser';
+
 
 @Component({
   selector: 'app-gallery-directory',
@@ -33,11 +32,6 @@ export class GalleryDirectoryComponent implements OnInit, OnDestroy {
       return this.directory.media[0];
     }
     return null;
-  }
-
-  public get Orientation(): OrientationTypes {
-    return (this.SamplePhoto && (this.SamplePhoto as PhotoDTO).metadata.orientation)
-      || OrientationTypes.TOP_LEFT;
   }
 
   getSanitizedThUrl() {

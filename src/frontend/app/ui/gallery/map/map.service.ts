@@ -13,13 +13,13 @@ export class MapService {
 
   constructor(private networkService: NetworkService) {
     MapService.MAPBOXLAYERS = [{
-      name: 'street', url: 'https://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token='
+      name: 'street', url: 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}?access_token='
         + Config.Client.Map.mapboxAccessToken
     }, {
-      name: 'satellite', url: 'https://api.tiles.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token='
+      name: 'satellite', url: 'https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/256/{z}/{x}/{y}?access_token='
         + Config.Client.Map.mapboxAccessToken
     }, {
-      name: 'hybrid', url: 'https://api.tiles.mapbox.com/v4/mapbox.streets-satellite/{z}/{x}/{y}.png?access_token='
+      name: 'hybrid', url: 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/256/{z}/{x}/{y}?access_token='
         + Config.Client.Map.mapboxAccessToken
     }
     ];

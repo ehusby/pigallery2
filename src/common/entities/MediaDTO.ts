@@ -1,6 +1,5 @@
 import {DirectoryDTO} from './DirectoryDTO';
 import {PhotoDTO} from './PhotoDTO';
-import {OrientationTypes} from 'ts-exif-parser';
 import {FileDTO} from './FileDTO';
 import {SupportedFormats} from '../SupportedFormats';
 
@@ -39,18 +38,6 @@ export module MediaDTO {
           (<PhotoDTO>media).metadata.positionData.GPSData.longitude));
   };
 
-  export const isSideWay = (media: MediaDTO): boolean => {
-    if (!(<PhotoDTO>media).metadata.orientation) {
-      return false;
-    }
-    const photo = <PhotoDTO>media;
-    return photo.metadata.orientation === OrientationTypes.LEFT_TOP ||
-      photo.metadata.orientation === OrientationTypes.RIGHT_TOP ||
-      photo.metadata.orientation === OrientationTypes.LEFT_BOTTOM ||
-      photo.metadata.orientation === OrientationTypes.RIGHT_BOTTOM;
-
-  };
-
   export const isPhoto = (media: FileDTO): boolean => {
     return !MediaDTO.isVideo(media);
   };
@@ -86,16 +73,7 @@ export module MediaDTO {
   };
 
 
-  export const getRotatedSize = (photo: MediaDTO): MediaDimension => {
-    if (isSideWay(photo)) {
-      // noinspection JSSuspiciousNameCombination
-      return {width: photo.metadata.size.height, height: photo.metadata.size.width};
-    }
-    return photo.metadata.size;
-  };
-
-  export const calcRotatedAspectRatio = (photo: MediaDTO): number => {
-    const size = getRotatedSize(photo);
-    return size.width / size.height;
+  export const calcAspectRatio = (photo: MediaDTO): number => {
+    return photo.metadata.size.width / photo.metadata.size.height;
   };
 }

@@ -121,7 +121,7 @@ describe('SharingManager', (sqlHelper: SQLTestHelper) => {
       includeSubfolders: false,
       timeStamp: Date.now()
     };
-    const updated = await sm.updateSharing(update);
+    const updated = await sm.updateSharing(update, false);
 
     expect(updated.id).to.equals(saved.id);
     expect(updated.sharingKey).to.equals(sharing.sharingKey);

@@ -30,17 +30,17 @@ Live Demo @ heroku: https://pigallery2.herokuapp.com/
 
 ## 1. Getting started (also works on Raspberry Pi)
 
-### 1.1 Install and Run with Docker (recommended)
+### 1.1 [Install and Run with Docker (recommended)](docker/README.md)
 
-[Docker](https://www.docker.com/) with [docker-compose](https://docs.docker.com/compose/) is the offitial and recommend way of installing and running *Pigallery2*.
+[Docker](https://www.docker.com/) with [docker-compose](https://docs.docker.com/compose/) is the official and recommend way of installing and running *Pigallery2*.
 It contains all necessary dependencies, auto restarts on reboot, supports https, easy to upgrade to newer versions.
 For configuration and docker-compose files read more [here](docker/README.md) or check all builds: https://hub.docker.com/r/bpatrik/pigallery2/tags/
 
 
 
-### 1.2 Direct Install (if you are familiar with nodejs and building npm packages from source)
-As an alternative, you can also directly install nodejs and the app and run it natively. 
-### 1.2.0 [Install NodeJs](https://nodejs.org/en/download/)
+### 1.2 Direct Install (if you are familiar with Node.js and building npm packages from source)
+As an alternative, you can also directly install Node.js and the app and run it natively. 
+### 1.2.0 [Install Node.js](https://nodejs.org/en/download/)
 Download and extract
 ```bash
 curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
@@ -73,9 +73,9 @@ npm install
 npm run build
 ```
 
-**Note**: It is recommended to create a release version with `npm run create-release` on a more powerful mashine and deploy that to you server.
+**Note**: It is recommended to create a release version with `npm run create-release` on a more powerful machine and deploy that to you server.
 
-**Note**: you can use `npm run create-release -- --languages=fr,ro` to restrict building to the listed languages (english is added by default)
+**Note**: you can use `npm run create-release -- --languages=fr,ro` to restrict building to the listed languages (English is added by default)
 
 #### 1.2.2 Run PiGallery2
 ```bash
@@ -89,6 +89,9 @@ Default user: `admin` pass: `admin`
 Running `npm start -- --Server-port=8080` will start the app on port 8080 that does not require `root`
 Adding read/write permissions to all files can solve the file access issue `chmod -R o-w .`, see [#98](https://github.com/bpatrik/pigallery2/issues/98).
 
+##### 1.2.2.1 Run on startup
+You can run the app up as a service to run it on startup. Read more at [#42](https://github.com/bpatrik/pigallery2/issues/42#issuecomment-458340945)
+
 ### 1.3 Advanced configuration
 You can set up the app the following ways:
  * Using the UI
@@ -99,7 +102,7 @@ You can set up the app the following ways:
  * Through environmental variable
    * like set env. variable `Server-port` to `3000`   
 
-Full list of configuration options are available at the  [MANPAGE.md](MANPAGE.md).
+Full list of configuration options are available at the [MANPAGE.md](MANPAGE.md).
 
 ### 1.4 Useful links/tips:
 
@@ -119,7 +122,7 @@ apt-get install build-essential  libkrb5-dev gcc g++
 
 
 ## 2. Translate the page to your own language
-1. [Install Pigallery2](#111-b-install-from-source) from source (with the release it won't work) 
+1. [Install Pigallery2](#121-b-install-from-source) from source (with the release it won't work) 
 2. add your language e.g: fr
    ```bash
    npm run add-translation -- --fr
@@ -194,13 +197,16 @@ apt-get install build-essential  libkrb5-dev gcc g++
    * fully supports `*.mp4` files and partially (might have errors with safari and IE) supports `*.ogg`, `*.ogv`, `*.webm` files
    * uses ffmpeg and ffprobe to generate video thumbnails
    * can transcode videos to mp4 for better support
- * job sceduling support, with the following supported task: [#92](https://github.com/bpatrik/pigallery2/issues/92)
+ * job scheduling support, with the following supported task: [#92](https://github.com/bpatrik/pigallery2/issues/92)
    * converting/transcoding videos [#66](https://github.com/bpatrik/pigallery2/issues/66) [#71](https://github.com/bpatrik/pigallery2/issues/71)
    * generating thumbnails
    * generating converted photos
    * cleaning up temp folder
    * indexing db
  * folder ignoring [#87](https://github.com/bpatrik/pigallery2/issues/87)
+ * `.pg2conf` UI modifying files. [#177](https://github.com/bpatrik/pigallery2/issues/177).
+    * List of these files are passed down to the UI modify its behaviour.
+    * Currently, supported custom, per folder sorting.
  * Dockerized 
  * **Markdown based blogging support** - `future plan`
    * you can write some note in the blog.md for every directory
@@ -209,13 +215,13 @@ apt-get install build-essential  libkrb5-dev gcc g++
  
 ## 4. Suggest/endorse new features
   You are welcome to suggest new features to the application via [github issues](https://github.com/bpatrik/pigallery2/issues).
-  I cannot garantie any dealine with the development of a new feature. (I usually fix bugs within week/weeks.)
+  I cannot guarantee any deadline with the development of a new feature. (I usually fix bugs within a week/weeks.)
   I will give a higher priority to a feature that has more 'likes' (i.e.: `+1`-s or thumbs ups) on it.
 
 ## 5. Known errors
 * EXIF orientation tag:
-  *  There is no nice way to handle EXIF orientation tag properly.
-The page handles these photos, but might cause same error in the user experience (e.g.: the pages loads those photos slower. See issue [#11](https://github.com/bpatrik/pigallery2/issues/11))
+  *  Some photos code the orientation tag and with/height in a less conventional format, like the "duck photo" in [#19](https://github.com/bpatrik/pigallery2/issues/19). 
+After Browsers support orientation tag natively [#172](https://github.com/bpatrik/pigallery2/issues/172), I could not find a solution for that. 
 * Video support on weak servers (like raspberry pi) with low upload rate
   * video playback may use up too much resources and the server might not response for a while. Enable video transcoding in the app, to transcode the videos to lover bitrate. 
   

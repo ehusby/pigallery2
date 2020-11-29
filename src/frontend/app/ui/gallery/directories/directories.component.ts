@@ -19,9 +19,13 @@ export class DirectoriesComponent implements OnChanges {
   }
 
   private updateSize() {
-    const size = 220 + 5;
-    const containerWidth = this.container.nativeElement.parentElement.clientWidth;
-    this.size = (containerWidth / Math.round((containerWidth / size))) - 5;
+    if (window.innerWidth < window.innerHeight) {
+      // On portrait mode, show 2 directories side by side with some padding
+      this.size = Math.round(window.innerWidth / 2) - 25;
+    } else {
+      const size = 220 + 5;
+      const containerWidth = this.container.nativeElement.parentElement.clientWidth;
+      this.size = (containerWidth / Math.round((containerWidth / size))) - 5;
+    }
   }
-
 }

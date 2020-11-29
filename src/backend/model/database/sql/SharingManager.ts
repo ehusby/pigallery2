@@ -18,6 +18,20 @@ export class SharingManager implements ISharingManager {
       .execute();
   }
 
+  async deleteSharing(sharingKey: string): Promise<void> {
+    const connection = await SQLConnection.getConnection();
+    const sharing = await connection.getRepository(SharingEntity).findOne({sharingKey: sharingKey});
+    await connection.getRepository(SharingEntity).remove(sharing);
+  }
+
+  async listAll(): Promise<SharingDTO[]> {
+    await SharingManager.removeExpiredLink();
+    const connection = await SQLConnection.getConnection();
+    return await connection.getRepository(SharingEntity)
+      .createQueryBuilder('share')
+      .leftJoinAndSelect('share.creator', 'creator').getMany();
+  }
+
   async findOne(filter: any): Promise<SharingDTO> {
     await SharingManager.removeExpiredLink();
     const connection = await SQLConnection.getConnection();
@@ -33,7 +47,7 @@ export class SharingManager implements ISharingManager {
     return connection.getRepository(SharingEntity).save(sharing);
   }
 
-  async updateSharing(inSharing: SharingDTO): Promise<SharingDTO> {
+  async updateSharing(inSharing: SharingDTO, forceUpdate: boolean): Promise<SharingDTO> {
     const connection = await SQLConnection.getConnection();
 
     const sharing = await connection.getRepository(SharingEntity).findOne({
@@ -42,7 +56,7 @@ export class SharingManager implements ISharingManager {
       path: inSharing.path
     });
 
-    if (sharing.timeStamp < Date.now() - Config.Server.Sharing.updateTimeout) {
+    if (sharing.timeStamp < Date.now() - Config.Server.Sharing.updateTimeout && forceUpdate !== true) {
       throw new Error('Sharing is locked, can\'t update anymore');
     }
     if (inSharing.password == null) {

@@ -34,7 +34,7 @@
 
     <app-gallery-map *ngIf="isPhotoWithLocation && mapEnabled"
                      [photos]="_galleryService.content.value.directory.media"
-                     [metaFiles]="_galleryService.content.value.directory.metaFile"></app-gallery-map>
+                     [gpxFiles]="_galleryService.content.value.directory.metaFile | gpxFiles"></app-gallery-map>
     <app-gallery-grid [media]="_galleryService.content.value.directory.media"
                       [lightbox]="lightbox"></app-gallery-grid>
   </div>
@@ -48,7 +48,7 @@
 
     <app-gallery-map *ngIf="isPhotoWithLocation && mapEnabled"
                      [photos]="_galleryService.content.value.searchResult.media"
-                     [metaFiles]="_galleryService.content.value.searchResult.metaFile"></app-gallery-map>
+                     [gpxFiles]="_galleryService.content.value.searchResult.metaFile | gpxFiles"></app-gallery-map>
 
     <app-gallery-directories class="directories" [directories]="directories"></app-gallery-directories>
 
