@@ -51,22 +51,36 @@
        (click)="mediaElement.playPause()">
 
     <div class="faces-container"
-         [style.top.px]="photoFrameDim.height/2"
-         [style.left.px]="photoFrameDim.width/2"
-         [style.width.px]="faceContainerDim.width"
-         [style.height.px]="faceContainerDim.height"
-         *ngIf="facesEnabled && activePhoto && zoom == 1 && activePhoto.gridMedia.Photo.metadata.faces && activePhoto.gridMedia.Photo.metadata.faces.length > 0">
-      <a
-        class="face"
-        [routerLink]="['/search', face.name, {type: SearchTypes[SearchTypes.person]}]"
-        [style.top.%]="face.box.top / activePhoto.gridMedia.Photo.metadata.size.height*100"
-        [style.left.%]="face.box.left / activePhoto.gridMedia.Photo.metadata.size.width*100"
-        [style.height.%]="face.box.height / activePhoto.gridMedia.Photo.metadata.size.height*100"
-        [style.width.%]="face.box.width / activePhoto.gridMedia.Photo.metadata.size.width*100"
-        *ngFor="let face of activePhoto.gridMedia.Photo.metadata.faces">
-        <div class="face-box"></div>
-        <span class="face-name">{{face.name}}</span>
-      </a>
+         [style.top.px]="photoFrameDim.height/2 + drag.y"
+         [style.left.px]="photoFrameDim.width/2 + drag.x"
+         [style.width.px]="faceContainerDim.width* zoom"
+         [style.height.px]="faceContainerDim.height* zoom"
+         *ngIf="facesEnabled && activePhoto  && activePhoto.gridMedia.Photo.metadata.faces && activePhoto.gridMedia.Photo.metadata.faces.length > 0">
+      <ng-container *ngIf="searchEnabled">
+        <a
+          class="face"
+          [routerLink]="['/search', getPersonSearchQuery(face.name)]"
+          [style.top.%]="face.box.top / activePhoto.gridMedia.Photo.metadata.size.height*100"
+          [style.left.%]="face.box.left / activePhoto.gridMedia.Photo.metadata.size.width*100"
+          [style.height.%]="face.box.height / activePhoto.gridMedia.Photo.metadata.size.height*100"
+          [style.width.%]="face.box.width / activePhoto.gridMedia.Photo.metadata.size.width*100"
+          *ngFor="let face of activePhoto.gridMedia.Photo.metadata.faces">
+          <div class="face-box"></div>
+          <span class="face-name">{{face.name}}</span>
+        </a>
+      </ng-container>
+      <ng-container *ngIf="!searchEnabled">
+        <div
+          class="face"
+          [style.top.%]="face.box.top / activePhoto.gridMedia.Photo.metadata.size.height*100"
+          [style.left.%]="face.box.left / activePhoto.gridMedia.Photo.metadata.size.width*100"
+          [style.height.%]="face.box.height / activePhoto.gridMedia.Photo.metadata.size.height*100"
+          [style.width.%]="face.box.width / activePhoto.gridMedia.Photo.metadata.size.width*100"
+          *ngFor="let face of activePhoto.gridMedia.Photo.metadata.faces">
+          <div class="face-box"></div>
+          <span class="face-name">{{face.name}}</span>
+        </div>
+      </ng-container>
     </div>
 
 

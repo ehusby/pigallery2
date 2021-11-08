@@ -14,7 +14,7 @@ services:
     restart: always
 
   pigallery2:
-    image: bpatrik/pigallery2:latest
+    image: bpatrik/pigallery2:latest-debian-buster # TODO: change it back to latest once relese workflow gets fixed
     container_name: pigallery2
     environment:
       - NODE_ENV=production

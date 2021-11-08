@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from 'express';
 import {ErrorCodes, ErrorDTO} from '../../../common/entities/Error';
-import {UserDTO, UserRoles} from '../../../common/entities/UserDTO';
+import {UserDTO, UserDTOUtils, UserRoles} from '../../../common/entities/UserDTO';
 import {ObjectManagers} from '../../model/ObjectManagers';
 import {Config} from '../../../common/config/private/Config';
 import {PasswordHelper} from '../../model/PasswordHelper';
@@ -10,9 +10,12 @@ import * as path from 'path';
 
 export class AuthenticationMWs {
 
-  public static async tryAuthenticate(req: Request, res: Response, next: NextFunction) {
+  public static async tryAuthenticate(req: Request, res: Response, next: NextFunction): Promise<void> {
     if (Config.Client.authenticationRequired === false) {
-      req.session.user = <UserDTO>{name: UserRoles[Config.Client.unAuthenticatedUserRole], role: Config.Client.unAuthenticatedUserRole};
+      req.session.user = {
+        name: UserRoles[Config.Client.unAuthenticatedUserRole],
+        role: Config.Client.unAuthenticatedUserRole
+      } as UserDTO;
       return next();
     }
     try {
@@ -28,9 +31,12 @@ export class AuthenticationMWs {
 
   }
 
-  public static async authenticate(req: Request, res: Response, next: NextFunction) {
+  public static async authenticate(req: Request, res: Response, next: NextFunction): Promise<void> {
     if (Config.Client.authenticationRequired === false) {
-      req.session.user = <UserDTO>{name: UserRoles[Config.Client.unAuthenticatedUserRole], role: Config.Client.unAuthenticatedUserRole};
+      req.session.user = {
+        name: UserRoles[Config.Client.unAuthenticatedUserRole],
+        role: Config.Client.unAuthenticatedUserRole
+      } as UserDTO;
       return next();
     }
 
@@ -56,21 +62,21 @@ export class AuthenticationMWs {
   }
 
 
-  public static normalizePathParam(paramName: string) {
-    return (req: Request, res: Response, next: NextFunction) => {
+  public static normalizePathParam(paramName: string): (req: Request, res: Response, next: NextFunction) => void {
+    return function normalizePathParam(req: Request, res: Response, next: NextFunction): void {
       req.params[paramName] = path.normalize(req.params[paramName] || path.sep).replace(/^(\.\.[\/\\])+/, '');
       return next();
     };
   }
 
-  public static authorisePath(paramName: string, isDirectory: boolean) {
-    return (req: Request, res: Response, next: NextFunction) => {
+  public static authorisePath(paramName: string, isDirectory: boolean): (req: Request, res: Response, next: NextFunction) => void {
+    return function authorisePath(req: Request, res: Response, next: NextFunction): Response | void {
       let p: string = req.params[paramName];
       if (!isDirectory) {
         p = path.dirname(p);
       }
 
-      if (!UserDTO.isDirectoryPathAvailable(p, req.session.user.permissions)) {
+      if (!UserDTOUtils.isDirectoryPathAvailable(p, req.session.user.permissions)) {
         return res.sendStatus(403);
       }
 
@@ -79,8 +85,8 @@ export class AuthenticationMWs {
   }
 
 
-  public static authorise(role: UserRoles) {
-    return (req: Request, res: Response, next: NextFunction) => {
+  public static authorise(role: UserRoles): (req: Request, res: Response, next: NextFunction) => void {
+    return function authorise(req: Request, res: Response, next: NextFunction): void {
       if (req.session.user.role < role) {
         return next(new ErrorDTO(ErrorCodes.NOT_AUTHORISED));
       }
@@ -88,7 +94,7 @@ export class AuthenticationMWs {
     };
   }
 
-  public static async shareLogin(req: Request, res: Response, next: NextFunction) {
+  public static async shareLogin(req: Request, res: Response, next: NextFunction): Promise<void> {
 
     if (Config.Client.Sharing.enabled === false) {
       return next();
@@ -100,9 +106,10 @@ export class AuthenticationMWs {
 
     try {
       const password = (req.body ? req.body.password : null) || null;
-      const sharingKey: string = req.query[QueryParams.gallery.sharingKey_query] || req.params[QueryParams.gallery.sharingKey_params];
+      const sharingKey: string = req.query[QueryParams.gallery.sharingKey_query] as string ||
+        req.params[QueryParams.gallery.sharingKey_params] as string;
       const sharing = await ObjectManagers.getInstance().SharingManager.findOne({
-        sharingKey: sharingKey
+        sharingKey
       });
 
       if (!sharing || sharing.expires < Date.now() ||
@@ -118,12 +125,12 @@ export class AuthenticationMWs {
         sharingPath += '*';
       }
 
-      req.session.user = <UserDTO>{
+      req.session.user = {
         name: 'Guest',
         role: UserRoles.LimitedGuest,
         permissions: [sharingPath],
         usedSharingKey: sharing.sharingKey
-      };
+      } as UserDTO;
       return next();
 
     } catch (err) {
@@ -132,14 +139,14 @@ export class AuthenticationMWs {
 
   }
 
-  public static inverseAuthenticate(req: Request, res: Response, next: NextFunction) {
+  public static inverseAuthenticate(req: Request, res: Response, next: NextFunction): void {
     if (typeof req.session.user !== 'undefined') {
       return next(new ErrorDTO(ErrorCodes.ALREADY_AUTHENTICATED));
     }
     return next();
   }
 
-  public static async login(req: Request, res: Response, next: NextFunction) {
+  public static async login(req: Request, res: Response, next: NextFunction): Promise<void | Response> {
 
     if (Config.Client.authenticationRequired === false) {
       return res.sendStatus(404);
@@ -166,24 +173,24 @@ export class AuthenticationMWs {
       return next();
 
     } catch (err) {
-      console.error(err);
-      return next(new ErrorDTO(ErrorCodes.CREDENTIAL_NOT_FOUND, 'credentials not found during login'));
+      return next(new ErrorDTO(ErrorCodes.CREDENTIAL_NOT_FOUND, 'credentials not found during login', err));
     }
 
 
   }
 
-  public static logout(req: Request, res: Response, next: NextFunction) {
+  public static logout(req: Request, res: Response, next: NextFunction): void {
     delete req.session.user;
     return next();
   }
 
-  private static async getSharingUser(req: Request) {
+  private static async getSharingUser(req: Request): Promise<UserDTO> {
     if (Config.Client.Sharing.enabled === true &&
       (!!req.query[QueryParams.gallery.sharingKey_query] || !!req.params[QueryParams.gallery.sharingKey_params])) {
-      const sharingKey: string = req.query[QueryParams.gallery.sharingKey_query] || req.params[QueryParams.gallery.sharingKey_params];
+      const sharingKey: string = req.query[QueryParams.gallery.sharingKey_query] as string ||
+        req.params[QueryParams.gallery.sharingKey_params] as string;
       const sharing = await ObjectManagers.getInstance().SharingManager.findOne({
-        sharingKey: sharingKey
+        sharingKey
       });
       if (!sharing || sharing.expires < Date.now()) {
         return null;
@@ -197,12 +204,12 @@ export class AuthenticationMWs {
       if (sharing.includeSubfolders === true) {
         sharingPath += '*';
       }
-      return <UserDTO>{
+      return {
         name: 'Guest',
         role: UserRoles.LimitedGuest,
         permissions: [sharingPath],
         usedSharingKey: sharing.sharingKey
-      };
+      } as UserDTO;
 
     }
     return null;

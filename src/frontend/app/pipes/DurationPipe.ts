@@ -1,10 +1,9 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 
 @Pipe({name: 'duration'})
 export class DurationPipe implements PipeTransform {
-  constructor(private i18n: I18n) {
+  constructor() {
   }
 
   transform(time: number, separator: ':' | 'string' = 'string'): string {
@@ -21,13 +20,13 @@ export class DurationPipe implements PipeTransform {
     }
     let str = '';
     if (h > 0) {
-      str += h + this.i18n({value: 'h', meaning: 'hour'});
+      str += h + $localize`:hour:h`;
     }
     if (m > 0) {
-      str += m + this.i18n({value: 'm', meaning: 'minute'});
+      str += m + $localize`:minute:m`;
     }
     if (s > 0) {
-      str += s + this.i18n({value: 's', meaning: 'second'});
+      str += s + $localize`:second:s`;
     }
 
     return str;

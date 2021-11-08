@@ -1,4 +1,5 @@
 import {NotificationDTO, NotificationType} from '../../common/entities/NotificationDTO';
+import {Request} from 'express';
 
 export class NotificationManager {
   public static notifications: NotificationDTO[] = [];
@@ -11,19 +12,35 @@ export class NotificationManager {
     ];
 
 
-  public static error(message: string, details?: any) {
-    NotificationManager.notifications.push({
+  public static error(message: string, details?: any, req?: Request): void {
+    const noti: NotificationDTO = {
       type: NotificationType.error,
-      message: message,
-      details: details
-    });
+      message,
+      details
+    };
+    if (req) {
+      noti.request = {
+        method: req.method,
+        url: req.url,
+        statusCode: req.statusCode
+      };
+    }
+    NotificationManager.notifications.push(noti);
   }
 
-  public static warning(message: string, details?: any) {
-    NotificationManager.notifications.push({
+  public static warning(message: string, details?: any, req?: Request): void {
+    const noti: NotificationDTO = {
       type: NotificationType.warning,
-      message: message,
-      details: details
-    });
+      message,
+      details
+    };
+    if (req) {
+      noti.request = {
+        method: req.method,
+        url: req.url,
+        statusCode: req.statusCode
+      };
+    }
+    NotificationManager.notifications.push(noti);
   }
 }

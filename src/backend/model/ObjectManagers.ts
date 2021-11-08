@@ -8,145 +8,229 @@ import {IIndexingManager} from './database/interfaces/IIndexingManager';
 import {IPersonManager} from './database/interfaces/IPersonManager';
 import {IVersionManager} from './database/interfaces/IVersionManager';
 import {IJobManager} from './database/interfaces/IJobManager';
+import {LocationManager} from './database/LocationManager';
+import {IAlbumManager} from './database/interfaces/IAlbumManager';
+import {JobManager} from './jobs/JobManager';
+import {IPreviewManager} from './database/interfaces/IPreviewManager';
+import {ParentDirectoryDTO} from '../../common/entities/DirectoryDTO';
+import {IObjectManager} from './database/interfaces/IObjectManager';
+
+const LOG_TAG = '[ObjectManagers]';
 
 export class ObjectManagers {
 
-  private static _instance: ObjectManagers = null;
+  private static instance: ObjectManagers = null;
 
-  private _galleryManager: IGalleryManager;
-  private _userManager: IUserManager;
-  private _searchManager: ISearchManager;
-  private _sharingManager: ISharingManager;
-  private _indexingManager: IIndexingManager;
-  private _personManager: IPersonManager;
-  private _versionManager: IVersionManager;
-  private _jobManager: IJobManager;
+  private readonly managers: IObjectManager[];
+  private galleryManager: IGalleryManager;
+  private userManager: IUserManager;
+  private searchManager: ISearchManager;
+  private sharingManager: ISharingManager;
+  private indexingManager: IIndexingManager;
+  private personManager: IPersonManager;
+  private previewManager: IPreviewManager;
+  private versionManager: IVersionManager;
+  private jobManager: IJobManager;
+  private locationManager: LocationManager;
+  private albumManager: IAlbumManager;
 
+
+  constructor() {
+    this.managers = [];
+  }
 
   get VersionManager(): IVersionManager {
-    return this._versionManager;
+    return this.versionManager;
   }
 
   set VersionManager(value: IVersionManager) {
-    this._versionManager = value;
+    if (this.versionManager) {
+      this.managers.splice(this.managers.indexOf(this.versionManager), 1);
+    }
+    this.versionManager = value;
+    this.managers.push(this.versionManager);
+  }
+
+  get LocationManager(): LocationManager {
+    return this.locationManager;
+  }
+
+  set LocationManager(value: LocationManager) {
+    if (this.locationManager) {
+      this.managers.splice(this.managers.indexOf(this.locationManager), 1);
+    }
+    this.locationManager = value;
+    this.managers.push(this.locationManager);
+  }
+
+  get AlbumManager(): IAlbumManager {
+    return this.albumManager;
+  }
+
+  set AlbumManager(value: IAlbumManager) {
+    if (this.albumManager) {
+      this.managers.splice(this.managers.indexOf(this.albumManager), 1);
+    }
+    this.albumManager = value;
+    this.managers.push(this.albumManager);
   }
 
   get PersonManager(): IPersonManager {
-    return this._personManager;
+    return this.personManager;
   }
 
   set PersonManager(value: IPersonManager) {
-    this._personManager = value;
+    if (this.personManager) {
+      this.managers.splice(this.managers.indexOf(this.personManager), 1);
+    }
+    this.personManager = value;
+    this.managers.push(this.personManager);
+  }
+
+  get PreviewManager(): IPreviewManager {
+    return this.previewManager;
+  }
+
+  set PreviewManager(value: IPreviewManager) {
+    if (this.previewManager) {
+      this.managers.splice(this.managers.indexOf(this.previewManager), 1);
+    }
+    this.previewManager = value;
+    this.managers.push(this.previewManager);
   }
 
   get IndexingManager(): IIndexingManager {
-    return this._indexingManager;
+    return this.indexingManager;
   }
 
   set IndexingManager(value: IIndexingManager) {
-    this._indexingManager = value;
+    if (this.indexingManager) {
+      this.managers.splice(this.managers.indexOf(this.indexingManager), 1);
+    }
+    this.indexingManager = value;
+    this.managers.push(this.indexingManager);
   }
 
 
   get GalleryManager(): IGalleryManager {
-    return this._galleryManager;
+    return this.galleryManager;
   }
 
   set GalleryManager(value: IGalleryManager) {
-    this._galleryManager = value;
+    if (this.galleryManager) {
+      this.managers.splice(this.managers.indexOf(this.galleryManager), 1);
+    }
+    this.galleryManager = value;
+    this.managers.push(this.galleryManager);
   }
 
   get UserManager(): IUserManager {
-    return this._userManager;
+    return this.userManager;
   }
 
   set UserManager(value: IUserManager) {
-    this._userManager = value;
+    if (this.userManager) {
+      this.managers.splice(this.managers.indexOf(this.userManager), 1);
+    }
+    this.userManager = value;
+    this.managers.push(this.userManager);
   }
 
   get SearchManager(): ISearchManager {
-    return this._searchManager;
+    return this.searchManager;
   }
 
   set SearchManager(value: ISearchManager) {
-    this._searchManager = value;
+    if (this.searchManager) {
+      this.managers.splice(this.managers.indexOf(this.searchManager), 1);
+    }
+    this.searchManager = value;
+    this.managers.push(this.searchManager);
   }
 
   get SharingManager(): ISharingManager {
-    return this._sharingManager;
+    return this.sharingManager;
   }
 
   set SharingManager(value: ISharingManager) {
-    this._sharingManager = value;
+    if (this.sharingManager) {
+      this.managers.splice(this.managers.indexOf(this.sharingManager), 1);
+    }
+    this.sharingManager = value;
+    this.managers.push(this.sharingManager);
   }
 
   get JobManager(): IJobManager {
-    return this._jobManager;
+    return this.jobManager;
   }
 
   set JobManager(value: IJobManager) {
-    this._jobManager = value;
-  }
-
-  public static getInstance() {
-    if (this._instance === null) {
-      this._instance = new ObjectManagers();
+    if (this.jobManager) {
+      this.managers.splice(this.managers.indexOf(this.jobManager), 1);
     }
-    return this._instance;
+    this.jobManager = value;
+    this.managers.push(this.jobManager);
   }
 
-  public static async reset() {
+  public static getInstance(): ObjectManagers {
+    if (this.instance === null) {
+      this.instance = new ObjectManagers();
+    }
+    return this.instance;
+  }
+
+  public static async reset(): Promise<void> {
+    Logger.silly(LOG_TAG, 'Object manager reset begin');
+    if (ObjectManagers.getInstance().IndexingManager &&
+      ObjectManagers.getInstance().IndexingManager.IsSavingInProgress) {
+      await ObjectManagers.getInstance().IndexingManager.SavingReady;
+    }
     if (ObjectManagers.getInstance().JobManager) {
       ObjectManagers.getInstance().JobManager.stopSchedules();
     }
     await SQLConnection.close();
-    this._instance = null;
+    this.instance = null;
+    Logger.debug(LOG_TAG, 'Object manager reset');
   }
 
-
-  public static async InitCommonManagers() {
-    const JobManager = require('./jobs/JobManager').JobManager;
-    ObjectManagers.getInstance().JobManager = new JobManager();
-  }
-
-  public static async InitMemoryManagers() {
+  public static async InitMemoryManagers(): Promise<void> {
     await ObjectManagers.reset();
-    const GalleryManager = require('./database/memory/GalleryManager').GalleryManager;
-    const UserManager = require('./database/memory/UserManager').UserManager;
-    const SearchManager = require('./database/memory/SearchManager').SearchManager;
-    const SharingManager = require('./database/memory/SharingManager').SharingManager;
-    const IndexingManager = require('./database/memory/IndexingManager').IndexingManager;
-    const PersonManager = require('./database/memory/PersonManager').PersonManager;
-    const VersionManager = require('./database/memory/VersionManager').VersionManager;
-    ObjectManagers.getInstance().GalleryManager = new GalleryManager();
-    ObjectManagers.getInstance().UserManager = new UserManager();
-    ObjectManagers.getInstance().SearchManager = new SearchManager();
-    ObjectManagers.getInstance().SharingManager = new SharingManager();
-    ObjectManagers.getInstance().IndexingManager = new IndexingManager();
-    ObjectManagers.getInstance().PersonManager = new PersonManager();
-    ObjectManagers.getInstance().VersionManager = new VersionManager();
-    this.InitCommonManagers();
+    this.initManagers('memory');
+    Logger.debug(LOG_TAG, 'Memory DB inited');
   }
 
-  public static async InitSQLManagers() {
+  public static async InitSQLManagers(): Promise<void> {
     await ObjectManagers.reset();
     await SQLConnection.init();
-    const GalleryManager = require('./database/sql/GalleryManager').GalleryManager;
-    const UserManager = require('./database/sql/UserManager').UserManager;
-    const SearchManager = require('./database/sql/SearchManager').SearchManager;
-    const SharingManager = require('./database/sql/SharingManager').SharingManager;
-    const IndexingManager = require('./database/sql/IndexingManager').IndexingManager;
-    const PersonManager = require('./database/sql/PersonManager').PersonManager;
-    const VersionManager = require('./database/sql/VersionManager').VersionManager;
-    ObjectManagers.getInstance().GalleryManager = new GalleryManager();
-    ObjectManagers.getInstance().UserManager = new UserManager();
-    ObjectManagers.getInstance().SearchManager = new SearchManager();
-    ObjectManagers.getInstance().SharingManager = new SharingManager();
-    ObjectManagers.getInstance().IndexingManager = new IndexingManager();
-    ObjectManagers.getInstance().PersonManager = new PersonManager();
-    ObjectManagers.getInstance().VersionManager = new VersionManager();
-    this.InitCommonManagers();
-    Logger.debug('SQL DB inited');
+    this.initManagers('sql');
+    Logger.debug(LOG_TAG, 'SQL DB inited');
+  }
+
+  private static initManagers(type: 'memory' | 'sql'): void {
+    ObjectManagers.getInstance().AlbumManager = new (require(`./database/${type}/AlbumManager`).AlbumManager)();
+    ObjectManagers.getInstance().GalleryManager = new (require(`./database/${type}/GalleryManager`).GalleryManager)();
+    ObjectManagers.getInstance().IndexingManager = new (require(`./database/${type}/IndexingManager`).IndexingManager)();
+    ObjectManagers.getInstance().PersonManager = new (require(`./database/${type}/PersonManager`).PersonManager)();
+    ObjectManagers.getInstance().PreviewManager = new (require(`./database/${type}/PreviewManager`).PreviewManager)();
+    ObjectManagers.getInstance().SearchManager = new (require(`./database/${type}/SearchManager`).SearchManager)();
+    ObjectManagers.getInstance().SharingManager = new (require(`./database/${type}/SharingManager`).SharingManager)();
+    ObjectManagers.getInstance().UserManager = new (require(`./database/${type}/UserManager`).UserManager)();
+    ObjectManagers.getInstance().VersionManager = new (require(`./database/${type}/VersionManager`).VersionManager)();
+    ObjectManagers.getInstance().JobManager = new JobManager();
+    ObjectManagers.getInstance().LocationManager = new LocationManager();
+  }
+
+  public async onDataChange(changedDir: ParentDirectoryDTO = null): Promise<void> {
+    await this.VersionManager.onNewDataVersion(changedDir);
+
+    for (const manager of this.managers) {
+      if (manager === this.versionManager) {
+        continue;
+      }
+      if (manager.onNewDataVersion) {
+        await manager.onNewDataVersion(changedDir);
+      }
+    }
   }
 
 }

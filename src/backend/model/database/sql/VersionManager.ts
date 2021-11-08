@@ -16,7 +16,7 @@ export class VersionManager implements IVersionManager {
 
   async getDataVersion(): Promise<string> {
     if (this.latestDirectoryStatus === null) {
-      await this.updateDataVersion();
+      await this.onNewDataVersion();
     }
 
     if (!this.latestDirectoryStatus) {
@@ -31,7 +31,7 @@ export class VersionManager implements IVersionManager {
     return crypto.createHash('md5').update(versionString).digest('hex');
   }
 
-  async updateDataVersion() {
+  async onNewDataVersion(): Promise<void> {
     const connection = await SQLConnection.getConnection();
     const dir = await connection.getRepository(DirectoryEntity)
       .createQueryBuilder('directory')

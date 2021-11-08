@@ -1,12 +1,18 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component, OnDestroy, TemplateRef} from '@angular/core';
 import {AutoCompleteService} from './autocomplete.service';
-import {AutoCompleteItem, SearchTypes} from '../../../../../common/entities/AutoCompleteItem';
-import {ActivatedRoute, Params, RouterLink} from '@angular/router';
+import {ActivatedRoute, Params, Router, RouterLink} from '@angular/router';
 import {GalleryService} from '../gallery.service';
 import {Subscription} from 'rxjs';
-import {Config} from '../../../../../common/config/public/Config';
 import {NavigationService} from '../../../model/navigation.service';
 import {QueryParams} from '../../../../../common/QueryParams';
+import {MetadataSearchQueryTypes, SearchQueryDTO, SearchQueryTypes, TextSearch} from '../../../../../common/entities/SearchQueryDTO';
+import {BsModalService} from 'ngx-bootstrap/modal';
+import {BsModalRef} from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import {SearchQueryParserService} from './search-query-parser.service';
+import {AlbumsService} from '../../albums/albums.service';
+import {Config} from '../../../../../common/config/public/Config';
+import {UserRoles} from '../../../../../common/entities/UserDTO';
+import {AuthenticationService} from '../../../model/network/authentication.service';
 
 @Component({
   selector: 'app-gallery-search',
@@ -16,128 +22,102 @@ import {QueryParams} from '../../../../../common/QueryParams';
 })
 export class GallerySearchComponent implements OnDestroy {
 
-  autoCompleteItems: AutoCompleteRenderItem[] = [];
-  public searchText = '';
-  private cache = {
-    lastAutocomplete: '',
-    lastInstantSearch: ''
-  };
+  public searchQueryDTO: SearchQueryDTO = {type: SearchQueryTypes.any_text, text: ''} as TextSearch;
+  public rawSearchText = '';
   mouseOverAutoComplete = false;
-
-  readonly SearchTypes: typeof SearchTypes;
+  readonly SearchQueryTypes: typeof SearchQueryTypes;
+  public readonly MetadataSearchQueryTypes: { value: string; key: SearchQueryTypes }[];
+  public saveSearchName = '';
+  private searchModalRef: BsModalRef;
   private readonly subscription: Subscription = null;
+  private saveSearchModalRef: BsModalRef;
 
-  constructor(private _autoCompleteService: AutoCompleteService,
-              private _galleryService: GalleryService,
+  constructor(private autoCompleteService: AutoCompleteService,
+              private searchQueryParserService: SearchQueryParserService,
+              private galleryService: GalleryService,
+              private albumService: AlbumsService,
               private navigationService: NavigationService,
-              private _route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              public router: Router,
+              private modalService: BsModalService,
+              public authenticationService: AuthenticationService) {
 
-    this.SearchTypes = SearchTypes;
+    this.SearchQueryTypes = SearchQueryTypes;
+    this.MetadataSearchQueryTypes = MetadataSearchQueryTypes.map((v) => ({key: v, value: SearchQueryTypes[v]}));
 
-    this.subscription = this._route.params.subscribe((params: Params) => {
-      const searchText = params[QueryParams.gallery.searchText];
-      if (searchText && searchText !== '') {
-        this.searchText = searchText;
+    this.subscription = this.route.params.subscribe((params: Params): void => {
+      if (!params[QueryParams.gallery.search.query]) {
+        return;
+      }
+      const searchQuery = JSON.parse(params[QueryParams.gallery.search.query]);
+      if (searchQuery) {
+        this.searchQueryDTO = searchQuery;
+        this.onQueryChange();
       }
     });
   }
 
 
-  ngOnDestroy() {
+  get CanCreateAlbum(): boolean {
+    return Config.Client.Album.enabled &&
+      this.authenticationService.user.getValue().role >= UserRoles.Admin;
+  }
+
+  get HTMLSearchQuery(): string {
+    return JSON.stringify(this.searchQueryDTO);
+  }
+
+
+  ngOnDestroy(): void {
     if (this.subscription !== null) {
       this.subscription.unsubscribe();
     }
   }
 
-  onSearchChange(event: KeyboardEvent) {
+  public async openSearchModal(template: TemplateRef<any>): Promise<void> {
+    this.searchModalRef = this.modalService.show(template, {class: 'modal-lg'});
+    document.body.style.paddingRight = '0px';
+  }
 
+  public hideSearchModal(): void {
+    this.searchModalRef.hide();
+    this.searchModalRef = null;
+  }
 
-    const searchText = (<HTMLInputElement>event.target).value.trim();
+  public async openSaveSearchModal(template: TemplateRef<any>): Promise<void> {
+    this.saveSearchModalRef = this.modalService.show(template, {class: 'modal-lg'});
+    document.body.style.paddingRight = '0px';
+  }
 
-    if (Config.Client.Search.AutoComplete.enabled &&
-      this.cache.lastAutocomplete !== searchText) {
-      this.cache.lastAutocomplete = searchText;
-      this.autocomplete(searchText).catch(console.error);
-    }
-
-    if (Config.Client.Search.instantSearchEnabled &&
-      this.cache.lastInstantSearch !== searchText) {
-      this.cache.lastInstantSearch = searchText;
-      if (searchText === '') {
-        return this.navigationService.toGallery().catch(console.error);
-      }
-      this._galleryService.runInstantSearch(searchText);
-      this.navigationService.search(searchText).catch(console.error);
-
-    }
+  public hideSaveSearchModal(): void {
+    this.saveSearchModalRef.hide();
+    this.saveSearchModalRef = null;
   }
 
 
-  public setMouseOverAutoComplete(value: boolean) {
-    this.mouseOverAutoComplete = value;
+  onQueryChange(): void {
+    this.rawSearchText = this.searchQueryParserService.stringify(this.searchQueryDTO);
+    // this.validateRawSearchText();
   }
 
-  public onFocusLost() {
-    if (this.mouseOverAutoComplete === false) {
-      this.autoCompleteItems = [];
+
+  validateRawSearchText(): void {
+    try {
+      this.searchQueryDTO = this.searchQueryParserService.parse(this.rawSearchText);
+    } catch (e) {
+      console.error(e);
     }
   }
 
-  public onFocus() {
-    this.autocomplete(this.searchText).catch(console.error);
+  Search(): void {
+    this.router.navigate(['/search', this.HTMLSearchQuery]).catch(console.error);
   }
 
-  private emptyAutoComplete() {
-    this.autoCompleteItems = [];
-  }
 
-  private async autocomplete(searchText: string) {
-    if (!Config.Client.Search.AutoComplete.enabled) {
-      return;
-    }
-    if (searchText.trim() === '.') {
-      return;
-    }
-
-
-    if (searchText.trim().length > 0) {
-      try {
-        const items = await this._autoCompleteService.autoComplete(searchText);
-        this.showSuggestions(items, searchText);
-      } catch (error) {
-        console.error(error);
-      }
-
-    } else {
-      this.emptyAutoComplete();
-    }
-  }
-
-  private showSuggestions(suggestions: AutoCompleteItem[], searchText: string) {
-    this.emptyAutoComplete();
-    suggestions.forEach((item: AutoCompleteItem) => {
-      const renderItem = new AutoCompleteRenderItem(item.text, searchText, item.type);
-      this.autoCompleteItems.push(renderItem);
-    });
+  async saveSearch(): Promise<void> {
+    await this.albumService.addSavedSearch(this.saveSearchName, this.searchQueryDTO);
+    this.hideSaveSearchModal();
   }
 }
 
-class AutoCompleteRenderItem {
-  public preText = '';
-  public highLightText = '';
-  public postText = '';
-  public type: SearchTypes;
-
-  constructor(public text: string, searchText: string, type: SearchTypes) {
-    const preIndex = text.toLowerCase().indexOf(searchText.toLowerCase());
-    if (preIndex > -1) {
-      this.preText = text.substring(0, preIndex);
-      this.highLightText = text.substring(preIndex, preIndex + searchText.length);
-      this.postText = text.substring(preIndex + searchText.length);
-    } else {
-      this.postText = text;
-    }
-    this.type = type;
-  }
-}
 

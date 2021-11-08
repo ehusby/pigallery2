@@ -1,6 +1,6 @@
 #-----------------BUILDER-----------------
 #-----------------------------------------
-FROM node:12-stretch AS builder
+FROM node:14-buster AS builder
 # LABEL maintainer="Patrik J. Braun"
 # copying only package{-lock}.json to make node_modules cachable
 RUN git clone https://github.com/bpatrik/pigallery2.git /build
@@ -16,7 +16,7 @@ RUN npm install --unsafe-perm \
 
 #-----------------MAIN--------------------
 #-----------------------------------------
-FROM node:12-stretch-slim AS main
+FROM node:14-buster-slim AS main
 WORKDIR /app
 ENV NODE_ENV=production \
     # overrides only the default value of the settings (the actualy value can be overwritten through config.json)

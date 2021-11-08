@@ -2,27 +2,25 @@ import {Injectable} from '@angular/core';
 import {NetworkService} from '../../../model/network/network.service';
 import {SettingsService} from '../settings.service';
 import {AbstractSettingsService} from '../_abstract/abstract.settings.service';
-import {ServerConfig} from '../../../../../common/config/private/PrivateConfig';
-import {ClientConfig} from '../../../../../common/config/public/ClientConfig';
+import {ServerConfig, ServerPhotoConfig} from '../../../../../common/config/private/PrivateConfig';
+import {ClientConfig, ClientPhotoConfig} from '../../../../../common/config/public/ClientConfig';
 
 @Injectable()
 export class PhotoSettingsService extends AbstractSettingsService<{
-  photoProcessingLibrary: ServerConfig.PhotoProcessingLib,
-  server: ServerConfig.PhotoConfig,
-  client: ClientConfig.PhotoConfig
+  server: ServerPhotoConfig,
+  client: ClientPhotoConfig
 }> {
-  constructor(private _networkService: NetworkService,
-              _settingsService: SettingsService) {
-    super(_settingsService);
+  constructor(private networkService: NetworkService,
+              settingsService: SettingsService) {
+    super(settingsService);
   }
 
 
   public updateSettings(settings: {
-    photoProcessingLibrary: ServerConfig.PhotoProcessingLib,
-    server: ServerConfig.PhotoConfig,
-    client: ClientConfig.PhotoConfig
+    server: ServerPhotoConfig,
+    client: ClientPhotoConfig
   }): Promise<void> {
-    return this._networkService.putJson('/settings/photo', {settings: settings});
+    return this.networkService.putJson('/settings/photo', {settings});
   }
 
 

@@ -7,10 +7,11 @@ import {NotificationManager} from '../model/NotifocationManager';
 import {Logger} from '../Logger';
 import {SharingDTO} from '../../common/entities/SharingDTO';
 import {Utils} from '../../common/Utils';
+import {LoggerRouter} from '../routes/LoggerRouter';
 
 export class RenderingMWs {
 
-  public static renderResult(req: Request, res: Response, next: NextFunction) {
+  public static renderResult(req: Request, res: Response, next: NextFunction): any {
     if (typeof req.resultPipe === 'undefined') {
       return next();
     }
@@ -19,19 +20,19 @@ export class RenderingMWs {
   }
 
 
-  public static renderSessionUser(req: Request, res: Response, next: NextFunction) {
+  public static renderSessionUser(req: Request, res: Response, next: NextFunction): any {
     if (!(req.session.user)) {
       return next(new ErrorDTO(ErrorCodes.GENERAL_ERROR, 'User not exists'));
     }
 
-    const user = <UserDTO>{
+    const user = {
       id: req.session.user.id,
       name: req.session.user.name,
       csrfToken: req.session.user.csrfToken || req.csrfToken(),
       role: req.session.user.role,
       usedSharingKey: req.session.user.usedSharingKey,
       permissions: req.session.user.permissions
-    };
+    } as UserDTO;
 
     if (!user.csrfToken && req.csrfToken) {
       user.csrfToken = req.csrfToken();
@@ -40,7 +41,7 @@ export class RenderingMWs {
     RenderingMWs.renderMessage(res, user);
   }
 
-  public static renderSharing(req: Request, res: Response, next: NextFunction) {
+  public static renderSharing(req: Request, res: Response, next: NextFunction): any {
     if (!req.resultPipe) {
       return next();
     }
@@ -50,39 +51,39 @@ export class RenderingMWs {
   }
 
 
-  public static renderSharingList(req: Request, res: Response, next: NextFunction) {
+  public static renderSharingList(req: Request, res: Response, next: NextFunction): any {
     if (!req.resultPipe) {
       return next();
     }
 
     const shares: SharingDTO[] = Utils.clone(req.resultPipe);
-    shares.forEach(s => {
+    shares.forEach((s): void => {
       delete s.password;
       delete s.creator.password;
     });
     return RenderingMWs.renderMessage(res, shares);
   }
 
-  public static renderFile(req: Request, res: Response, next: NextFunction) {
+  public static renderFile(req: Request, res: Response, next: NextFunction): any {
     if (!req.resultPipe) {
       return next();
     }
     return res.sendFile(req.resultPipe, {maxAge: 31536000, dotfiles: 'allow'});
   }
 
-  public static renderOK(req: Request, res: Response, next: NextFunction) {
+  public static renderOK(req: Request, res: Response, next: NextFunction): void {
     const message = new Message<string>(null, 'ok');
     res.json(message);
   }
 
 
-  public static async renderConfig(req: Request, res: Response, next: NextFunction) {
+  public static async renderConfig(req: Request, res: Response, next: NextFunction): Promise<void> {
     const originalConf = await Config.original();
     originalConf.Server.sessionSecret = null;
-    const message = new Message<PrivateConfigClass>(null, <any>originalConf.toJSON({
+    const message = new Message<PrivateConfigClass>(null, originalConf.toJSON({
       attachState: true,
       attachVolatile: true
-    }));
+    }) as any);
     res.json(message);
   }
 
@@ -92,23 +93,24 @@ export class RenderingMWs {
     if (err instanceof ErrorDTO) {
       if (err.details) {
         Logger.warn('Handled error:');
+        LoggerRouter.log(Logger.warn, req, res);
         console.log(err);
         delete (err.details); // do not send back error object to the client side
 
         // hide error details for non developers
-        if (!(req.session.user && req.session.user.role >= UserRoles.Developer)) {
+        if (!(req.session && req.session.user && req.session.user.role >= UserRoles.Developer)) {
           delete (err.detailsStr);
         }
       }
       const message = new Message<any>(err, null);
       return res.json(message);
     }
-    NotificationManager.error('unknown server error', err);
+    NotificationManager.error('Unknown server error', err, req);
     return next(err);
   }
 
 
-  protected static renderMessage<T>(res: Response, content: T) {
+  protected static renderMessage<T>(res: Response, content: T): void {
     const message = new Message<T>(null, content);
     res.json(message);
   }

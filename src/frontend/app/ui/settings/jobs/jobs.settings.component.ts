@@ -3,12 +3,12 @@ import {JobsSettingsService} from './jobs.settings.service';
 import {AuthenticationService} from '../../../model/network/authentication.service';
 import {NavigationService} from '../../../model/navigation.service';
 import {NotificationService} from '../../../model/notification.service';
-import {SettingsComponent} from '../_abstract/abstract.settings.component';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {SettingsComponentDirective} from '../_abstract/abstract.settings.component';
 import {ScheduledJobsService} from '../scheduled-jobs.service';
 import {
   AfterJobTrigger,
   JobScheduleDTO,
+  JobScheduleDTOUtils,
   JobTriggerType,
   NeverJobTrigger,
   PeriodicJobTrigger,
@@ -18,7 +18,7 @@ import {ConfigTemplateEntry} from '../../../../../common/entities/job/JobDTO';
 import {ModalDirective} from 'ngx-bootstrap/modal';
 import {JobProgressDTO, JobProgressStates} from '../../../../../common/entities/job/JobProgressDTO';
 import {BackendtextService} from '../../../model/backendtext.service';
-import {ServerConfig} from '../../../../../common/config/private/PrivateConfig';
+import {ServerJobConfig} from '../../../../../common/config/private/PrivateConfig';
 
 @Component({
   selector: 'app-settings-jobs',
@@ -27,7 +27,7 @@ import {ServerConfig} from '../../../../../common/config/private/PrivateConfig';
     '../_abstract/abstract.settings.component.css'],
   providers: [JobsSettingsService]
 })
-export class JobsSettingsComponent extends SettingsComponent<ServerConfig.JobConfig, JobsSettingsService>
+export class JobsSettingsComponent extends SettingsComponentDirective<ServerJobConfig, JobsSettingsService>
   implements OnInit, OnDestroy, OnChanges {
 
   @ViewChild('jobModal', {static: false}) public jobModal: ModalDirective;
@@ -47,83 +47,90 @@ export class JobsSettingsComponent extends SettingsComponent<ServerConfig.JobCon
     allowParallelRun: false
   };
 
-  constructor(_authService: AuthenticationService,
-              _navigation: NavigationService,
-              _settingsService: JobsSettingsService,
+  constructor(authService: AuthenticationService,
+              navigation: NavigationService,
+              settingsService: JobsSettingsService,
               public jobsService: ScheduledJobsService,
               public backendTextService: BackendtextService,
-              notification: NotificationService,
-              i18n: I18n) {
+              notification: NotificationService) {
 
-    super(i18n('Jobs'),
-      _authService,
-      _navigation,
-      _settingsService,
+    super($localize`Jobs`,
+      authService,
+      navigation,
+      settingsService,
       notification,
-      i18n,
       s => s.Server.Jobs);
 
     this.hasAvailableSettings = !this.simplifiedMode;
     this.JobTriggerTypeMap = [
-      {key: JobTriggerType.after, value: this.i18n('after')},
-      {key: JobTriggerType.never, value: this.i18n('never')},
-      {key: JobTriggerType.periodic, value: this.i18n('periodic')},
-      {key: JobTriggerType.scheduled, value: this.i18n('scheduled')},
+      {key: JobTriggerType.after, value: $localize`after`},
+      {key: JobTriggerType.never, value: $localize`never`},
+      {key: JobTriggerType.periodic, value: $localize`periodic`},
+      {key: JobTriggerType.scheduled, value: $localize`scheduled`},
     ];
-    this.periods = [this.i18n('Monday'), // 0
-      this.i18n('Tuesday'), // 1
-      this.i18n('Wednesday'), // 2
-      this.i18n('Thursday'),
-      this.i18n('Friday'),
-      this.i18n('Saturday'),
-      this.i18n('Sunday'),
-      this.i18n('day')]; // 7
+    this.periods = [
+      $localize`Monday`, // 0
+      $localize`Tuesday`, // 1
+      $localize`Wednesday`, // 2
+      $localize`Thursday`,
+      $localize`Friday`,
+      $localize`Saturday`,
+      $localize`Sunday`,
+      $localize`day`]; // 7
+  }
+
+
+  atTimeLocal(atTime: number): Date {
+    const d = new Date();
+    d.setUTCHours(Math.floor(atTime / 60));
+    d.setUTCMinutes(Math.floor(atTime % 60));
+    return d;
   }
 
   getConfigTemplate(JobName: string): ConfigTemplateEntry[] {
-    const job = this._settingsService.availableJobs.value.find(t => t.Name === JobName);
+    const job = this.settingsService.availableJobs.value.find(t => t.Name === JobName);
     if (job && job.ConfigTemplate && job.ConfigTemplate.length > 0) {
       return job.ConfigTemplate;
     }
     return null;
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     super.ngOnInit();
     this.jobsService.subscribeToProgress();
-    this._settingsService.getAvailableJobs();
+    this.settingsService.getAvailableJobs().catch(console.error);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     super.ngOnDestroy();
     this.jobsService.unsubscribeFromProgress();
   }
 
-  remove(schedule: JobScheduleDTO) {
+  remove(schedule: JobScheduleDTO): void {
     this.states.scheduled.value.splice(this.states.scheduled.value.indexOf(schedule), 1);
   }
 
-  jobTypeChanged(schedule: JobScheduleDTO) {
-    const job = this._settingsService.availableJobs.value.find(t => t.Name === schedule.jobName);
+  jobTypeChanged(schedule: JobScheduleDTO): void {
+    const job = this.settingsService.availableJobs.value.find(t => t.Name === schedule.jobName);
     schedule.config = schedule.config || {};
     if (job.ConfigTemplate) {
       job.ConfigTemplate.forEach(ct => schedule.config[ct.id] = ct.defaultValue);
     }
   }
 
-  prepareNewJob() {
-    const jobName = this._settingsService.availableJobs.value[0].Name;
+  prepareNewJob(): void {
+    const jobName = this.settingsService.availableJobs.value[0].Name;
     this.newSchedule = {
       name: 'new job',
-      jobName: jobName,
-      config: <any>{},
+      jobName,
+      config: {},
       trigger: {
         type: JobTriggerType.never
       },
       allowParallelRun: false
     };
 
-    const job = this._settingsService.availableJobs.value.find(t => t.Name === jobName);
+    const job = this.settingsService.availableJobs.value.find(t => t.Name === jobName);
     this.newSchedule.config = this.newSchedule.config || {};
     if (job.ConfigTemplate) {
       job.ConfigTemplate.forEach(ct => this.newSchedule.config[ct.id] = ct.defaultValue);
@@ -132,21 +139,21 @@ export class JobsSettingsComponent extends SettingsComponent<ServerConfig.JobCon
     this.jobModal.show();
   }
 
-  jobTriggerTypeChanged(triggerType: JobTriggerType, schedule: JobScheduleDTO) {
-    schedule.trigger = <NeverJobTrigger>{type: triggerType};
+  jobTriggerTypeChanged(triggerType: JobTriggerType, schedule: JobScheduleDTO): void {
+    schedule.trigger = {type: triggerType} as NeverJobTrigger;
     switch (triggerType) {
       case JobTriggerType.scheduled:
-        (<ScheduledJobTrigger><unknown>schedule.trigger).time = (Date.now());
+        (schedule.trigger as unknown as ScheduledJobTrigger).time = (Date.now());
         break;
 
       case JobTriggerType.periodic:
-        (<PeriodicJobTrigger><unknown>schedule.trigger).periodicity = null;
-        (<PeriodicJobTrigger><unknown>schedule.trigger).atTime = null;
+        (schedule.trigger as unknown as PeriodicJobTrigger).periodicity = null;
+        (schedule.trigger as unknown as PeriodicJobTrigger).atTime = null;
         break;
     }
   }
 
-  setNumberArray(configElement: any, id: string, value: string) {
+  setNumberArray(configElement: any, id: string, value: string): void {
     value = value.replace(new RegExp(',', 'g'), ';');
     value = value.replace(new RegExp(' ', 'g'), ';');
     configElement[id] = value.split(';')
@@ -154,29 +161,27 @@ export class JobsSettingsComponent extends SettingsComponent<ServerConfig.JobCon
       .filter((i: number) => !isNaN(i) && i > 0);
   }
 
-  getNumberArray(configElement: any, id: string) {
-
+  getNumberArray(configElement: any, id: string): string {
     return configElement[id].join('; ');
   }
 
-  public shouldIdent(curr: JobScheduleDTO, prev: JobScheduleDTO) {
+  public shouldIdent(curr: JobScheduleDTO, prev: JobScheduleDTO): boolean {
     return curr && curr.trigger.type === JobTriggerType.after && prev && prev.name === curr.trigger.afterScheduleName;
   }
 
   public sortedSchedules(): JobScheduleDTO[] {
-    return this.states.scheduled.value.slice().sort((a: JobScheduleDTO, b: JobScheduleDTO) => {
+    return (this.states.scheduled.value as JobScheduleDTO[]).slice().sort((a: JobScheduleDTO, b: JobScheduleDTO) => {
       return this.getNextRunningDate(a, this.states.scheduled.value) - this.getNextRunningDate(b, this.states.scheduled.value);
     });
   }
 
-  addNewJob() {
+  addNewJob(): void {
     const jobName = this.newSchedule.jobName;
     const count = this.states.scheduled.value.filter((s: JobScheduleDTO) => s.jobName === jobName).length;
     this.newSchedule.name = count === 0 ? jobName : this.backendTextService.getJobName(jobName) + ' ' + (count + 1);
     this.states.scheduled.value.push(this.newSchedule);
     this.jobModal.hide();
   }
-
 
   getProgress(schedule: JobScheduleDTO): JobProgressDTO {
     return this.jobsService.getProgress(schedule);
@@ -190,12 +195,12 @@ export class JobsSettingsComponent extends SettingsComponent<ServerConfig.JobCon
       return list.map(s => s.name).sort().indexOf(sch.name) * -1;
     }
     if (sch.trigger.type === JobTriggerType.after) {
-      const parent = list.find(s => s.name === (<AfterJobTrigger>sch.trigger).afterScheduleName);
+      const parent = list.find(s => s.name === (sch.trigger as AfterJobTrigger).afterScheduleName);
       if (parent) {
         return this.getNextRunningDate(parent, list, depth + 1) + 0.001;
       }
     }
-    const d = JobScheduleDTO.getNextRunningDate(new Date(), sch);
+    const d = JobScheduleDTOUtils.getNextRunningDate(new Date(), sch);
     return d !== null ? d.getTime() : 0;
   }
 }

@@ -1,5 +1,5 @@
 export class FFmpegFactory {
-  public static get() {
+  public static get(): any {
     const ffmpeg = require('fluent-ffmpeg');
     try {
       const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;

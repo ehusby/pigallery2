@@ -2,7 +2,7 @@ import {ConfigTemplateEntry} from '../../../../common/entities/job/JobDTO';
 import {Job} from './Job';
 import * as path from 'path';
 import {DiskManager} from '../../DiskManger';
-import {DiskMangerWorker} from '../../threading/DiskMangerWorker';
+import {DirectoryScanSettings} from '../../threading/DiskMangerWorker';
 import {Logger} from '../../../Logger';
 import {Config} from '../../../../common/config/private/Config';
 import {FileDTO} from '../../../../common/entities/FileDTO';
@@ -12,7 +12,7 @@ import {PhotoEntity} from '../../database/sql/enitites/PhotoEntity';
 import {VideoEntity} from '../../database/sql/enitites/VideoEntity';
 import {backendTexts} from '../../../../common/BackendTexts';
 import {ProjectPath} from '../../../ProjectPath';
-import {ServerConfig} from '../../../../common/config/private/PrivateConfig';
+import {DatabaseType} from '../../../../common/config/private/PrivateConfig';
 
 declare var global: NodeJS.Global;
 
@@ -26,10 +26,10 @@ export abstract class FileJob<S extends { indexedOnly: boolean } = { indexedOnly
   fileQueue: string[] = [];
 
 
-  protected constructor(private scanFilter: DiskMangerWorker.DirectoryScanSettings) {
+  protected constructor(private scanFilter: DirectoryScanSettings) {
     super();
     this.scanFilter.noChildDirPhotos = true;
-    if (Config.Server.Database.type !== ServerConfig.DatabaseType.memory) {
+    if (Config.Server.Database.type !== DatabaseType.memory) {
       this.ConfigTemplate.push({
         id: 'indexedOnly',
         type: 'boolean',
@@ -40,7 +40,7 @@ export abstract class FileJob<S extends { indexedOnly: boolean } = { indexedOnly
     }
   }
 
-  protected async init() {
+  protected async init(): Promise<void> {
     this.directoryQueue = [];
     this.fileQueue = [];
     this.directoryQueue.push('/');
@@ -55,9 +55,9 @@ export abstract class FileJob<S extends { indexedOnly: boolean } = { indexedOnly
     return files;
   }
 
-  protected abstract async shouldProcess(filePath: string): Promise<boolean>;
+  protected abstract shouldProcess(filePath: string): Promise<boolean>;
 
-  protected abstract async processFile(filePath: string): Promise<void>;
+  protected abstract processFile(filePath: string): Promise<void>;
 
   protected async step(): Promise<boolean> {
     if (this.directoryQueue.length === 0 && this.fileQueue.length === 0) {
@@ -67,7 +67,7 @@ export abstract class FileJob<S extends { indexedOnly: boolean } = { indexedOnly
     if (this.directoryQueue.length > 0) {
 
       if (this.config.indexedOnly === true &&
-        Config.Server.Database.type !== ServerConfig.DatabaseType.memory) {
+        Config.Server.Database.type !== DatabaseType.memory) {
         await this.loadAllMediaFilesFromDB();
         this.directoryQueue = [];
       } else {
@@ -94,12 +94,12 @@ export abstract class FileJob<S extends { indexedOnly: boolean } = { indexedOnly
     return true;
   }
 
-  private async loadADirectoryFromDisk() {
+  private async loadADirectoryFromDisk(): Promise<void> {
     const directory = this.directoryQueue.shift();
     this.Progress.log('scanning directory: ' + directory);
     const scanned = await DiskManager.scanDirectoryNoMetadata(directory, this.scanFilter);
-    for (let i = 0; i < scanned.directories.length; i++) {
-      this.directoryQueue.push(path.join(scanned.directories[i].path, scanned.directories[i].name));
+    for (const item of scanned.directories) {
+      this.directoryQueue.push(path.join(item.path, item.name));
     }
     if (this.scanFilter.noPhoto !== true || this.scanFilter.noVideo !== true) {
       this.fileQueue.push(...(await this.filterMediaFiles(scanned.media))
@@ -111,7 +111,7 @@ export abstract class FileJob<S extends { indexedOnly: boolean } = { indexedOnly
     }
   }
 
-  private async loadAllMediaFilesFromDB() {
+  private async loadAllMediaFilesFromDB(): Promise<void> {
 
     if (this.scanFilter.noVideo === true && this.scanFilter.noPhoto === true) {
       return;

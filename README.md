@@ -10,7 +10,14 @@
 
 Homepage: http://bpatrik.github.io/pigallery2/
 
-This is a directory-first photo gallery website, optimised for running on low resource servers (especially on raspberry pi)
+This is a **fast** (like faster than your PC fast) **directory-first photo gallery website**, optimised for running on low resource servers (especially on raspberry pi).
+
+✔️ Strenghts:
+ * ⚡ Fast, like for real
+ * ✔️ Simple. Point to your photos folder and a temp folder and you are good to go
+
+⛔ Weakness:
+ * 😥 Its simple. Shows what you have that's it. No gallery changes (photo delete, rotate, enhance, tag, organize, etc), your gallery folder is read-only.
 
 ## Live Demo
 Live Demo @ heroku: https://pigallery2.herokuapp.com/ 
@@ -54,8 +61,8 @@ Full node install on raspberry pi description: https://www.w3schools.com/nodejs/
 
 ```bash
 cd ~
-wget https://github.com/bpatrik/pigallery2/releases/download/1.8.0/pigallery2.zip
-unzip pigallery2.zip -d pigallery2
+wget https://github.com/bpatrik/pigallery2/releases/download/1.9.0/pigallery2-release.zip
+unzip pigallery2-release.zip -d pigallery2
 cd pigallery2
 npm install
 ```
@@ -83,7 +90,8 @@ npm start
 ```
 To configure it, run `PiGallery2` first to create `config.json` file, then edit it and restart.
 The app has a nice UI for settings, you may use that too. 
-Default user: `admin` pass: `admin`
+
+Default user: `admin` pass: `admin`. (It is not possible to change the admin password, you need to create an other user and delete the default `admin` user, see  #220)
 
 **Note**: First run, you might have file access issues and port 80 issue, see [#115](https://github.com/bpatrik/pigallery2/issues/115).
 Running `npm start -- --Server-port=8080` will start the app on port 8080 that does not require `root`
@@ -124,12 +132,9 @@ apt-get install build-essential  libkrb5-dev gcc g++
 ## 2. Translate the page to your own language
 1. [Install Pigallery2](#121-b-install-from-source) from source (with the release it won't work) 
 2. add your language e.g: fr
-   ```bash
-   npm run add-translation -- --fr
-   ```
-   it creates a new `messages.fr.xls` file at `src/frontend/translate` folder, 
-   it will already contain dummy translation with google translate.
-3. 'fix' the dummy translation
+   * copy `src/frontend/translate/messages.en.xls` to `src/frontend/translate/messages.fr.xls`
+   * add the new translation to the `angular.json` `projects->pigallery2->i18n->locales` section 
+3. translate the file by updating the `<target>` tags
 4. test if it works:
    build and start the app
    ```bash
@@ -214,14 +219,16 @@ apt-get install build-essential  libkrb5-dev gcc g++
  
  
 ## 4. Suggest/endorse new features
-  You are welcome to suggest new features to the application via [github issues](https://github.com/bpatrik/pigallery2/issues).
-  I cannot guarantee any deadline with the development of a new feature. (I usually fix bugs within a week/weeks.)
-  I will give a higher priority to a feature that has more 'likes' (i.e.: `+1`-s or thumbs ups) on it.
+  You are welcome to suggest new features to the application via [github issues](https://github.com/bpatrik/pigallery2/issues).  
+  Unfortunatly, lately I only have a limited time for this hobby project of mine. 
+  So, I mostly focuse on those features that are align with my needs. Sorry :(.
+  Although, I try to fixs bugs ASAP (that can still take from a few days to months).
+  I also try to implement some of the feature requests that have a lots of 'likes' (i.e.: `+1`-s or thumbs ups) on it.
+  If you have a feature that you really would like to happen, I welcome contributions to the app. See [CONTRIBUTING.md](https://github.com/bpatrik/pigallery2/blob/master/CONTRIBUTING.md) for more details.
 
 ## 5. Known errors
-* EXIF orientation tag:
-  *  Some photos code the orientation tag and with/height in a less conventional format, like the "duck photo" in [#19](https://github.com/bpatrik/pigallery2/issues/19). 
-After Browsers support orientation tag natively [#172](https://github.com/bpatrik/pigallery2/issues/172), I could not find a solution for that. 
+* IOS map issue
+  * Map on IOS prevents using the buttons in the image preview navigation, see #155
 * Video support on weak servers (like raspberry pi) with low upload rate
   * video playback may use up too much resources and the server might not response for a while. Enable video transcoding in the app, to transcode the videos to lover bitrate. 
   

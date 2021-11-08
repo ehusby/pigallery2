@@ -20,7 +20,7 @@
           [(ngModel)]="value"
           (ngModelChange)="onChange($event)"
           [name]="idName"
-          [disabled]="state.readonly || _disabled"
+          [disabled]="state.readonly || disabled"
           [id]="idName"
           required="required">
 
@@ -30,9 +30,9 @@
           [name]="idName"
           [title]="title"
           (ngModelChange)="onChange($event)"
-          [disabled]="state.readonly || _disabled"
+          [disabled]="state.readonly || disabled"
           class="form-control" [(ngModel)]="state.value">
-          <option *ngFor="let opt of _options" [ngValue]="opt.key">{{opt.value}}
+          <option *ngFor="let opt of optionsView" [ngValue]="opt.key">{{opt.value}}
           </option>
         </select>
 
@@ -42,7 +42,7 @@
           [id]="idName"
           [name]="idName"
           [title]="title"
-          [disabled]="state.readonly || _disabled"
+          [disabled]="state.readonly || disabled"
           switch-on-color="primary"
           switch-inverse="true"
           switch-off-text="Disabled"

@@ -7,34 +7,34 @@ import {ShareService} from '../ui/gallery/share.service';
 export class NavigationService {
 
 
-  constructor(private _router: Router,
-              private _shareService: ShareService) {
+  constructor(private router: Router,
+              private shareService: ShareService) {
 
   }
 
-  public isLoginPage() {
-    return this._router.isActive('login', true) || this._router.isActive('shareLogin', true);
+  public isLoginPage(): boolean {
+    return this.router.isActive('login', true) || this.router.isActive('shareLogin', true);
   }
 
-  public async toLogin() {
-    await this._shareService.wait();
-    if (this._shareService.isSharing()) {
-      return this._router.navigate(['shareLogin'], {queryParams: {sk: this._shareService.getSharingKey()}});
+  public async toLogin(): Promise<boolean> {
+    await this.shareService.wait();
+    if (this.shareService.isSharing()) {
+      return this.router.navigate(['shareLogin'], {queryParams: {sk: this.shareService.getSharingKey()}});
     } else {
-      return this._router.navigate(['login']);
+      return this.router.navigate(['login']);
     }
   }
 
-  public async toGallery() {
-    await this._shareService.wait();
-    if (this._shareService.isSharing()) {
-      return this._router.navigate(['share', this._shareService.getSharingKey()]);
+  public async toGallery(): Promise<boolean> {
+    await this.shareService.wait();
+    if (this.shareService.isSharing()) {
+      return this.router.navigate(['share', this.shareService.getSharingKey()]);
     } else {
-      return this._router.navigate(['gallery', '']);
+      return this.router.navigate(['gallery', '']);
     }
   }
 
-  public async search(searchText: string) {
-    return this._router.navigate(['search', searchText]);
+  public async search(searchText: string): Promise<boolean> {
+    return this.router.navigate(['search', searchText]);
   }
 }

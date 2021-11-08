@@ -1,15 +1,14 @@
 import {Component} from '@angular/core';
 import {VideoSettingsService} from './video.settings.service';
-import {SettingsComponent} from '../_abstract/abstract.settings.component';
+import {SettingsComponentDirective} from '../_abstract/abstract.settings.component';
 import {AuthenticationService} from '../../../model/network/authentication.service';
 import {NavigationService} from '../../../model/navigation.service';
 import {NotificationService} from '../../../model/notification.service';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ScheduledJobsService} from '../scheduled-jobs.service';
-import {DefaultsJobs, JobDTO} from '../../../../../common/entities/job/JobDTO';
-import {JobProgressStates} from '../../../../../common/entities/job/JobProgressDTO';
-import {ServerConfig} from '../../../../../common/config/private/PrivateConfig';
-import {ClientConfig} from '../../../../../common/config/public/ClientConfig';
+import {DefaultsJobs, JobDTOUtils} from '../../../../../common/entities/job/JobDTO';
+import {JobProgressDTO, JobProgressStates} from '../../../../../common/entities/job/JobProgressDTO';
+import {ServerVideoConfig, videoCodecType, videoFormatType, videoResolutionType} from '../../../../../common/config/private/PrivateConfig';
+import {ClientVideoConfig} from '../../../../../common/config/public/ClientConfig';
 
 
 @Component({
@@ -19,34 +18,34 @@ import {ClientConfig} from '../../../../../common/config/public/ClientConfig';
     '../_abstract/abstract.settings.component.css'],
   providers: [VideoSettingsService],
 })
-export class VideoSettingsComponent extends SettingsComponent<{ server: ServerConfig.VideoConfig, client: ClientConfig.VideoConfig }> {
+export class VideoSettingsComponent
+  extends SettingsComponentDirective<{ server: ServerVideoConfig, client: ClientVideoConfig }> {
 
-  readonly resolutionTypes: ServerConfig.resolutionType[] = [360, 480, 720, 1080, 1440, 2160, 4320];
+  readonly resolutionTypes: videoResolutionType[] = [360, 480, 720, 1080, 1440, 2160, 4320];
 
   resolutions: { key: number, value: string }[] = [];
-  codecs: { [key: string]: { key: ServerConfig.codecType, value: ServerConfig.codecType }[] } = {
-    webm: ['libvpx', 'libvpx-vp9'].map((e: ServerConfig.codecType) => ({key: e, value: e})),
-    mp4: ['libx264', 'libx265'].map((e: ServerConfig.codecType) => ({key: e, value: e}))
+  codecs: { [key: string]: { key: videoCodecType, value: videoCodecType }[] } = {
+    webm: ['libvpx', 'libvpx-vp9'].map((e: videoCodecType) => ({key: e, value: e})),
+    mp4: ['libx264', 'libx265'].map((e: videoCodecType) => ({key: e, value: e}))
   };
-  formats: { key: ServerConfig.formatType, value: ServerConfig.formatType }[] = ['mp4', 'webm']
-      .map((e: ServerConfig.formatType) => ({key: e, value: e}));
+  formats: { key: videoFormatType, value: videoFormatType }[] = ['mp4', 'webm']
+    .map((e: videoFormatType) => ({key: e, value: e}));
   fps = [24, 25, 30, 48, 50, 60].map(e => ({key: e, value: e}));
 
   JobProgressStates = JobProgressStates;
   readonly jobName = DefaultsJobs[DefaultsJobs['Video Converting']];
 
-  constructor(_authService: AuthenticationService,
-              _navigation: NavigationService,
-              _settingsService: VideoSettingsService,
+  constructor(authService: AuthenticationService,
+              navigation: NavigationService,
+              settingsService: VideoSettingsService,
               public jobsService: ScheduledJobsService,
-              notification: NotificationService,
-              i18n: I18n) {
-    super(i18n('Video'), _authService, _navigation, _settingsService, notification, i18n, s => ({
+              notification: NotificationService) {
+    super($localize`Video`, authService, navigation, settingsService, notification, s => ({
       client: s.Client.Media.Video,
       server: s.Server.Media.Video
     }));
 
-    const currentRes = _settingsService.Settings.value.Server.Media.Video.transcoding.resolution;
+    const currentRes = settingsService.Settings.value.Server.Media.Video.transcoding.resolution;
     if (this.resolutionTypes.indexOf(currentRes) === -1) {
       this.resolutionTypes.push(currentRes);
     }
@@ -54,8 +53,8 @@ export class VideoSettingsComponent extends SettingsComponent<{ server: ServerCo
   }
 
 
-  get Progress() {
-    return this.jobsService.progress.value[JobDTO.getHashName(DefaultsJobs[DefaultsJobs['Video Converting']])];
+  get Progress(): JobProgressDTO {
+    return this.jobsService.progress.value[JobDTOUtils.getHashName(DefaultsJobs[DefaultsJobs['Video Converting']])];
   }
 
   get bitRate(): number {
@@ -66,7 +65,7 @@ export class VideoSettingsComponent extends SettingsComponent<{ server: ServerCo
     this.states.server.transcoding.bitRate.value = Math.round(value * 1024 * 1024);
   }
 
-  getRecommendedBitRate(resolution: number, fps: number) {
+  getRecommendedBitRate(resolution: number, fps: number): number {
     let bitRate = 1024 * 1024;
     if (resolution <= 360) {
       bitRate = 1024 * 1024;
@@ -78,7 +77,7 @@ export class VideoSettingsComponent extends SettingsComponent<{ server: ServerCo
       bitRate = 8 * 1024 * 1024;
     } else if (resolution <= 1440) {
       bitRate = 16 * 1024 * 1024;
-    } else  {
+    } else {
       bitRate = 40 * 1024 * 1024;
     }
 
@@ -89,12 +88,12 @@ export class VideoSettingsComponent extends SettingsComponent<{ server: ServerCo
     return bitRate;
   }
 
-  updateBitRate() {
+  updateBitRate(): void {
     this.states.server.transcoding.bitRate.value = this.getRecommendedBitRate(this.states.server.transcoding.resolution.value,
-        this.states.server.transcoding.fps.value);
+      this.states.server.transcoding.fps.value);
   }
 
-  formatChanged(format: ServerConfig.formatType) {
+  formatChanged(format: videoFormatType): void {
     this.states.server.transcoding.codec.value = this.codecs[format][0].key;
   }
 

@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {Config} from '../../../../common/config/public/Config';
-import {Cookie} from 'ng2-cookies';
 import {CookieNames} from '../../../../common/CookieNames';
+import {CookieService} from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-language',
@@ -14,10 +14,10 @@ export class LanguageComponent {
   languages: string[] = [];
   current: string = null;
 
-  constructor() {
+  constructor(private cookieService: CookieService) {
     this.languages = Config.Client.languages;
-    if (Cookie.get(CookieNames.lang) != null) {
-      this.current = Cookie.get(CookieNames.lang);
+    if (this.cookieService.get(CookieNames.lang) != null) {
+      this.current = this.cookieService.get(CookieNames.lang);
     }
   }
 

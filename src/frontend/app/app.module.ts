@@ -1,8 +1,7 @@
-import {Injectable, LOCALE_ID, NgModule, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
-import {BrowserModule, HAMMER_GESTURE_CONFIG, HammerGestureConfig} from '@angular/platform-browser';
+import {Injectable, NgModule} from '@angular/core';
+import {BrowserModule, HAMMER_GESTURE_CONFIG, HammerGestureConfig, HammerModule} from '@angular/platform-browser';
 import {FormsModule} from '@angular/forms';
 import {AppComponent} from './app.component';
-import {appRoutes} from './app.routing';
 import {UserService} from './model/network/user.service';
 import {GalleryService} from './ui/gallery/gallery.service';
 import {NetworkService} from './model/network/network.service';
@@ -11,7 +10,8 @@ import {FullScreenService} from './ui/gallery/fullscreen.service';
 import {AuthenticationService} from './model/network/authentication.service';
 import {UserMangerSettingsComponent} from './ui/settings/usermanager/usermanager.settings.component';
 import {FrameComponent} from './ui/frame/frame.component';
-import {YagaModule} from '@yaga/leaflet-ng2';
+import {LeafletModule} from '@asymmetrik/ngx-leaflet';
+import {LoadingBarModule} from '@ngx-loading-bar/core';
 import {GalleryLightboxMediaComponent} from './ui/gallery/lightbox/media/media.lightbox.gallery.component';
 import {GalleryPhotoLoadingComponent} from './ui/gallery/grid/photo/loading/loading.photo.grid.gallery.component';
 import {GalleryNavigatorComponent} from './ui/gallery/navigator/navigator.gallery.component';
@@ -29,7 +29,6 @@ import {GalleryMapComponent} from './ui/gallery/map/map.gallery.component';
 import {GalleryMapLightboxComponent} from './ui/gallery/map/lightbox/lightbox.map.gallery.component';
 import {ThumbnailManagerService} from './ui/gallery/thumbnailManager.service';
 import {OverlayService} from './ui/gallery/overlay.service';
-import {SlimLoadingBarModule} from 'ng2-slim-loading-bar';
 import {GalleryShareComponent} from './ui/gallery/share/share.gallery.component';
 import {ShareLoginComponent} from './ui/sharelogin/share-login.component';
 import {ShareService} from './ui/gallery/share.service';
@@ -58,7 +57,6 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {DefaultUrlSerializer, UrlSerializer, UrlTree} from '@angular/router';
 import {IndexingSettingsComponent} from './ui/settings/indexing/indexing.settings.component';
 import {LanguageComponent} from './ui/language/language.component';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {QueryService} from './model/query.service';
 import {IconizeSortingMethod} from './pipes/IconizeSortingMethod';
 import {StringifySortingMethod} from './pipes/StringifySortingMethod';
@@ -93,6 +91,21 @@ import {JobButtonComponent} from './ui/settings/jobs/button/job-button.settings.
 import {ErrorInterceptor} from './model/network/helper/error.interceptor';
 import {CSRFInterceptor} from './model/network/helper/csrf.interceptor';
 import {SettingsEntryComponent} from './ui/settings/_abstract/settings-entry/settings-entry.component';
+import {GallerySearchQueryEntryComponent} from './ui/gallery/search/query-enrty/query-entry.search.gallery.component';
+import {StringifySearchQuery} from './pipes/StringifySearchQuery';
+import {AutoCompleteService} from './ui/gallery/search/autocomplete.service';
+import {SearchQueryParserService} from './ui/gallery/search/search-query-parser.service';
+import {GallerySearchFieldComponent} from './ui/gallery/search/search-field/search-field.gallery.component';
+import {AppRoutingModule} from './app.routing';
+import {CookieService} from 'ngx-cookie-service';
+import {LeafletMarkerClusterModule} from '@asymmetrik/ngx-leaflet-markercluster';
+import {icon, Marker} from 'leaflet';
+import {AlbumsComponent} from './ui/albums/albums.component';
+import {AlbumComponent} from './ui/albums/album/album.component';
+import {AlbumsService} from './ui/albums/albums.service';
+import {GallerySearchQueryBuilderComponent} from './ui/gallery/search/query-builder/query-bulder.gallery.component';
+import {SavedSearchPopupComponent} from './ui/albums/saved-search-popup/saved-search-popup.component';
+import {AlbumsSettingsComponent} from './ui/settings/albums/albums.settings.component';
 
 
 @Injectable()
@@ -107,40 +120,46 @@ export class MyHammerConfig extends HammerGestureConfig {
 
 
 export class CustomUrlSerializer implements UrlSerializer {
-  private _defaultUrlSerializer: DefaultUrlSerializer = new DefaultUrlSerializer();
+  private defaultUrlSerializer: DefaultUrlSerializer = new DefaultUrlSerializer();
 
   parse(url: string): UrlTree {
     // Encode parentheses
     url = url.replace(/\(/g, '%28').replace(/\)/g, '%29');
     // Use the default serializer.
-    return this._defaultUrlSerializer.parse(url);
+    return this.defaultUrlSerializer.parse(url);
   }
 
   serialize(tree: UrlTree): string {
-    return this._defaultUrlSerializer.serialize(tree).replace(/%28/g, '(').replace(/%29/g, ')');
+    return this.defaultUrlSerializer.serialize(tree).replace(/%28/g, '(').replace(/%29/g, ')');
   }
 }
 
-// use the require method provided by webpack
-declare const require: (path: string) => string;
+// Fixes Leaflet icon path issue:
+// https://stackoverflow.com/questions/41144319/leaflet-marker-not-found-production-env
+const iconRetinaUrl = 'assets/marker-icon-2x.png';
+const iconUrl = 'assets/marker-icon.png';
+const shadowUrl = 'assets/marker-shadow.png';
+const iconDefault = icon({
+  iconRetinaUrl,
+  iconUrl,
+  shadowUrl,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  tooltipAnchor: [16, -28],
+  shadowSize: [41, 41]
+});
+Marker.prototype.options.icon = iconDefault;
 
-export function translationsFactory(locale: string) {
-  locale = locale || 'en'; // default to english if no locale
-
-  // default locale, nothing to translate
-  if (locale === 'en') {
-    return '';
-  }
-  return (<any>require(`raw-loader!../translate/messages.${locale}.xlf`)).default;
-}
 
 @NgModule({
   imports: [
     BrowserModule,
+    HammerModule,
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    appRoutes,
+    AppRoutingModule,
     ClipboardModule,
     JwBootstrapSwitchNg2Module,
     TooltipModule.forRoot(),
@@ -149,10 +168,11 @@ export function translationsFactory(locale: string) {
     CollapseModule.forRoot(),
     PopoverModule.forRoot(),
     BsDropdownModule.forRoot(),
-    SlimLoadingBarModule.forRoot(),
     BsDatepickerModule.forRoot(),
-    YagaModule,
-    TimepickerModule.forRoot()
+    TimepickerModule.forRoot(),
+    LoadingBarModule,
+    LeafletModule,
+    LeafletMarkerClusterModule
   ],
   declarations: [AppComponent,
     LoginComponent,
@@ -164,6 +184,10 @@ export function translationsFactory(locale: string) {
     LanguageComponent,
     TimeStampDatePickerComponent,
     TimeStampTimePickerComponent,
+    // Albums
+    AlbumsComponent,
+    AlbumComponent,
+    SavedSearchPopupComponent,
     // Gallery
     GalleryLightboxMediaComponent,
     GalleryPhotoLoadingComponent,
@@ -174,6 +198,9 @@ export function translationsFactory(locale: string) {
     GalleryMapLightboxComponent,
     FrameComponent,
     GallerySearchComponent,
+    GallerySearchQueryEntryComponent,
+    GallerySearchFieldComponent,
+    GallerySearchQueryBuilderComponent,
     GalleryShareComponent,
     GalleryNavigatorComponent,
     GalleryPhotoComponent,
@@ -201,6 +228,7 @@ export function translationsFactory(locale: string) {
     RandomPhotoSettingsComponent,
     BasicSettingsComponent,
     FacesSettingsComponent,
+    AlbumsSettingsComponent,
     OtherSettingsComponent,
     IndexingSettingsComponent,
     JobProgressComponent,
@@ -213,7 +241,8 @@ export function translationsFactory(locale: string) {
     StringifySortingMethod,
     DurationPipe,
     FileSizePipe,
-    GPXFilesFilterPipe
+    GPXFilesFilterPipe,
+    StringifySearchQuery
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: CSRFInterceptor, multi: true},
@@ -224,9 +253,12 @@ export function translationsFactory(locale: string) {
     NetworkService,
     ShareService,
     UserService,
+    AlbumsService,
     GalleryCacheService,
     GalleryService,
     MapService,
+    SearchQueryParserService,
+    AutoCompleteService,
     AuthenticationService,
     ThumbnailLoaderService,
     ThumbnailManagerService,
@@ -242,13 +274,7 @@ export function translationsFactory(locale: string) {
     VersionService,
     ScheduledJobsService,
     BackendtextService,
-    {
-      provide: TRANSLATIONS,
-      useFactory: translationsFactory,
-      deps: [LOCALE_ID]
-    },
-    {provide: TRANSLATIONS_FORMAT, useValue: 'xlf'},
-    I18n
+    CookieService
   ],
   bootstrap: [AppComponent]
 })

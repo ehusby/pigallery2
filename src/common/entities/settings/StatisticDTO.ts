@@ -3,4 +3,5 @@ export interface StatisticDTO {
   photos: number;
   videos: number;
   diskUsage: number;
+  persons: number;
 }

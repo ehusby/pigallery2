@@ -2,36 +2,39 @@ import {Injectable} from '@angular/core';
 import {NetworkService} from '../../../model/network/network.service';
 import {SettingsService} from '../settings.service';
 import {AbstractSettingsService} from '../_abstract/abstract.settings.service';
-import {ClientConfig} from '../../../../../common/config/public/ClientConfig';
-import {ServerConfig} from '../../../../../common/config/private/PrivateConfig';
+import {ClientSharingConfig} from '../../../../../common/config/public/ClientConfig';
 import {SharingDTO} from '../../../../../common/entities/SharingDTO';
+import {DatabaseType} from '../../../../../common/config/private/PrivateConfig';
 
 @Injectable()
-export class ShareSettingsService extends AbstractSettingsService<ClientConfig.SharingConfig> {
-  constructor(private _networkService: NetworkService,
-              _settingsService: SettingsService) {
-    super(_settingsService);
+export class ShareSettingsService extends AbstractSettingsService<ClientSharingConfig> {
+  constructor(private networkService: NetworkService,
+              settingsService: SettingsService) {
+    super(settingsService);
 
   }
 
 
   public isSupported(): boolean {
-    return this._settingsService.settings.value.Server.Database.type !== ServerConfig.DatabaseType.memory &&
-      this._settingsService.settings.value.Client.authenticationRequired === true;
+    return this.settingsService.settings.value.Server.Database.type !== DatabaseType.memory &&
+      this.settingsService.settings.value.Client.authenticationRequired === true;
   }
 
-  public updateSettings(settings: ClientConfig.SharingConfig): Promise<void> {
-    return this._networkService.putJson('/settings/share', {settings: settings});
+  public updateSettings(settings: ClientSharingConfig): Promise<void> {
+    return this.networkService.putJson('/settings/share', {settings});
   }
 
 
   public getSharingList(): Promise<SharingDTO[]> {
-    return this._networkService.getJson('/share/list');
+    if (!this.settingsService.settings.value.Client.Sharing.enabled) {
+      return Promise.resolve([]);
+    }
+    return this.networkService.getJson('/share/list');
   }
 
 
   public deleteSharing(sharing: SharingDTO): Promise<void> {
-    return this._networkService.deleteJson('/share/' + sharing.sharingKey);
+    return this.networkService.deleteJson('/share/' + sharing.sharingKey);
   }
 
 }

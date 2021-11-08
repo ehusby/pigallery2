@@ -13,7 +13,7 @@ export class FacesService {
   }
 
   public async setFavourite(person: PersonDTO, isFavourite: boolean): Promise<void> {
-    const updated = await this.networkService.postJson<PersonDTO>('/person/' + person.name, {isFavourite: isFavourite});
+    const updated = await this.networkService.postJson<PersonDTO>('/person/' + person.name, {isFavourite});
     const updatesList = this.persons.getValue();
     for (let i = 0; i < updatesList.length; i++) {
       if (updatesList[i].id === updated.id) {
@@ -24,8 +24,8 @@ export class FacesService {
     }
   }
 
-  public async getPersons() {
-    this.persons.next((await this.networkService.getJson<PersonDTO[]>('/person')).sort((a, b) => a.name.localeCompare(b.name)));
+  public async getPersons(): Promise<void> {
+    this.persons.next((await this.networkService.getJson<PersonDTO[]>('/person')).sort((a, b): number => a.name.localeCompare(b.name)));
   }
 
 }

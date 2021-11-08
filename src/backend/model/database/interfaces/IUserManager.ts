@@ -1,6 +1,7 @@
 import {UserDTO, UserRoles} from '../../../../common/entities/UserDTO';
+import {IObjectManager} from './IObjectManager';
 
-export interface IUserManager {
+export interface IUserManager extends IObjectManager {
   findOne(filter: any): Promise<UserDTO>;
 
   find(filter: any): Promise<UserDTO[]>;

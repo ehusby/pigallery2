@@ -3,8 +3,7 @@ import {Server} from '../../../../src/backend/server';
 import {LoginCredential} from '../../../../src/common/entities/LoginCredential';
 import {UserDTO, UserRoles} from '../../../../src/common/entities/UserDTO';
 import * as path from 'path';
-import * as util from 'util';
-import * as rimraf from 'rimraf';
+import * as fs from 'fs';
 import {SQLConnection} from '../../../../src/backend/model/database/sql/SQLConnection';
 import {ObjectManagers} from '../../../../src/backend/model/ObjectManagers';
 import {Utils} from '../../../../src/common/Utils';
@@ -12,7 +11,7 @@ import {SuperAgentStatic} from 'superagent';
 import {RouteTestingHelper} from './RouteTestingHelper';
 import {QueryParams} from '../../../../src/common/QueryParams';
 import {ErrorCodes} from '../../../../src/common/entities/Error';
-import {ServerConfig} from '../../../../src/common/config/private/PrivateConfig';
+import {DatabaseType, ServerConfig} from '../../../../src/common/config/private/PrivateConfig';
 
 
 process.env.NODE_ENV = 'test';
@@ -21,7 +20,6 @@ const chaiHttp = require('chai-http');
 const should = chai.should();
 chai.use(chaiHttp);
 
-const rimrafPR = util.promisify(rimraf);
 describe('SharingRouter', () => {
 
   const testUser: UserDTO = {
@@ -31,15 +29,15 @@ describe('SharingRouter', () => {
     role: UserRoles.User,
     permissions: null
   };
-  const {password: _pass, ...expectedUser} = testUser;
+  const {password: pass, ...expectedUser} = testUser;
   const tempDir = path.join(__dirname, '../../tmp');
   let server: Server;
   const setUp = async () => {
-    await rimrafPR(tempDir);
+    await fs.promises.rmdir(tempDir, {recursive: true});
     Config.Client.authenticationRequired = true;
     Config.Server.Threading.enabled = false;
     Config.Client.Sharing.enabled = true;
-    Config.Server.Database.type = ServerConfig.DatabaseType.sqlite;
+    Config.Server.Database.type = DatabaseType.sqlite;
     Config.Server.Database.dbFolder = tempDir;
 
     server = new Server();
@@ -51,7 +49,7 @@ describe('SharingRouter', () => {
   };
   const tearDown = async () => {
     await SQLConnection.close();
-    await rimrafPR(tempDir);
+    await fs.promises.rmdir(tempDir, {recursive: true});
   };
 
   const shouldBeValidUser = (result: any, user: any) => {
@@ -75,11 +73,11 @@ describe('SharingRouter', () => {
     const result = await (chai.request(srv.App) as SuperAgentStatic)
       .post('/api/user/login')
       .send({
-        loginCredential: <LoginCredential>{
+        loginCredential: {
           password: testUser.password,
           username: testUser.name,
           rememberMe: false
-        }
+        } as LoginCredential
       });
 
     shouldBeValidUser(result, expectedUser);

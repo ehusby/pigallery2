@@ -11,10 +11,12 @@ import {ConfigProperty} from 'typeconfig/src/decorators/property/ConfigPropoerty
 export class ClientClass {
 
   @ConfigProperty()
-  public Client: ClientConfig.Config = new ClientConfig.Config();
+  public Client: ClientConfig = new ClientConfig();
 }
 
-declare module ServerInject {
+// ConfigInject is getting injected form the server side to the global scope
+// tslint:disable-next-line:no-namespace
+declare namespace ServerInject {
   export const ConfigInject: ClientClass;
 }
 

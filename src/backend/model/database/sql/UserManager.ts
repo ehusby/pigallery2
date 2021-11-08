@@ -11,7 +11,7 @@ export class UserManager implements IUserManager {
   }
 
 
-  public async findOne(filter: any) {
+  public async findOne(filter: any): Promise<any> {
     const connection = await SQLConnection.getConnection();
     const pass = filter.password;
     delete filter.password;
@@ -24,34 +24,34 @@ export class UserManager implements IUserManager {
 
   }
 
-  public async find(filter: any) {
+  public async find(filter: any): Promise<any> {
     const connection = await SQLConnection.getConnection();
     return await connection.getRepository(UserEntity).find(filter);
   }
 
-  public async createUser(user: UserDTO) {
+  public async createUser(user: UserDTO): Promise<any> {
     const connection = await SQLConnection.getConnection();
     user.password = PasswordHelper.cryptPassword(user.password);
     return connection.getRepository(UserEntity).save(user);
   }
 
-  public async deleteUser(id: number) {
+  public async deleteUser(id: number): Promise<any> {
     const connection = await SQLConnection.getConnection();
-    const user = await connection.getRepository(UserEntity).findOne({id: id});
+    const user = await connection.getRepository(UserEntity).findOne({id});
     return await connection.getRepository(UserEntity).remove(user);
   }
 
-  public async changeRole(id: number, newRole: UserRoles) {
+  public async changeRole(id: number, newRole: UserRoles): Promise<any> {
 
     const connection = await SQLConnection.getConnection();
     const userRepository = connection.getRepository(UserEntity);
-    const user = await userRepository.findOne({id: id});
+    const user = await userRepository.findOne({id});
     user.role = newRole;
     return userRepository.save(user);
 
   }
 
-  public async changePassword(request: any) {
+  public async changePassword(request: any): Promise<void> {
     throw new Error('not implemented'); // TODO: implement
   }
 

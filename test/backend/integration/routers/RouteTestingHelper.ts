@@ -7,14 +7,14 @@ export class RouteTestingHelper {
 
 
   static async createSharing(testUser: UserDTO, password: string = null): Promise<SharingDTO> {
-    const sharing = <SharingDTO>{
+    const sharing = {
       sharingKey: 'sharing_test_key_' + Date.now(),
       path: 'test',
       expires: Date.now() + 1000,
       timeStamp: Date.now(),
       includeSubfolders: false,
       creator: testUser
-    };
+    } as SharingDTO;
     if (password) {
       sharing.password = password;
     }
@@ -23,11 +23,11 @@ export class RouteTestingHelper {
   }
 
   public static getExpectedSharingUser(sharing: SharingDTO): UserDTO {
-    return <UserDTO>{
+    return {
       name: 'Guest',
       role: UserRoles.LimitedGuest,
       permissions: [sharing.path],
       usedSharingKey: sharing.sharingKey
-    };
+    } as UserDTO;
   }
 }

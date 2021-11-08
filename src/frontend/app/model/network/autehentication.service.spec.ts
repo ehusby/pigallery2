@@ -10,7 +10,7 @@ import {ShareService} from '../../ui/gallery/share.service';
 
 class MockUserService {
   public login(credential: LoginCredential): Promise<UserDTO> {
-    return Promise.resolve(<UserDTO>{name: 'testUserName'});
+    return Promise.resolve({name: 'testUserName'} as UserDTO);
   }
 
   public async getSessionUser(): Promise<UserDTO> {
@@ -19,12 +19,12 @@ class MockUserService {
 }
 
 class MockNetworkService {
-  addGlobalErrorHandler(fn: (error: ErrorDTO) => boolean) {
+  addGlobalErrorHandler(fn: (error: ErrorDTO) => boolean): void {
   }
 }
 
 class MockShareService {
-  onNewUser(user: any) {
+  onNewUser(user: any): void {
   }
 }
 
@@ -71,7 +71,7 @@ describe('AuthenticationService', () => {
         expect(authService.isAuthenticated()).toBe(true);
         done();
       });
-      authService.login(<any>{});
+      authService.login({} as any);
     })());
 
 });

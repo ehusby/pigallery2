@@ -6,75 +6,15 @@
        [style.top.px]="lightboxDimension.top"
        [style.left.px]="lightboxDimension.left"
        [style.opacity]="opacity">
+    <div
+      [style.width.px]="mapDimension.width"
+      [style.height.px]="mapDimension.height"
 
-    <yaga-map #yagaMap
-              [style.width.px]="mapDimension.width"
-              [style.height.px]="mapDimension.height">
-
-      <yaga-layers-control
-        position="bottomright">
-
-        <yaga-feature-group
-          [caption]="'path'"
-          *ngIf="paths.length>0"
-          yaga-overlay-layer="'path'">
-          <yaga-polyline
-            *ngFor="let path of paths"
-            [latLngs]="path">
-          </yaga-polyline>
-          <yaga-marker
-            *ngFor="let path of paths"
-            [lat]="path[0].lat"
-            [lng]="path[1].lng">
-          </yaga-marker>
-        </yaga-feature-group>
-        <yaga-feature-group
-          [caption]="'photos'"
-          yaga-overlay-layer="'photos'">
-          <yaga-marker [title]="photo.name"
-                       *ngFor="let photo of mapPhotos"
-                       [lat]="photo.lat"
-                       [lng]="photo.lng">
-            <yaga-icon
-              *ngIf="photo.iconUrl"
-              [iconUrl]="photo.iconUrl"
-              [iconSize]="yagaMap.zoom < 15 ? smallIconSize : iconSize"
-            ></yaga-icon>
-            <yaga-popup
-              (open)="loadPreview(photo)"
-              [minWidth]="photo.preview.width">
-              <img *ngIf="photo.preview.thumbnail.Src"
-                   [style.width.px]="photo.preview.width"
-                   [style.height.px]="photo.preview.height"
-                   [src]="photo.preview.thumbnail.Src">
-              <div class="preview-loading"
-                   *ngIf="!photo.preview.thumbnail.Src"
-                   [style.width.px]="photo.preview.width"
-                   [style.height.px]="photo.preview.height">
-              <span class="oi"
-                    [ngClass]="photo.preview.thumbnail.Error ? 'oi-warning' :  'oi-picture'"
-                    aria-hidden="true">
-              </span>
-              </div>
-            </yaga-popup>
-          </yaga-marker>
-
-        </yaga-feature-group>
-        <ng-container *ngFor="let l of mapService.Layers">
-          <yaga-tile-layer yaga-base-layer
-                           [caption]="l.name"
-                           [url]="l.url"></yaga-tile-layer>
-        </ng-container>
-
-      </yaga-layers-control>
-      <yaga-zoom-control position="bottomright">
-
-      </yaga-zoom-control>
-      <yaga-attribution-control
-        prefix=""
-        [attributions]="mapService.Attributions">
-      </yaga-attribution-control>
-    </yaga-map>
+      leaflet
+      [leafletOptions]="mapOptions"
+      (leafletMapZoom)="onLeafletZoom()"
+      (leafletMapReady)="onMapReady($event)">
+    </div>
   </div>
 
 

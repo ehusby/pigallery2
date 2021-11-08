@@ -1,7 +1,6 @@
 import {Config} from '../common/config/private/Config';
-import * as _express from 'express';
+import * as express from 'express';
 import {Request} from 'express';
-import * as _bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import * as _http from 'http';
 import {Server as HttpServer} from 'http';
@@ -20,11 +19,11 @@ import * as _csrf from 'csurf';
 import * as unless from 'express-unless';
 import {Event} from '../common/event/Event';
 import {QueryParams} from '../common/QueryParams';
-import {ServerConfig} from '../common/config/private/PrivateConfig';
 import {ConfigClassBuilder} from 'typeconfig/node';
 import {ConfigClassOptions} from 'typeconfig/src/decorators/class/IConfigClass';
+import {DatabaseType} from '../common/config/private/PrivateConfig';
 
-const _session = require('cookie-session');
+const session = require('cookie-session');
 
 declare var process: NodeJS.Process;
 
@@ -33,7 +32,7 @@ const LOG_TAG = '[server]';
 export class Server {
 
   public onStarted = new Event<void>();
-  private app: _express.Express;
+  private app: express.Express;
   private server: HttpServer;
 
   constructor() {
@@ -51,10 +50,10 @@ export class Server {
     Logger.info(LOG_TAG, 'running diagnostics...');
     await ConfigDiagnostics.runDiagnostics();
     Logger.verbose(LOG_TAG, 'using config from ' +
-      (<ConfigClassOptions>ConfigClassBuilder.attachPrivateInterface(Config).__options).configPath + ':');
+      (ConfigClassBuilder.attachPrivateInterface(Config).__options as ConfigClassOptions).configPath + ':');
     Logger.verbose(LOG_TAG, JSON.stringify(Config, null, '\t'));
 
-    this.app = _express();
+    this.app = express();
 
     LoggerRouter.route(this.app);
 
@@ -65,7 +64,7 @@ export class Server {
      * Session above all
      */
 
-    this.app.use(_session({
+    this.app.use(session({
       name: CookieNames.session,
       keys: Config.Server.sessionSecret
     }));
@@ -75,7 +74,7 @@ export class Server {
      * Parse parameters in POST
      */
     // for parsing application/json
-    this.app.use(_bodyParser.json());
+    this.app.use(express.json());
     this.app.use(cookieParser());
     const csuf: any = _csrf();
     csuf.unless = unless;
@@ -95,7 +94,7 @@ export class Server {
     Localizations.init();
 
     this.app.use(locale(Config.Client.languages, 'en'));
-    if (Config.Server.Database.type !== ServerConfig.DatabaseType.memory) {
+    if (Config.Server.Database.type !== DatabaseType.memory) {
       await ObjectManagers.InitSQLManagers();
     } else {
       await ObjectManagers.InitMemoryManagers();

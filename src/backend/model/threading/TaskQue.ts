@@ -3,7 +3,7 @@ import {Utils} from '../../../common/Utils';
 
 export interface TaskQueEntry<I, O> {
   data: I;
-  promise: { obj: Promise<O>, resolve: Function, reject: Function };
+  promise: { obj: Promise<O>, resolve: (ret: O) => void, reject: (err: any) => void };
 }
 
 
@@ -13,29 +13,6 @@ export class TaskQue<I, O> {
   private processing: TaskQueEntry<I, O>[] = [];
 
   constructor() {
-  }
-
-
-  private getSameTask(input: I): TaskQueEntry<I, O> {
-    return this.tasks.find(t => Utils.equalsFilter(t.data, input)) ||
-      this.processing.find(t => Utils.equalsFilter(t.data, input));
-  }
-
-  private putNewTask(input: I): TaskQueEntry<I, O> {
-    const taskEntry: TaskQueEntry<I, O> = {
-      data: input,
-      promise: {
-        obj: null,
-        resolve: null,
-        reject: null
-      }
-    };
-    this.tasks.push(taskEntry);
-    taskEntry.promise.obj = new Promise<O>((resolve: Function, reject: Function) => {
-      taskEntry.promise.reject = reject;
-      taskEntry.promise.resolve = resolve;
-    });
-    return taskEntry;
   }
 
   public isEmpty(): boolean {
@@ -58,5 +35,27 @@ export class TaskQue<I, O> {
       throw new Error('Task does not exist');
     }
     this.processing.splice(index, 1);
+  }
+
+  private getSameTask(input: I): TaskQueEntry<I, O> {
+    return this.tasks.find(t => Utils.equalsFilter(t.data, input)) ||
+      this.processing.find(t => Utils.equalsFilter(t.data, input));
+  }
+
+  private putNewTask(input: I): TaskQueEntry<I, O> {
+    const taskEntry: TaskQueEntry<I, O> = {
+      data: input,
+      promise: {
+        obj: null,
+        resolve: null,
+        reject: null
+      }
+    };
+    this.tasks.push(taskEntry);
+    taskEntry.promise.obj = new Promise<O>((resolve: (ret: O) => void, reject: (err: any) => void) => {
+      taskEntry.promise.reject = reject;
+      taskEntry.promise.resolve = resolve;
+    });
+    return taskEntry;
   }
 }

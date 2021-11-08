@@ -4,29 +4,7 @@
       {{Name}}</h5>
     <div class="card-body">
       <div [hidden]="!error" class="alert alert-danger" role="alert"><strong>Error: </strong>{{error}}</div>
-      <div [hidden]="states.photoProcessingLibrary.value!=PhotoProcessingLib.Jimp"
-           class="alert alert-warning"
-           role="alert" i18n>It is highly recommended to use hardware accelerated (sharp or gm) lib for thumbnail
-        generation
-      </div>
 
-      <div [hidden]="simplifiedMode">
-
-        <app-settings-entry
-          name="Thumbnail generation library"
-          i18n-name
-          [ngModel]="states.photoProcessingLibrary"
-          [optionMap]="libTypesMap"
-          [simplifiedMode]="simplifiedMode"
-          required="true">
-          <small *ngIf="states.photoProcessingLibrary.value==PhotoProcessingLib.sharp"
-                 class="form-text text-muted" i18n>Make sure that sharp node module is installed (npm install sharp).
-          </small>
-        </app-settings-entry>
-
-
-        <hr/>
-      </div>
       <p class="title" i18n>Photo converting:</p>
 
       <app-settings-entry
@@ -55,6 +33,15 @@
         required="true">
       </app-settings-entry>
 
+      <app-settings-entry
+        name="Load full resolution image on zoom"
+        description="Enables loading the full resolution image on zoom in the ligthbox (preview)."
+        i18n-description i18n-name
+        [ngModel]="states.client.loadFullImageOnZoom"
+        [simplifiedMode]="simplifiedMode"
+        [disabled]="!states.client.Converting.enabled.value">
+      </app-settings-entry>
+
 
       <button class="btn btn-success float-right"
               [disabled]="!settingsForm.form.valid || !changed || inProgress"
@@ -68,7 +55,7 @@
       <div [hidden]="!states.client.Converting.enabled.value">
         <app-settings-job-button class="mt-2 mt-md-0 float-left"
                                  [soloRun]="true"
-                                 (error)="error=$event"
+                                 (jobError)="error=$event"
                                  [allowParallelRun]="false"
                                  [jobName]="jobName"></app-settings-job-button>
 

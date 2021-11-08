@@ -27,40 +27,56 @@
   </ng-container>
 
 
-  <div body class="container-fluid" style="width: 100%; padding:0" *ngIf="_galleryService.content.value.directory">
-    <app-gallery-navbar [directory]="_galleryService.content.value.directory"></app-gallery-navbar>
+  <div body class="container-fluid" style="width: 100%; padding:0">
+    <ng-container *ngIf="galleryService.content.value.error">
+      <div class="alert alert-danger" role="alert">
+        {{galleryService.content.value.error}}
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!galleryService.content.value.error">
+      <ng-container *ngIf="galleryService.content.value.directory">
 
-    <app-gallery-directories class="directories" [directories]="directories"></app-gallery-directories>
+        <app-gallery-navbar [directory]="galleryService.content.value.directory"></app-gallery-navbar>
 
-    <app-gallery-map *ngIf="isPhotoWithLocation && mapEnabled"
-                     [photos]="_galleryService.content.value.directory.media"
-                     [gpxFiles]="_galleryService.content.value.directory.metaFile | gpxFiles"></app-gallery-map>
-    <app-gallery-grid [media]="_galleryService.content.value.directory.media"
-                      [lightbox]="lightbox"></app-gallery-grid>
-  </div>
-  <!-- Search-->
-  <div body class="container-fluid" style="width: 100%; padding:0" *ngIf="_galleryService.content.value.searchResult">
-    <div class="alert alert-info" role="alert"
-         *ngIf="_galleryService.content.value.searchResult.resultOverflow == true" i18n>
-      Too many results to show. Refine your search.
-    </div>
-    <app-gallery-navbar [searchResult]="_galleryService.content.value.searchResult"></app-gallery-navbar>
+        <app-gallery-directories class="directories" [directories]="directories"></app-gallery-directories>
 
-    <app-gallery-map *ngIf="isPhotoWithLocation && mapEnabled"
-                     [photos]="_galleryService.content.value.searchResult.media"
-                     [gpxFiles]="_galleryService.content.value.searchResult.metaFile | gpxFiles"></app-gallery-map>
+        <app-gallery-map *ngIf="isPhotoWithLocation && mapEnabled"
+                         [photos]="galleryService.content.value.directory.media"
+                         [gpxFiles]="galleryService.content.value.directory.metaFile | gpxFiles"></app-gallery-map>
+        <app-gallery-grid [media]="galleryService.content.value.directory.media"
+                          [lightbox]="lightbox"></app-gallery-grid>
 
-    <app-gallery-directories class="directories" [directories]="directories"></app-gallery-directories>
 
-    <app-gallery-grid [media]="_galleryService.content.value.searchResult.media"
-                      [lightbox]="lightbox"></app-gallery-grid>
+      </ng-container>
+      <!-- Search-->
+      <ng-container *ngIf="galleryService.content.value.searchResult">
+        <div class="alert alert-info" role="alert"
+             *ngIf="galleryService.content.value.searchResult.resultOverflow == true" i18n>
+          Too many results to show. Refine your search.
+        </div>
+        <app-gallery-navbar [searchResult]="galleryService.content.value.searchResult"></app-gallery-navbar>
+
+        <app-gallery-directories class="directories" [directories]="directories"></app-gallery-directories>
+
+        <app-gallery-map *ngIf="isPhotoWithLocation && mapEnabled"
+                         [photos]="galleryService.content.value.searchResult.media"
+                         [gpxFiles]="galleryService.content.value.searchResult.metaFile | gpxFiles"></app-gallery-map>
+
+
+        <app-gallery-grid [media]="galleryService.content.value.searchResult.media"
+                          [lightbox]="lightbox"></app-gallery-grid>
+
+
+      </ng-container>
+    </ng-container>
   </div>
 
   <div body class="container"
        style="width: 100%; padding:0"
-       *ngIf="(!_galleryService.content.value.directory ||
-        _galleryService.content.value.directory.isPartial == true)
-       && !_galleryService.content.value.searchResult">
+       *ngIf="(!galleryService.content.value.directory ||
+        galleryService.content.value.directory.isPartial == true)
+       && !galleryService.content.value.searchResult
+       && !galleryService.content.value.error">
     <div class="spinner">
 
     </div>

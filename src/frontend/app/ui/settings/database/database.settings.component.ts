@@ -3,10 +3,9 @@ import {AuthenticationService} from '../../../model/network/authentication.servi
 import {Utils} from '../../../../../common/Utils';
 import {NotificationService} from '../../../model/notification.service';
 import {NavigationService} from '../../../model/navigation.service';
-import {SettingsComponent} from '../_abstract/abstract.settings.component';
+import {SettingsComponentDirective} from '../_abstract/abstract.settings.component';
 import {DatabaseSettingsService} from './database.settings.service';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import {ServerConfig} from '../../../../../common/config/private/PrivateConfig';
+import {DatabaseType, ServerConfig, ServerDataBaseConfig} from '../../../../../common/config/private/PrivateConfig';
 
 @Component({
   selector: 'app-settings-database',
@@ -15,20 +14,19 @@ import {ServerConfig} from '../../../../../common/config/private/PrivateConfig';
     '../_abstract/abstract.settings.component.css'],
   providers: [DatabaseSettingsService],
 })
-export class DatabaseSettingsComponent extends SettingsComponent<ServerConfig.DataBaseConfig> implements OnInit {
+export class DatabaseSettingsComponent extends SettingsComponentDirective<ServerDataBaseConfig> implements OnInit {
 
-  public types = Utils.enumToArray(ServerConfig.DatabaseType);
-  public DatabaseType = ServerConfig.DatabaseType;
+  public types = Utils.enumToArray(DatabaseType);
+  public DatabaseType = DatabaseType;
 
-  constructor(_authService: AuthenticationService,
-              _navigation: NavigationService,
-              _settingsService: DatabaseSettingsService,
-              notification: NotificationService,
-              i18n: I18n) {
-    super(i18n('Database'), _authService, _navigation, _settingsService, notification, i18n, s => s.Server.Database);
+  constructor(authService: AuthenticationService,
+              navigation: NavigationService,
+              settingsService: DatabaseSettingsService,
+              notification: NotificationService) {
+    super($localize`Database`, authService, navigation, settingsService, notification, s => s.Server.Database);
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     super.ngOnInit();
   }
 

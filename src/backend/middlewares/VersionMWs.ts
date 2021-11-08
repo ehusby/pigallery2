@@ -9,11 +9,8 @@ export class VersionMWs {
 
   /**
    * This version data is mainly used on the client side to invalidate the cache
-   * @param req
-   * @param res
-   * @param next
    */
-  public static async injectGalleryVersion(req: Request, res: Response, next: NextFunction) {
+  public static async injectGalleryVersion(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       res.header(CustomHeaders.dataVersion, await ObjectManagers.getInstance().VersionManager.getDataVersion());
       next();

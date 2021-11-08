@@ -1,19 +1,15 @@
 import {PersonEntry} from '../sql/enitites/PersonEntry';
-import {PhotoDTO} from '../../../../common/entities/PhotoDTO';
 import {PersonDTO} from '../../../../common/entities/PersonDTO';
+import {IObjectManager} from './IObjectManager';
+import {FaceRegion} from '../../../../common/entities/PhotoDTO';
 
-export interface IPersonManager {
+export interface IPersonManager extends IObjectManager {
   getAll(): Promise<PersonEntry[]>;
-
-  getSamplePhoto(name: string): Promise<PhotoDTO>;
-
-  getSamplePhotos(names: string[]): Promise<{ [key: string]: PhotoDTO }>;
 
   get(name: string): Promise<PersonEntry>;
 
-  saveAll(names: string[]): Promise<void>;
-
-  onGalleryIndexUpdate(): Promise<void>;
+  // saving a Person with a sample region. Person entry cannot exist without a face region
+  saveAll(person: { name: string, faceRegion: FaceRegion }[]): Promise<void>;
 
   updatePerson(name: string, partialPerson: PersonDTO): Promise<PersonEntry>;
 }

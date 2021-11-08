@@ -1,0 +1,46 @@
+{
+  "cameraData": {
+    "ISO": 800,
+    "exposure": 0.008,
+    "fStop": 5.6,
+    "focalLength": 85,
+    "lens": "EF-S15-85mm f/3.5-5.6 IS USM",
+    "make": "Canon",
+    "model": "Canon EOS 600D"
+  },
+  "caption": "Bambi Caption",
+  "creationDate": -11630935227000,
+  "faces": [
+    {
+      "box": {
+        "height": 2,
+        "left": 4,
+        "top": 2,
+        "width": 2
+      },
+      "name": "Bambi"
+    }
+  ],
+  "fileSize": 19145,
+  "keywords": [
+    "USA",
+    "USA Road trip",
+    "Yosemite"
+  ],
+  "orientation": 1,
+  "positionData": {
+    "GPSData": {
+      "altitude": 1960,
+      "latitude": 37.74805833333333,
+      "longitude": -119.51402333333333
+    },
+    "city": "Yosemite Nemzeti Park",
+    "country": "United States",
+    "state": "California"
+  },
+  "rating": 2,
+  "size": {
+    "height": 7,
+    "width": 10
+  }
+}

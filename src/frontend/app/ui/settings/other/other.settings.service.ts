@@ -6,14 +6,14 @@ import {OtherConfigDTO} from '../../../../../common/entities/settings/OtherConfi
 
 @Injectable()
 export class OtherSettingsService extends AbstractSettingsService<OtherConfigDTO> {
-  constructor(private _networkService: NetworkService,
-              _settingsService: SettingsService) {
-    super(_settingsService);
+  constructor(private networkService: NetworkService,
+              settingsService: SettingsService) {
+    super(settingsService);
   }
 
 
   public updateSettings(settings: OtherConfigDTO): Promise<void> {
-    return this._networkService.putJson('/settings/other', {settings: settings});
+    return this.networkService.putJson('/settings/other', {settings});
   }
 
 }

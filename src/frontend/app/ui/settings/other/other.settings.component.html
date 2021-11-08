@@ -12,7 +12,7 @@
 
       <app-settings-entry
         name="Threading"
-        description="Runs directory scanning and thumbnail generation (only for Jimp) in a different thread."
+        description="Runs directory scanning in a different thread."
         i18n-description i18n-name
         [ngModel]="states.Server.enabled">
       </app-settings-entry>
@@ -60,6 +60,13 @@
         [ngModel]="states.Client.captionFirstNaming">
       </app-settings-entry>
 
+      <app-settings-entry
+        name="Download Zip"
+        description="Enable download zip of a directory contents"
+        i18n-description i18n-name
+        [ngModel]="states.Client.enableDownloadZip">
+      </app-settings-entry>
+
 
 
       <hr/>
@@ -77,11 +84,23 @@
 
 
 
+
+
+
       <app-settings-entry
         name="Default photo sorting method"
         i18n-name
         [ngModel]="states.Client.defaultPhotoSortingMethod"
         [optionMap]="sortingMap"
+        [simplifiedMode]="simplifiedMode"
+        required="true">
+      </app-settings-entry>
+
+      <app-settings-entry
+        name="Sort directories by date"
+        description="If enabled, directories will be sorted by date, like photos, otherwise by name. Directory date is the last modification time of that directory not the creation date of the oldest photo."
+        i18n-description i18n-name
+        [ngModel]="states.Client.enableDirectorySortingByDate"
         [simplifiedMode]="simplifiedMode"
         required="true">
       </app-settings-entry>

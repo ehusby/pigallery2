@@ -1,10 +1,8 @@
 export class Utils {
-  static GUID() {
-    const s4 = function () {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
-    };
+  static GUID(): string {
+    const s4 = (): string => Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
 
     return s4() + s4() + '-' + s4() + s4();
   }
@@ -17,21 +15,20 @@ export class Utils {
     return R;
   }
 
-  static wait(time: number) {
-    return new Promise((resolve) => {
+  static wait(time: number): Promise<unknown> {
+    return new Promise((resolve): void => {
       setTimeout(resolve, time);
     });
   }
 
 
-  static removeNullOrEmptyObj(obj: any) {
+  static removeNullOrEmptyObj<T extends { [key: string]: any }>(obj: T): T {
     if (typeof obj !== 'object' || obj == null) {
       return obj;
     }
 
     const keys = Object.keys(obj);
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i];
+    for (const key of keys) {
       if (obj[key] !== null && typeof obj[key] === 'object') {
         if (Utils.removeNullOrEmptyObj(obj[key])) {
           if (Object.keys(obj[key]).length === 0) {
@@ -49,11 +46,22 @@ export class Utils {
     return JSON.parse(JSON.stringify(object));
   }
 
-  static zeroPrefix(value: string | number, length: number) {
+  static shallowClone<T>(object: T): T {
+    const c: any = {};
+    for (const e of Object.entries(object)) {
+      c[e[0]] = e[1];
+    }
+    return c;
+  }
+
+  static zeroPrefix(value: string | number, length: number): string {
     const ret = '00000' + value;
     return ret.substr(ret.length - length);
   }
 
+  /**
+   * Checks if the two input (let them be objects or arrays or just primitives) are equal
+   */
   static equalsFilter(object: any, filter: any): boolean {
     if (typeof filter !== 'object' || filter == null) {
       return object === filter;
@@ -66,8 +74,7 @@ export class Utils {
       return false;
     }
     const keys = Object.keys(filter);
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i];
+    for (const key of keys) {
       if (typeof filter[key] === 'object') {
         if (Utils.equalsFilter(object[key], filter[key]) === false) {
           return false;
@@ -81,13 +88,17 @@ export class Utils {
     return true;
   }
 
+  static renderDataSize(size: number): string {
+    const postFixes = ['B', 'KB', 'MB', 'GB', 'TB'];
+    let index = 0;
+    while (size > 1000 && index < postFixes.length - 1) {
+      size /= 1000;
+      index++;
+    }
+    return size.toFixed(2) + postFixes[index];
+  }
 
-  /**
-   *
-   * @param from
-   * @param to inclusive
-   * @returns {Array}
-   */
+
   static createRange(from: number, to: number): Array<number> {
     const arr = new Array(to - from + 1);
     let c = to - from + 1;
@@ -97,20 +108,20 @@ export class Utils {
     return arr;
   }
 
-  public static canonizePath(path: string) {
+  public static canonizePath(path: string): string {
     return path
       .replace(new RegExp('\\\\', 'g'), '/')
       .replace(new RegExp('/+', 'g'), '/');
   }
 
-  static concatUrls(...args: Array<string>) {
+  static concatUrls(...args: string[]): string {
     let url = '';
-    for (let i = 0; i < args.length; i++) {
-      if (args[i] === '' || typeof args[i] === 'undefined') {
+    for (const item of args) {
+      if (item === '' || typeof item === 'undefined') {
         continue;
       }
 
-      const part = args[i].replace(new RegExp('\\\\', 'g'), '/');
+      const part = item.replace(new RegExp('\\\\', 'g'), '/');
       if (part === '/' || part === './') {
         continue;
       }
@@ -126,8 +137,8 @@ export class Utils {
     return url.substring(0, url.length - 1);
   }
 
-  public static updateKeys(targetObject: any, sourceObject: any) {
-    Object.keys(sourceObject).forEach((key) => {
+  public static updateKeys(targetObject: any, sourceObject: any): void {
+    Object.keys(sourceObject).forEach((key): void => {
       if (typeof targetObject[key] === 'undefined') {
         return;
       }
@@ -139,8 +150,8 @@ export class Utils {
     });
   }
 
-  public static setKeys(targetObject: any, sourceObject: any) {
-    Object.keys(sourceObject).forEach((key) => {
+  public static setKeys(targetObject: any, sourceObject: any): void {
+    Object.keys(sourceObject).forEach((key): void => {
       if (typeof targetObject[key] === 'object') {
         Utils.setKeys(targetObject[key], sourceObject[key]);
       } else {
@@ -149,8 +160,8 @@ export class Utils {
     });
   }
 
-  public static setKeysForced(targetObject: any, sourceObject: any) {
-    Object.keys(sourceObject).forEach((key) => {
+  public static setKeysForced(targetObject: any, sourceObject: any): void {
+    Object.keys(sourceObject).forEach((key): void => {
       if (typeof sourceObject[key] === 'object') {
         if (typeof targetObject[key] === 'undefined') {
           targetObject[key] = {};
@@ -170,21 +181,21 @@ export class Utils {
       }
       const key = parseInt(enumMember, 10);
       if (key >= 0) {
-        arr.push({key: key, value: EnumType[enumMember]});
+        arr.push({key, value: EnumType[enumMember]});
       }
     }
     return arr;
   }
 
 
-  public static findClosest(number: number, arr: number[]): number {
+  public static findClosest(num: number, arr: number[]): number {
 
     let curr = arr[0];
-    let diff = Math.abs(number - curr);
+    let diff = Math.abs(num - curr);
 
-    arr.forEach((value) => {
+    arr.forEach((value): void => {
 
-      const newDiff = Math.abs(number - value);
+      const newDiff = Math.abs(num - value);
 
       if (newDiff < diff) {
         diff = newDiff;
@@ -197,37 +208,90 @@ export class Utils {
   }
 
 
-  public static findClosestinSorted(number: number, arr: number[]): number {
+  public static findClosestinSorted(num: number, arr: number[]): number {
 
     let curr = arr[0];
-    let diff = Math.abs(number - curr);
-    for (let i = 0; i < arr.length; ++i) {
+    let diff = Math.abs(num - curr);
+    for (const item of arr) {
 
-      const newDiff = Math.abs(number - arr[i]);
+      const newDiff = Math.abs(num - item);
       if (newDiff > diff) {
         break;
       }
       diff = newDiff;
-      curr = arr[i];
+      curr = item;
     }
 
 
     return curr;
   }
 
-  public static isUInt32(value: number, max: number = 4294967295) {
+  public static isUInt32(value: number, max: number = 4294967295): boolean {
+    value = parseInt('' + value, 10);
     return !isNaN(value) && value >= 0 && value <= max;
   }
 
-  public static isInt32(value: number) {
+  public static isInt32(value: number): boolean {
+    value = parseFloat('' + value);
     return !isNaN(value) && value >= -2147483648 && value <= 2147483647;
   }
 
-  public static isFloat32(value: number) {
+  public static isFloat32(value: number): boolean {
     const E = Math.pow(10, 38);
     const nE = Math.pow(10, -38);
     return !isNaN(value) && ((value >= -3.402823466 * E && value <= -1.175494351 * nE) ||
       (value <= 3.402823466 * E && value >= 1.175494351 * nE));
+  }
+
+  public static getAnyX(num: number, arr: any[], start = 0): any[][] {
+    if (num <= 0 || num > arr.length || start >= arr.length) {
+      return [];
+    }
+    if (num <= 1) {
+      return arr.slice(start).map((e): any[] => [e]);
+    }
+    if (num === arr.length - start) {
+      return [arr.slice(start)];
+    }
+    const ret: any[][] = [];
+    for (let i = start; i < arr.length; ++i) {
+      Utils.getAnyX(num - 1, arr, i + 1).forEach((a): void => {
+        a.push(arr[i]);
+        ret.push(a);
+      });
+    }
+    return ret;
+  }
+
+}
+
+export class LRU<V> {
+  data: { [key: string]: { value: V, usage: number } } = {};
+
+
+  constructor(public readonly size: number) {
+  }
+
+  set(key: string, value: V): void {
+    this.data[key] = {usage: Date.now(), value};
+    if (Object.keys(this.data).length > this.size) {
+      let oldestK = key;
+      let oldest = this.data[oldestK].usage;
+      for (const k in this.data) {
+        if (this.data[k].usage < oldest) {
+          oldestK = k;
+          oldest = this.data[oldestK].usage;
+        }
+      }
+      delete this.data[oldestK];
+    }
+  }
+
+  get(key: string): V {
+    if (!this.data[key]) {
+      return;
+    }
+    return this.data[key].value;
   }
 
 }

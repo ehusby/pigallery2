@@ -1,0 +1,42 @@
+<form #settingsForm="ngForm" class="form-horizontal">
+  <div class="card mb-4">
+    <h5 class="card-header">
+      {{Name}}
+      <div class="switch-wrapper">
+        <bSwitch
+          class="switch"
+          name="enabled"
+          switch-on-color="success"
+          switch-inverse="true"
+          switch-off-text="Disabled"
+          switch-on-text="Enabled"
+          i18n-switch-off-text
+          i18n-switch-on-text
+          [switch-disabled]="inProgress"
+          switch-handle-width="100"
+          switch-label-width="20"
+          [(ngModel)]="states.enabled.value">
+        </bSwitch>
+      </div>
+    </h5>
+    <div class="card-body">
+      <div [hidden]="!error" class="alert alert-danger" role="alert"><strong>Error: </strong>{{error}}</div>
+
+      <ng-container i18n>Shows albums tab in the top bar and enables creating saved searches.</ng-container>
+      <br/>
+      <ng-container i18n>Note: custom albums are not supported, see:</ng-container>&nbsp;
+      <a href="https://github.com/bpatrik/pigallery2/issues/301">#301</a>
+
+
+      <button class="btn btn-success float-right"
+              [disabled]="!settingsForm.form.valid || !changed || inProgress"
+              (click)="save()" i18n>Save
+      </button>
+      <button class="btn btn-secondary float-right"
+              [disabled]=" !changed || inProgress"
+              (click)="reset()" i18n>Reset
+      </button>
+    </div>
+  </div>
+
+</form>

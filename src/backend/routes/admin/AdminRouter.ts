@@ -5,14 +5,14 @@ import {AdminMWs} from '../../middlewares/admin/AdminMWs';
 import {Express} from 'express';
 
 export class AdminRouter {
-  public static route(app: Express) {
+  public static route(app: Express): void {
 
     this.addGetStatistic(app);
     this.addGetDuplicates(app);
     this.addJobs(app);
   }
 
-  private static addGetStatistic(app: Express) {
+  private static addGetStatistic(app: Express): void {
     app.get('/api/admin/statistic',
       AuthenticationMWs.authenticate,
       AuthenticationMWs.authorise(UserRoles.Admin),
@@ -21,7 +21,7 @@ export class AdminRouter {
     );
   }
 
-  private static addGetDuplicates(app: Express) {
+  private static addGetDuplicates(app: Express): void {
     app.get('/api/admin/duplicates',
       AuthenticationMWs.authenticate,
       AuthenticationMWs.authorise(UserRoles.Admin),
@@ -30,7 +30,7 @@ export class AdminRouter {
     );
   }
 
-  private static addJobs(app: Express) {
+  private static addJobs(app: Express): void {
     app.get('/api/admin/jobs/available',
       AuthenticationMWs.authenticate,
       AuthenticationMWs.authorise(UserRoles.Admin),

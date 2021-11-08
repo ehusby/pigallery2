@@ -1,12 +1,13 @@
 import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Dimension, IRenderable} from '../../../../model/IRenderable';
 import {GridMedia} from '../GridMedia';
-import {SearchTypes} from '../../../../../../common/entities/AutoCompleteItem';
 import {RouterLink} from '@angular/router';
 import {Thumbnail, ThumbnailManagerService} from '../../thumbnailManager.service';
 import {Config} from '../../../../../../common/config/public/Config';
 import {PageHelper} from '../../../../model/page.helper';
 import {PhotoDTO, PhotoMetadata} from '../../../../../../common/entities/PhotoDTO';
+import {SearchQueryTypes, TextSearch, TextSearchQueryMatchTypes} from '../../../../../../common/entities/SearchQueryDTO';
+import {AuthenticationService} from '../../../../model/network/authentication.service';
 
 @Component({
   selector: 'app-gallery-grid-photo',
@@ -20,17 +21,18 @@ export class GalleryPhotoComponent implements IRenderable, OnInit, OnDestroy {
   @ViewChild('photoContainer', {static: true}) container: ElementRef;
 
   thumbnail: Thumbnail;
-  keywords: { value: string, type: SearchTypes }[] = null;
+  keywords: { value: string, type: SearchQueryTypes }[] = null;
   infoBarVisible = false;
   animationTimer: number = null;
 
-  readonly SearchTypes: typeof SearchTypes = SearchTypes;
+  readonly SearchQueryTypes: typeof SearchQueryTypes = SearchQueryTypes;
   searchEnabled = true;
 
   wasInView: boolean = null;
 
-  constructor(private thumbnailService: ThumbnailManagerService) {
-    this.searchEnabled = Config.Client.Search.enabled;
+  constructor(private thumbnailService: ThumbnailManagerService,
+              private authService: AuthenticationService) {
+    this.searchEnabled = Config.Client.Search.enabled && this.authService.canSearch();
   }
 
   get ScrollListener(): boolean {
@@ -42,32 +44,35 @@ export class GalleryPhotoComponent implements IRenderable, OnInit, OnDestroy {
     if (Config.Client.Other.captionFirstNaming === false) {
       return this.gridMedia.media.name;
     }
-    if ((<PhotoDTO>this.gridMedia.media).metadata.caption) {
-      if ((<PhotoDTO>this.gridMedia.media).metadata.caption.length > 20) {
-        return (<PhotoDTO>this.gridMedia.media).metadata.caption.substring(0, 17) + '...';
+    if ((this.gridMedia.media as PhotoDTO).metadata.caption) {
+      if ((this.gridMedia.media as PhotoDTO).metadata.caption.length > 20) {
+        return (this.gridMedia.media as PhotoDTO).metadata.caption.substring(0, 17) + '...';
       }
-      return (<PhotoDTO>this.gridMedia.media).metadata.caption;
+      return (this.gridMedia.media as PhotoDTO).metadata.caption;
     }
     return this.gridMedia.media.name;
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.thumbnail = this.thumbnailService.getThumbnail(this.gridMedia);
     const metadata = this.gridMedia.media.metadata as PhotoMetadata;
     if ((metadata.keywords && metadata.keywords.length > 0) ||
       (metadata.faces && metadata.faces.length > 0)) {
       this.keywords = [];
       if (Config.Client.Faces.enabled) {
-        const names: string[] = (metadata.faces || []).map(f => f.name);
-        this.keywords = names.filter((name, index) => names.indexOf(name) === index)
-          .map(n => ({value: n, type: SearchTypes.person}));
+        const names: string[] = (metadata.faces || []).map((f): string => f.name);
+        this.keywords = names.filter((name, index): boolean => names.indexOf(name) === index)
+          .map((n): { type: SearchQueryTypes; value: string } => ({value: n, type: SearchQueryTypes.person}));
       }
-      this.keywords = this.keywords.concat((metadata.keywords || []).map(k => ({value: k, type: SearchTypes.keyword})));
+      this.keywords = this.keywords.concat((metadata.keywords || []).map((k): { type: SearchQueryTypes; value: string } => ({
+        value: k,
+        type: SearchQueryTypes.keyword
+      })));
     }
 
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.thumbnail.destroy();
 
     if (this.animationTimer != null) {
@@ -80,7 +85,7 @@ export class GalleryPhotoComponent implements IRenderable, OnInit, OnDestroy {
       && PageHelper.ScrollY + window.innerHeight > this.container.nativeElement.offsetTop;
   }
 
-  onScroll() {
+  onScroll(): void {
     if (this.thumbnail.Available === true || this.thumbnail.Error === true) {
       return;
     }
@@ -91,16 +96,28 @@ export class GalleryPhotoComponent implements IRenderable, OnInit, OnDestroy {
     }
   }
 
+  getPositionSearchQuery(): string {
+    return JSON.stringify({type: SearchQueryTypes.position, text: this.getPositionText()} as TextSearch);
+  }
+
+  getTextSearchQuery(name: string, type: SearchQueryTypes): string {
+    return JSON.stringify({
+      type,
+      matchType: TextSearchQueryMatchTypes.exact_match,
+      text: name
+    } as TextSearch);
+  }
+
   getPositionText(): string {
     if (!this.gridMedia || !this.gridMedia.isPhoto()) {
       return '';
     }
-    return (<PhotoDTO>this.gridMedia.media).metadata.positionData.city ||
-      (<PhotoDTO>this.gridMedia.media).metadata.positionData.state ||
-      (<PhotoDTO>this.gridMedia.media).metadata.positionData.country;
+    return (this.gridMedia.media as PhotoDTO).metadata.positionData.city ||
+      (this.gridMedia.media as PhotoDTO).metadata.positionData.state ||
+      (this.gridMedia.media as PhotoDTO).metadata.positionData.country;
   }
 
-  mouseOver() {
+  mouseOver(): void {
     this.infoBarVisible = true;
     if (this.animationTimer != null) {
       clearTimeout(this.animationTimer);
@@ -108,11 +125,11 @@ export class GalleryPhotoComponent implements IRenderable, OnInit, OnDestroy {
     }
   }
 
-  mouseOut() {
+  mouseOut(): void {
     if (this.animationTimer != null) {
       clearTimeout(this.animationTimer);
     }
-    this.animationTimer = window.setTimeout(() => {
+    this.animationTimer = window.setTimeout((): void => {
       this.animationTimer = null;
       this.infoBarVisible = false;
     }, 500);
@@ -120,17 +137,16 @@ export class GalleryPhotoComponent implements IRenderable, OnInit, OnDestroy {
 
   public getDimension(): Dimension {
     if (!this.imageRef) {
-      return <Dimension>{
+      return {
         top: 0,
         left: 0,
         width: 0,
         height: 0
       };
     }
-
-    return <Dimension>{
-      top: this.imageRef.nativeElement.offsetTop,
-      left: this.imageRef.nativeElement.offsetLeft,
+    return {
+      top: this.imageRef.nativeElement.offsetParent.offsetTop,
+      left: this.imageRef.nativeElement.offsetParent.offsetLeft,
       width: this.imageRef.nativeElement.width,
       height: this.imageRef.nativeElement.height
     };

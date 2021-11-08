@@ -26,25 +26,21 @@ declare global {
 export class PublicRouter {
 
 
-  public static route(app: Express) {
-    const setLocale = (req: Request, res: Response, next: Function) => {
-      let localePath = '';
-      let selectedLocale = req['locale'];
+  public static route(app: Express): void {
+    const setLocale = (req: Request, res: Response, next: NextFunction) => {
+      let selectedLocale = req.locale;
       if (req.cookies && req.cookies[CookieNames.lang]) {
         if (Config.Client.languages.indexOf(req.cookies[CookieNames.lang]) !== -1) {
           selectedLocale = req.cookies[CookieNames.lang];
         }
       }
-      if (selectedLocale !== 'en') {
-        localePath = selectedLocale;
-      }
       res.cookie(CookieNames.lang, selectedLocale);
-      req['localePath'] = localePath;
+      req.localePath = selectedLocale;
       next();
     };
 
-    const renderIndex = (req: Request, res: Response, next: Function) => {
-      ejs.renderFile(path.join(ProjectPath.FrontendFolder, req['localePath'], 'index.html'),
+    const renderIndex = (req: Request, res: Response, next: NextFunction) => {
+      ejs.renderFile(path.join(ProjectPath.FrontendFolder, req.localePath, 'index.html'),
         res.tpl, (err, str) => {
           if (err) {
             return next(new ErrorDTO(ErrorCodes.GENERAL_ERROR, err.message));
@@ -69,14 +65,14 @@ export class PublicRouter {
 
         res.tpl.user = null;
         if (req.session.user) {
-          res.tpl.user = <UserDTO>{
+          res.tpl.user = {
             id: req.session.user.id,
             name: req.session.user.name,
             csrfToken: req.session.user.csrfToken,
             role: req.session.user.role,
             usedSharingKey: req.session.user.usedSharingKey,
             permissions: req.session.user.permissions
-          };
+          } as UserDTO;
 
           if (!res.tpl.user.csrfToken && req.csrfToken) {
             res.tpl.user.csrfToken = req.csrfToken();
@@ -105,14 +101,14 @@ export class PublicRouter {
           ],
           display: 'standalone',
           orientation: 'any',
-          start_url: Config.Client.publicUrl,
+          start_url: Config.Client.publicUrl === '' ? '.' : Config.Client.publicUrl,
           background_color: '#000000',
           theme_color: '#000000'
         });
       }
     );
 
-    app.get(['/', '/login', '/gallery*', '/share*', '/admin', '/duplicates', '/faces', '/search*'],
+    app.get(['/', '/login', '/gallery*', '/share*', '/admin', '/duplicates', '/faces', '/albums', '/search*'],
       AuthenticationMWs.tryAuthenticate,
       setLocale,
       renderIndex
@@ -125,13 +121,11 @@ export class PublicRouter {
 
     const renderFile = (subDir: string = '') => {
       return (req: Request, res: Response) => {
-        const file = path.join(ProjectPath.FrontendFolder, req['localePath'], subDir, req.params.file);
-        fs.exists(file, (exists: boolean) => {
-          if (!exists) {
-            return res.sendStatus(404);
-          }
-          res.sendFile(file);
-        });
+        const file = path.join(ProjectPath.FrontendFolder, req.localePath, subDir, req.params.file);
+        if (!fs.existsSync(file)) {
+          return res.sendStatus(404);
+        }
+        res.sendFile(file);
       };
     };
 

@@ -18,12 +18,12 @@ export class DuplicatesPhotoComponent implements OnInit, OnDestroy {
   }
 
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.thumbnail = this.thumbnailService.getIcon(new MediaIcon(this.media));
 
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.thumbnail.destroy();
   }
 

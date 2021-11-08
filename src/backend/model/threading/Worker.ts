@@ -1,36 +1,38 @@
-import {DiskMangerWorker} from './DiskMangerWorker';
+import {DirectoryScanSettings, DiskMangerWorker} from './DiskMangerWorker';
 import {Logger} from '../../Logger';
 import {PhotoWorker, RendererInput} from './PhotoWorker';
-import {DirectoryDTO} from '../../../common/entities/DirectoryDTO';
 import {Utils} from '../../../common/Utils';
-import {ServerConfig} from '../../../common/config/private/PrivateConfig';
+import {MediaDTO} from '../../../common/entities/MediaDTO';
+import {ParentDirectoryDTO} from '../../../common/entities/DirectoryDTO';
 
 declare var process: NodeJS.Process;
 declare var global: NodeJS.Global;
+const LOG_TAG = '[Worker]';
 
 export class Worker {
-  public static process(): void {
-    Logger.debug('Worker is waiting for tasks');
+  public static process<O extends (void | ParentDirectoryDTO<MediaDTO>)>(): void {
+    Logger.debug(LOG_TAG, 'Worker is waiting for tasks');
     process.on('message', async (task: WorkerTask) => {
       try {
         let result = null;
         switch (task.type) {
           case WorkerTaskTypes.diskManager:
-            result = await DiskMangerWorker.scanDirectory((<DiskManagerTask>task).relativeDirectoryName, (<DiskManagerTask>task).settings);
+            result = await DiskMangerWorker.scanDirectory((task as DiskManagerTask).relativeDirectoryName,
+              (task as DiskManagerTask).settings);
             if (global.gc) {
               global.gc();
             }
             break;
           case WorkerTaskTypes.thumbnail:
-            result = await PhotoWorker.render((<ThumbnailTask>task).input, (<ThumbnailTask>task).renderer);
+            result = await PhotoWorker.render((task as ThumbnailTask).input);
             break;
           default:
             throw new Error('Unknown worker task type');
         }
-        process.send(<WorkerMessage>{
+        process.send({
           error: null,
-          result: result
-        });
+          result
+        } as WorkerMessage<O>);
       } catch (err) {
         process.send({error: err, result: null});
       }
@@ -49,21 +51,20 @@ export interface WorkerTask {
 
 export interface DiskManagerTask extends WorkerTask {
   relativeDirectoryName: string;
-  settings: DiskMangerWorker.DirectoryScanSettings;
+  settings: DirectoryScanSettings;
 }
 
 export interface ThumbnailTask extends WorkerTask {
   input: RendererInput;
-  renderer: ServerConfig.PhotoProcessingLib;
 }
 
-export module WorkerTask {
-  export const equals = (t1: WorkerTask, t2: WorkerTask): boolean => {
+export const WorkerTask = {
+  equals: (t1: WorkerTask, t2: WorkerTask): boolean => {
     return Utils.equalsFilter(t1, t2);
-  };
-}
+  }
+};
 
-export interface WorkerMessage {
+export interface WorkerMessage<O> {
   error: Error;
-  result: DirectoryDTO | void;
+  result: O;
 }

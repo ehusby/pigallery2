@@ -7,7 +7,6 @@ import {ModalDirective} from 'ngx-bootstrap/modal';
 import {NavigationService} from '../../../model/navigation.service';
 import {NotificationService} from '../../../model/notification.service';
 import {ErrorCodes, ErrorDTO} from '../../../../../common/entities/Error';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ISettingsComponent} from '../_abstract/ISettingsComponent';
 
 @Component({
@@ -19,9 +18,9 @@ import {ISettingsComponent} from '../_abstract/ISettingsComponent';
 })
 export class UserMangerSettingsComponent implements OnInit, ISettingsComponent {
   @ViewChild('userModal', {static: false}) public childModal: ModalDirective;
-  public newUser = <UserDTO>{};
-  public userRoles: Array<any> = [];
-  public users: Array<UserDTO> = [];
+  public newUser = {} as UserDTO;
+  public userRoles: any[] = [];
+  public users: UserDTO[] = [];
   public enabled = true;
   public error: string = null;
   public inProgress = false;
@@ -38,37 +37,36 @@ export class UserMangerSettingsComponent implements OnInit, ISettingsComponent {
   };
 
 
-  constructor(private _authService: AuthenticationService,
-              private _navigation: NavigationService,
-              private _userSettings: UserManagerSettingsService,
-              private notification: NotificationService,
-              public i18n: I18n) {
-    this.Name = i18n('Password protection');
-    this.text.Enabled = i18n('Enabled');
-    this.text.Disabled = i18n('Disabled');
-    this.text.Low = i18n('Low');
-    this.text.High = i18n('High');
+  constructor(private authService: AuthenticationService,
+              private navigation: NavigationService,
+              private userSettings: UserManagerSettingsService,
+              private notification: NotificationService) {
+    this.Name = $localize`Password protection`;
+    this.text.Enabled = $localize`Enabled`;
+    this.text.Disabled = $localize`Disabled`;
+    this.text.Low = $localize`Low`;
+    this.text.High = $localize`High`;
   }
 
 
-  ngOnInit() {
-    if (!this._authService.isAuthenticated() ||
-        this._authService.user.value.role < UserRoles.Admin) {
-      this._navigation.toLogin();
+  ngOnInit(): void {
+    if (!this.authService.isAuthenticated() ||
+      this.authService.user.value.role < UserRoles.Admin) {
+      this.navigation.toLogin();
       return;
     }
     this.userRoles = Utils
-        .enumToArray(UserRoles)
-        .filter(r => r.key !== UserRoles.LimitedGuest)
-        .filter(r => r.key <= this._authService.user.value.role)
-        .sort((a, b) => a.key - b.key);
+      .enumToArray(UserRoles)
+      .filter(r => r.key !== UserRoles.LimitedGuest)
+      .filter(r => r.key <= this.authService.user.value.role)
+      .sort((a, b) => a.key - b.key);
 
     this.getSettings();
     this.getUsersList();
   }
 
   canModifyUser(user: UserDTO): boolean {
-    const currentUser = this._authService.user.value;
+    const currentUser = this.authService.user.value;
     if (!currentUser) {
       return false;
     }
@@ -76,67 +74,67 @@ export class UserMangerSettingsComponent implements OnInit, ISettingsComponent {
     return currentUser.name !== user.name && currentUser.role >= user.role;
   }
 
-  async switched(event: { previousValue: false, currentValue: true }) {
+  async switched(event: { previousValue: false, currentValue: true }): Promise<void> {
     this.inProgress = true;
     this.error = '';
     this.enabled = event.currentValue;
     try {
-      await this._userSettings.updateSettings(this.enabled);
+      await this.userSettings.updateSettings(this.enabled);
       await this.getSettings();
       if (this.enabled === true) {
-        this.notification.success(this.i18n('Password protection enabled'), this.i18n('Success'));
-        this.notification.info(this.i18n('Server restart is recommended.'));
+        this.notification.success($localize`Password protection enabled`, $localize`Success`);
+        this.notification.info($localize`Server restart is recommended.`);
         this.getUsersList();
       } else {
-        this.notification.success(this.i18n('Password protection disabled'), this.i18n('Success'));
+        this.notification.success($localize`Password protection disabled`, $localize`Success`);
       }
     } catch (err) {
       console.error(err);
       if (err.message) {
-        this.error = (<ErrorDTO>err).message;
+        this.error = (err as ErrorDTO).message;
       }
     }
     this.inProgress = false;
   }
 
-  initNewUser() {
-    this.newUser = <UserDTO>{role: UserRoles.User};
+  initNewUser(): void {
+    this.newUser = {role: UserRoles.User} as UserDTO;
     this.childModal.show();
   }
 
-  async addNewUser() {
+  async addNewUser(): Promise<void> {
     try {
-      await this._userSettings.createUser(this.newUser);
+      await this.userSettings.createUser(this.newUser);
       await this.getUsersList();
       this.childModal.hide();
     } catch (e) {
       const err: ErrorDTO = e;
-      this.notification.error(err.message + ', ' + err.details, 'User creation error!');
+      this.notification.error(err.message + ', ' + err.details, $localize`User creation error!`);
     }
   }
 
-  async updateRole(user: UserDTO) {
-    await this._userSettings.updateRole(user);
+  async updateRole(user: UserDTO): Promise<void> {
+    await this.userSettings.updateRole(user);
     await this.getUsersList();
     this.childModal.hide();
   }
 
-  async deleteUser(user: UserDTO) {
-    await this._userSettings.deleteUser(user);
+  async deleteUser(user: UserDTO): Promise<void> {
+    await this.userSettings.deleteUser(user);
     await this.getUsersList();
     this.childModal.hide();
   }
 
-  private async getSettings() {
-    this.enabled = await this._userSettings.getSettings();
+  private async getSettings(): Promise<void> {
+    this.enabled = await this.userSettings.getSettings();
   }
 
-  private async getUsersList() {
+  private async getUsersList(): Promise<void> {
     try {
-      this.users = await this._userSettings.getUsers();
+      this.users = await this.userSettings.getUsers();
     } catch (err) {
       this.users = [];
-      if ((<ErrorDTO>err).code !== ErrorCodes.USER_MANAGEMENT_DISABLED) {
+      if ((err as ErrorDTO).code !== ErrorCodes.USER_MANAGEMENT_DISABLED) {
         throw err;
       }
     }

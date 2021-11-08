@@ -2,7 +2,8 @@ import {Injectable} from '@angular/core';
 import {ThumbnailLoaderService, ThumbnailLoadingListener, ThumbnailLoadingPriority, ThumbnailTaskEntity} from './thumbnailLoader.service';
 import {Media} from './Media';
 import {MediaIcon} from './MediaIcon';
-import {Person, PersonDTO} from '../../../../common/entities/PersonDTO';
+import {PersonDTO} from '../../../../common/entities/PersonDTO';
+import {Person} from '../faces/Person';
 
 
 @Injectable()
@@ -20,7 +21,7 @@ export class ThumbnailManagerService {
     return new Thumbnail(photo, this.thumbnailLoader, false);
   }
 
-  public getIcon(photo: MediaIcon) {
+  public getIcon(photo: MediaIcon): IconThumbnail {
     return new IconThumbnail(photo, this.thumbnailLoader);
   }
 
@@ -37,7 +38,7 @@ export abstract class ThumbnailBase {
   protected available = false;
   protected src: string = null;
   protected error = false;
-  protected onLoad: Function = null;
+  protected onLoad: () => void = null;
   protected thumbnailTask: ThumbnailTaskEntity = null;
 
 
@@ -46,7 +47,7 @@ export abstract class ThumbnailBase {
 
   abstract set Visible(visible: boolean);
 
-  set OnLoad(onLoad: Function) {
+  set OnLoad(onLoad: () => void) {
     this.onLoad = onLoad;
   }
 
@@ -67,7 +68,7 @@ export abstract class ThumbnailBase {
     return this.error;
   }
 
-  destroy() {
+  destroy(): void {
     if (this.thumbnailTask != null) {
       this.thumbnailService.removeTask(this.thumbnailTask);
       this.thumbnailTask = null;
@@ -91,13 +92,13 @@ export class PersonThumbnail extends ThumbnailBase {
       return;
     }
 
-    setTimeout(() => {
+    setTimeout((): void => {
 
       const listener: ThumbnailLoadingListener = {
-        onStartedLoading: () => { // onLoadStarted
+        onStartedLoading: (): void => { // onLoadStarted
           this.loading = true;
         },
-        onLoad: () => {// onLoaded
+        onLoad: (): void => {// onLoaded
           this.src = Person.getThumbnailUrl(person);
           if (this.onLoad) {
             this.onLoad();
@@ -106,7 +107,7 @@ export class PersonThumbnail extends ThumbnailBase {
           this.loading = false;
           this.thumbnailTask = null;
         },
-        onError: () => {// onError
+        onError: (): void => {// onError
           this.thumbnailTask = null;
           this.loading = false;
           this.error = true;
@@ -149,13 +150,13 @@ export class IconThumbnail extends ThumbnailBase {
     }
 
     if (!this.media.isIconAvailable()) {
-      setTimeout(() => {
+      setTimeout((): void => {
 
         const listener: ThumbnailLoadingListener = {
-          onStartedLoading: () => { // onLoadStarted
+          onStartedLoading: (): void => { // onLoadStarted
             this.loading = true;
           },
-          onLoad: () => {// onLoaded
+          onLoad: (): void => {// onLoaded
             this.src = this.media.getIconPath();
             if (this.onLoad) {
               this.onLoad();
@@ -164,7 +165,7 @@ export class IconThumbnail extends ThumbnailBase {
             this.loading = false;
             this.thumbnailTask = null;
           },
-          onError: () => {// onError
+          onError: (): void => {// onError
             this.thumbnailTask = null;
             this.loading = false;
             this.error = true;
@@ -250,14 +251,14 @@ export class Thumbnail extends ThumbnailBase {
     }
   }
 
-  public load() {
+  public load(): void {
     if (!this.media.isThumbnailAvailable() && this.thumbnailTask == null) {
       //    setTimeout(() => {
       const listener: ThumbnailLoadingListener = {
-        onStartedLoading: () => { // onLoadStarted
+        onStartedLoading: (): void => { // onLoadStarted
           this.loading = true;
         },
-        onLoad: () => {// onLoaded
+        onLoad: (): void => {// onLoaded
           this.src = this.media.getThumbnailPath();
           if (this.onLoad) {
             this.onLoad();
@@ -266,7 +267,7 @@ export class Thumbnail extends ThumbnailBase {
           this.loading = false;
           this.thumbnailTask = null;
         },
-        onError: () => {// onError
+        onError: (): void => {// onError
           this.thumbnailTask = null;
           this.loading = false;
           this.error = true;

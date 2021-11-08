@@ -14,11 +14,11 @@ export class SeededRandomService {
     }
   }
 
-  setSeed(seed: number) {
+  setSeed(seed: number): void {
     this.seed = (SeededRandomService.baseSeed + seed) % 2147483647; // shifting with 16 to the left
   }
 
-  get() {
+  get(): number {
     this.seed = (this.seed * 16807 % 2147483647);
     return this.seed / 2147483647;
   }

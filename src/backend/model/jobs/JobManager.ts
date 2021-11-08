@@ -3,7 +3,7 @@ import {JobProgressDTO, JobProgressStates} from '../../../common/entities/job/Jo
 import {IJob} from './jobs/IJob';
 import {JobRepository} from './JobRepository';
 import {Config} from '../../../common/config/private/Config';
-import {AfterJobTrigger, JobScheduleDTO, JobTriggerType} from '../../../common/entities/job/JobScheduleDTO';
+import {AfterJobTrigger, JobScheduleDTO, JobScheduleDTOUtils, JobTriggerType} from '../../../common/entities/job/JobScheduleDTO';
 import {Logger} from '../../Logger';
 import {NotificationManager} from '../NotifocationManager';
 import {IJobListener} from './jobs/IJobListener';
@@ -23,12 +23,12 @@ export class JobManager implements IJobManager, IJobListener {
   }
 
   protected get JobRunning(): boolean {
-    return JobRepository.Instance.getAvailableJobs().findIndex(j => j.InProgress === true) !== -1;
+    return JobRepository.Instance.getAvailableJobs().findIndex((j): boolean => j.InProgress === true) !== -1;
   }
 
   protected get JobNoParallelRunning(): boolean {
     return JobRepository.Instance.getAvailableJobs()
-      .findIndex(j => j.InProgress === true && j.allowParallelRun) !== -1;
+      .findIndex((j): boolean => j.InProgress === true && j.allowParallelRun) !== -1;
   }
 
   getProgresses(): { [id: string]: JobProgressDTO } {
@@ -67,15 +67,15 @@ export class JobManager implements IJobManager, IJobListener {
     if (state !== JobProgressStates.finished || soloRun === true) {
       return;
     }
-    const sch = Config.Server.Jobs.scheduled.find(s => s.jobName === job.Name);
+    const sch = Config.Server.Jobs.scheduled.find((s): boolean => s.jobName === job.Name);
     if (sch) {
-      const children = Config.Server.Jobs.scheduled.filter(s => s.trigger.type === JobTriggerType.after &&
-        (<AfterJobTrigger>s.trigger).afterScheduleName === sch.name);
-      for (let i = 0; i < children.length; ++i) {
+      const children = Config.Server.Jobs.scheduled.filter((s): boolean => s.trigger.type === JobTriggerType.after &&
+        (s.trigger as AfterJobTrigger).afterScheduleName === sch.name);
+      for (const item of children) {
         try {
-          await this.run(children[i].jobName, children[i].config, false, children[i].allowParallelRun);
+          await this.run(item.jobName, item.config, false, item.allowParallelRun);
         } catch (e) {
-          NotificationManager.warning('Job running error:' + children[i].name, e.toString());
+          NotificationManager.warning('Job running error:' + item.name, e.toString());
         }
       }
     }
@@ -86,32 +86,38 @@ export class JobManager implements IJobManager, IJobListener {
   }
 
   public stopSchedules(): void {
-    this.timers.forEach(t => clearTimeout(t.timer));
+    this.timers.forEach((t): void => clearTimeout(t.timer));
     this.timers = [];
   }
 
+  /**
+   * Schedules all jobs to run
+   */
   public runSchedules(): void {
     this.stopSchedules();
     Logger.info(LOG_TAG, 'Running job schedules');
-    Config.Server.Jobs.scheduled.forEach(s => this.runSchedule(s));
+    Config.Server.Jobs.scheduled.forEach((s): void => this.runSchedule(s));
   }
 
   protected findJob<T = any>(jobName: string): IJob<T> {
-    return this.getAvailableJobs().find(t => t.Name === jobName);
+    return this.getAvailableJobs().find((t): boolean => t.Name === jobName);
   }
 
-  private runSchedule(schedule: JobScheduleDTO) {
-    const nextDate = JobScheduleDTO.getNextRunningDate(new Date(), schedule);
+  /**
+   * Schedules a single job to run
+   */
+  private runSchedule(schedule: JobScheduleDTO): void {
+    const nextDate = JobScheduleDTOUtils.getNextRunningDate(new Date(), schedule);
     if (nextDate && nextDate.getTime() > Date.now()) {
       Logger.debug(LOG_TAG, 'running schedule: ' + schedule.jobName +
         ' at ' + nextDate.toLocaleString(undefined, {hour12: false}));
 
-      const timer: NodeJS.Timeout = setTimeout(async () => {
-        this.timers = this.timers.filter(t => t.timer !== timer);
+      const timer: NodeJS.Timeout = setTimeout(async (): Promise<void> => {
+        this.timers = this.timers.filter((t): boolean => t.timer !== timer);
         await this.run(schedule.jobName, schedule.config, false, schedule.allowParallelRun);
         this.runSchedule(schedule);
       }, nextDate.getTime() - Date.now());
-      this.timers.push({schedule: schedule, timer: timer});
+      this.timers.push({schedule, timer});
 
     } else {
       Logger.debug(LOG_TAG, 'skipping schedule:' + schedule.jobName);

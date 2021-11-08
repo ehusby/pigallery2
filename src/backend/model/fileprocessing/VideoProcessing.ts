@@ -10,7 +10,7 @@ import {SupportedFormats} from '../../../common/SupportedFormats';
 
 export class VideoProcessing {
   private static taskQue: ITaskExecuter<VideoConverterInput, void> =
-    new TaskExecuter(1, (input => VideoConverterWorker.convert(input)));
+    new TaskExecuter(1, ((input): Promise<void> => VideoConverterWorker.convert(input)));
 
   public static generateConvertedFilePath(videoPath: string): string {
     return path.join(ProjectPath.TranscodedFolder,
@@ -67,7 +67,7 @@ export class VideoProcessing {
     const metaData = await MetadataLoader.loadVideoMetadata(videoPath);
 
     const renderInput: VideoConverterInput = {
-      videoPath: videoPath,
+      videoPath,
       output: {
         path: outPath,
         codec: Config.Server.Media.Video.transcoding.codec,
@@ -96,7 +96,7 @@ export class VideoProcessing {
 
   }
 
-  public static isVideo(fullPath: string) {
+  public static isVideo(fullPath: string): boolean {
     const extension = path.extname(fullPath).toLowerCase();
     return SupportedFormats.WithDots.Videos.indexOf(extension) !== -1;
   }

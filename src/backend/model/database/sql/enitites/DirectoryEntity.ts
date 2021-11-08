@@ -1,12 +1,13 @@
 import {Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique} from 'typeorm';
-import {DirectoryDTO} from '../../../../../common/entities/DirectoryDTO';
+import {ParentDirectoryDTO, SubDirectoryDTO} from '../../../../../common/entities/DirectoryDTO';
 import {MediaEntity} from './MediaEntity';
 import {FileEntity} from './FileEntity';
 import {columnCharsetCS} from './EntityUtils';
+import {MediaDTO} from '../../../../../common/entities/MediaDTO';
 
 @Entity()
 @Unique(['name', 'path'])
-export class DirectoryEntity implements DirectoryDTO {
+export class DirectoryEntity implements ParentDirectoryDTO<MediaDTO>, SubDirectoryDTO<MediaDTO> {
 
   @Index()
   @PrimaryGeneratedColumn({unsigned: true})
@@ -53,6 +54,9 @@ export class DirectoryEntity implements DirectoryDTO {
 
   @OneToMany(type => DirectoryEntity, dir => dir.parent)
   public directories: DirectoryEntity[];
+
+  // not saving to database, it is only assigned when querying the DB
+  public preview: MediaEntity;
 
   @OneToMany(type => MediaEntity, media => media.directory)
   public media: MediaEntity[];

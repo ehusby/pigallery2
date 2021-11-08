@@ -32,7 +32,7 @@ a {
 }
 
 .no-image {
-
+  position: absolute;
   color: #7f7f7f;
   font-size: 80px;
   top: calc(50% - 40px);
@@ -72,8 +72,3 @@ a:hover .photo-container {
   border-color: #000;
 }
 
-.person-name {
-  display: inline-block;
-  width: 180px;
-  white-space: normal;
-}

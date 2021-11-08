@@ -18,15 +18,13 @@
                 <ng-container [ngSwitch]="schedule.trigger.type">
                   <ng-container *ngSwitchCase="JobTriggerType.periodic">
                     <ng-container i18n>every</ng-container>
-                    {{periods[schedule.trigger.periodicity]}} {{schedule.trigger.atTime | date:"HH:mm":"+0"}}
+                    {{periods[schedule.trigger.periodicity]}} {{atTimeLocal(schedule.trigger.atTime) | date:"HH:mm (z)"}}
                   </ng-container>
                   <ng-container
                     *ngSwitchCase="JobTriggerType.scheduled">{{schedule.trigger.time | date:"medium"}}</ng-container>
                   <ng-container *ngSwitchCase="JobTriggerType.never" i18n>never</ng-container>
                   <ng-container *ngSwitchCase="JobTriggerType.after">
-                    <ng-container i18n>after</ng-container>
-                    :
-                    {{schedule.trigger.afterScheduleName}}
+                    <ng-container i18n>after</ng-container>: {{schedule.trigger.afterScheduleName}}
                   </ng-container>
                 </ng-container>
               </div>
@@ -35,7 +33,7 @@
                   class="oi oi-trash"></span>
                 </button>
                 <app-settings-job-button class="job-control-button ml-md-2 mt-2 mt-md-0"
-                                         (error)="error=$event"
+                                         (jobError)="error=$event"
                                          [allowParallelRun]="schedule.allowParallelRun"
                                          [jobName]="schedule.jobName" [config]="schedule.config"
                                          [shortName]="true"></app-settings-job-button>
@@ -57,7 +55,7 @@
                     <app-settings-job-button class="float-right"
                                              [jobName]="schedule.jobName"
                                              [allowParallelRun]="schedule.allowParallelRun"
-                                             (error)="error=$event"
+                                             (jobError)="error=$event"
                                              [config]="schedule.config"></app-settings-job-button>
 
                   </div>
@@ -249,7 +247,7 @@
         <div class="modal-body">
           <select class="form-control" (change)="jobTypeChanged(newSchedule)" [(ngModel)]="newSchedule.jobName"
                   name="newJobName" required>
-            <option *ngFor="let availableJob of _settingsService.availableJobs | async"
+            <option *ngFor="let availableJob of settingsService.availableJobs | async"
                     [ngValue]="availableJob.Name">{{backendTextService.getJobName(availableJob.Name)}}
             </option>
           </select>

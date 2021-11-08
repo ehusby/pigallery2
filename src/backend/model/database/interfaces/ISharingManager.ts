@@ -1,6 +1,7 @@
 import {SharingDTO} from '../../../../common/entities/SharingDTO';
+import {IObjectManager} from './IObjectManager';
 
-export interface ISharingManager {
+export interface ISharingManager extends IObjectManager {
   findOne(filter: any): Promise<SharingDTO>;
 
   createSharing(sharing: SharingDTO): Promise<SharingDTO>;

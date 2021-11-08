@@ -1,44 +1,102 @@
 <form class="navbar-form" role="search" #SearchForm="ngForm">
   <div class="input-group">
-    <input type="text"
-           class="form-control "
-           i18n-placeholder
-           placeholder="Search"
-           (keyup)="onSearchChange($event)"
-           (blur)="onFocusLost()"
-           (focus)="onFocus()"
-           [(ngModel)]="searchText"
-           #name="ngModel"
-           size="30"
-           ngControl="search"
-           name="srch-term"
-           id="srch-term"
-           autocomplete="off">
 
+    <app-gallery-search-field [(ngModel)]="rawSearchText"
+                              (ngModelChange)="validateRawSearchText()"
+                              class="search-field"
+                              (search)="Search()"
+                              name="search-field">
 
-    <div class="autocomplete-list" *ngIf="autoCompleteItems.length > 0"
-         (mouseover)="setMouseOverAutoComplete(true)" (mouseout)="setMouseOverAutoComplete(false)">
-      <div class="autocomplete-item" *ngFor="let item of autoCompleteItems">
-        <a [routerLink]="['/search', item.text, {type: SearchTypes[item.type]}]">
-                    <span [ngSwitch]="item.type">
-                      <span *ngSwitchCase="SearchTypes.photo" class="oi oi-image"></span>
-                      <span *ngSwitchCase="SearchTypes.person" class="oi oi-person"></span>
-                      <span *ngSwitchCase="SearchTypes.video" class="oi oi-video"></span>
-                      <span *ngSwitchCase="SearchTypes.directory" class="oi oi-folder"></span>
-                      <span *ngSwitchCase="SearchTypes.keyword" class="oi oi-tag"></span>
-                      <span *ngSwitchCase="SearchTypes.position" class="oi oi-map-marker"></span>
-                    </span>
-          {{item.preText}}<strong>{{item.highLightText}}</strong>{{item.postText}}
-        </a>
-      </div>
-    </div>
+    </app-gallery-search-field>
 
     <div class="input-group-btn" style="display: block">
       <button class="btn btn-light" type="button"
-              [routerLink]="['/search', searchText]">
+              [routerLink]="['/search', HTMLSearchQuery]">
         <span class="oi oi-magnifying-glass"></span>
+      </button>
+    </div>
+
+    <div class="input-group-btn" style="display: block">
+      <button class="btn btn-light" type="button" (click)="openSearchModal(searchModal)">
+        <span class="oi oi-chevron-bottom"></span>
       </button>
     </div>
   </div>
 </form>
 
+
+<ng-template #searchModal>
+  <!-- sharing Modal-->
+  <div class="modal-header">
+    <h5 class="modal-title" i18n>Search</h5>
+    <button type="button" class="close" (click)="hideSearchModal()" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form #searchPanelForm="ngForm" class="form-horizontal">
+
+      <app-gallery-search-query-builder
+        name="search-query-builder"
+        [(ngModel)]="searchQueryDTO"
+        (change)="onQueryChange()"
+        (search)="Search()">
+      </app-gallery-search-query-builder>
+
+
+      <div class="input-group-btn float-right row" style="display: block">
+
+        <button *ngIf="CanCreateAlbum"
+                class="btn btn-secondary mr-2" type="button"
+                [disabled]="rawSearchText == ''"
+                (click)="openSaveSearchModal(saveSearchModal)">
+          <span class="oi oi-folder"></span> Save
+        </button>
+        <button class="btn btn-primary" type="button"
+                [routerLink]="['/search', HTMLSearchQuery]"
+                (click)="hideSearchModal()">
+          <span class="oi oi-magnifying-glass"></span> Search
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #saveSearchModal>
+  <!-- sharing Modal-->
+  <div class="modal-header">
+    <h5 class="modal-title" i18n>Save search to album</h5>
+    <button type="button" class="close" (click)="hideSaveSearchModal()" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <form #saveSearchPanelForm="ngForm" class="form-horizontal">
+
+        <div class="form-group">
+          <label for="saveSearchName">Album name</label>
+          <input
+            id="saveSearchName"
+            name="saveSearchName"
+            placeholder="Album name"
+            class="form-control input-md"
+            required="required"
+            [(ngModel)]="saveSearchName"
+            type="text"/>
+        </div>
+      <div class="input-group-btn float-right row mt-2" style="display: block">
+        <app-saved-search-popup-btn
+          [disabled]="saveSearchName == ''"
+          class="mr-2"
+          [savedSearchDTO]="{name:saveSearchName, searchQuery:searchQueryDTO}">
+        </app-saved-search-popup-btn>
+        <button class="btn btn-primary" type="button"
+                [disabled]="saveSearchName == ''"
+                (click)="saveSearch()">
+          <span class="oi oi-folder"></span> Save as album
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>

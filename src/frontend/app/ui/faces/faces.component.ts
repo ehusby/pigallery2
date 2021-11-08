@@ -3,7 +3,7 @@ import {FacesService} from './faces.service';
 import {QueryService} from '../../model/query.service';
 import {map} from 'rxjs/operators';
 import {PersonDTO} from '../../../../common/entities/PersonDTO';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-faces',
@@ -34,11 +34,11 @@ export class FacesComponent implements OnInit {
   }
 
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.updateSize();
   }
 
-  private updateSize() {
+  private updateSize(): void {
     const size = 220 + 5;
     // body - container margin
     const containerWidth = this.container.nativeElement.clientWidth - 30;

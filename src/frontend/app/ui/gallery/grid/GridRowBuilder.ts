@@ -17,8 +17,8 @@ export class GridRowBuilder {
     }
   }
 
-  public addPhotos(number: number) {
-    for (let i = 0; i < number; i++) {
+  public addPhotos(num: number): void {
+    for (let i = 0; i < num; i++) {
       this.addPhoto();
     }
   }
@@ -36,7 +36,7 @@ export class GridRowBuilder {
     return this.photoRow;
   }
 
-  public adjustRowHeightBetween(minHeight: number, maxHeight: number) {
+  public adjustRowHeightBetween(minHeight: number, maxHeight: number): void {
     while (this.calcRowHeight() > maxHeight && this.addPhoto() === true) { // row too high -> add more images
     }
 
@@ -51,8 +51,8 @@ export class GridRowBuilder {
 
   public calcRowHeight(): number {
     let width = 0;
-    for (let i = 0; i < this.photoRow.length; i++) {
-      const size = this.photoRow[i].metadata.size;
+    for (const item of this.photoRow) {
+      const size = item.metadata.size;
       width += (size.width / size.height); // summing up aspect ratios
     }
     const height = (this.containerWidth - this.photoRow.length * (this.photoMargin * 2) - 1) / width; // cant be equal -> width-1

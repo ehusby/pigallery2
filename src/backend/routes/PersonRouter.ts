@@ -8,7 +8,7 @@ import {VersionMWs} from '../middlewares/VersionMWs';
 import {Config} from '../../common/config/private/Config';
 
 export class PersonRouter {
-  public static route(app: Express) {
+  public static route(app: Express): void {
 
     this.updatePerson(app);
     this.addGetPersons(app);
@@ -16,7 +16,7 @@ export class PersonRouter {
   }
 
 
-  private static updatePerson(app: Express) {
+  protected static updatePerson(app: Express): void {
     app.post(['/api/person/:name'],
       // common part
       AuthenticationMWs.authenticate,
@@ -29,7 +29,7 @@ export class PersonRouter {
     );
   }
 
-  private static addGetPersons(app: Express) {
+  protected static addGetPersons(app: Express): void {
     app.get(['/api/person'],
       // common part
       AuthenticationMWs.authenticate,
@@ -38,14 +38,14 @@ export class PersonRouter {
 
       // specific part
       PersonMWs.listPersons,
-      PersonMWs.addSamplePhotoForAll,
+      // PersonMWs.addSamplePhotoForAll,
       ThumbnailGeneratorMWs.addThumbnailInfoForPersons,
-      PersonMWs.removeSamplePhotoForAll,
+      PersonMWs.cleanUpPersonResults,
       RenderingMWs.renderResult
     );
   }
 
-  private static getPersonThumbnail(app: Express) {
+  protected static getPersonThumbnail(app: Express): void {
     app.get(['/api/person/:name/thumbnail'],
       // common part
       AuthenticationMWs.authenticate,
@@ -53,7 +53,7 @@ export class PersonRouter {
       VersionMWs.injectGalleryVersion,
 
       // specific part
-      PersonMWs.getSamplePhoto,
+      PersonMWs.getPerson,
       ThumbnailGeneratorMWs.generatePersonThumbnail,
       RenderingMWs.renderFile
     );

@@ -15,31 +15,37 @@ export class MediaIcon {
     return this.media.name.substr(this.media.name.lastIndexOf('.') + 1);
   }
 
-  iconLoaded() {
+  iconLoaded(): void {
     this.media.readyIcon = true;
   }
 
-  isIconAvailable() {
+  isIconAvailable(): boolean {
     return this.media.readyIcon;
   }
 
   getRelativePath(): string {
-    return Utils.concatUrls(this.media.directory.path, this.media.directory.name, this.media.name);
+    return encodeURI(Utils.concatUrls(this.media.directory.path,
+      this.media.directory.name,
+      this.media.name))
+      // do not escape all urls with encodeURIComponent because that make the URL ugly and not needed
+      // do not escape before concatUrls as that would make prevent optimizations
+      // .replace(new RegExp('%', 'g'), '%25') // order important
+      .replace(new RegExp('#', 'g'), '%23')
+      .replace(new RegExp('\\$', 'g'), '%24');
   }
 
-  getIconPath() {
+  getIconPath(): string {
     return Utils.concatUrls(Config.Client.urlBase,
       '/api/gallery/content/',
-      this.media.directory.path, this.media.directory.name, this.media.name, 'icon');
+      this.getRelativePath(), 'icon');
   }
 
-  getMediaPath() {
+  getMediaPath(): string {
     return Utils.concatUrls(Config.Client.urlBase,
-      '/api/gallery/content/',
-      this.media.directory.path, this.media.directory.name, this.media.name);
+      '/api/gallery/content/', this.getRelativePath());
   }
 
-  getBestFitMediaPath() {
+  getBestFitMediaPath(): string {
     return Utils.concatUrls(this.getMediaPath(), '/bestFit');
   }
 

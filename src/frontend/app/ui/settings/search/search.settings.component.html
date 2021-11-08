@@ -1,6 +1,6 @@
 <form #settingsForm="ngForm">
   <div class="card mb-4"
-       [ngClass]="states.enabled.value && !_settingsService.isSupported()?'panel-warning':''">
+       [ngClass]="states.enabled.value && !settingsService.isSupported()?'panel-warning':''">
     <h5 class="card-header">
       {{Name}}
       <div class="switch-wrapper">
@@ -13,7 +13,7 @@
           switch-on-text="Enabled"
           i18n-switch-off-text
           i18n-switch-on-text
-          [switch-disabled]="inProgress || !_settingsService.isSupported()"
+          [switch-disabled]="inProgress || !settingsService.isSupported()"
           switch-handle-width="100"
           switch-label-width="20"
           [(ngModel)]="states.enabled.value">
@@ -23,7 +23,7 @@
     <div class="card-body">
       <div [hidden]="!error" class="alert alert-danger" role="alert"><strong>Error: </strong>{{error}}</div>
 
-      <ng-container *ngIf="states.enabled.value  || _settingsService.isSupported()">
+      <ng-container *ngIf="states.enabled.value  || settingsService.isSupported()">
 
 
 
@@ -36,16 +36,34 @@
         </app-settings-entry>
 
         <app-settings-entry
-          name="Instant search"
-          description="Enables showing search results, while typing search query."
+          name="Maximum media result"
+          description="Maximum number of photos and videos that listed in one search result"
           i18n-description i18n-name
-          [ngModel]="states.instantSearchEnabled">
+          [ngModel]="states.maxMediaResult"
+          [simplifiedMode]="simplifiedMode"
+          required="true">
+        </app-settings-entry>
+
+        <app-settings-entry
+          name="List directories"
+          description="Search will also return with directories"
+          i18n-description i18n-name
+          [ngModel]="states.listDirectories"
+          [simplifiedMode]="simplifiedMode">
+        </app-settings-entry>
+
+        <app-settings-entry
+          name="List metafiles"
+          description="Search also returns with metafiles from directories that contain a media file of the matched search result"
+          i18n-description i18n-name
+          [ngModel]="states.listMetafiles"
+          [simplifiedMode]="simplifiedMode">
         </app-settings-entry>
 
 
 
       </ng-container>
-      <div class="panel-info" *ngIf="(!states.enabled.value && !_settingsService.isSupported())" i18n>
+      <div class="panel-info" *ngIf="(!states.enabled.value && !settingsService.isSupported())" i18n>
         Search is not supported with these settings
       </div>
       <button class="btn btn-success float-right"

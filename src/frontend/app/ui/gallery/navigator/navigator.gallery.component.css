@@ -1,5 +1,6 @@
 .nav-container {
   position: relative;
+  z-index: 2;
 }
 
 .right-side {
@@ -13,8 +14,13 @@
   display: inline-block;
 }
 
-.divider{
-  margin: 5px 10px;
+.btn-download {
+  padding-left: 1px;
+  padding-right: 1px;
+}
+
+.divider {
+  margin: 5px 5px 5px 10px;
   border-left: 1px solid #6c757d;
   display: inline-block;
 }
@@ -24,7 +30,11 @@ ol {
 }
 
 .dropdown-menu {
-  min-width: 10rem;
+  min-width: 13rem;
+}
+
+.dropdown-item{
+  padding: 0.25rem 0.5rem;
 }
 
 .row {
@@ -42,6 +52,6 @@ nav {
 }
 
 
-.search-type{
+.search-type {
   margin-left: 5px;
 }

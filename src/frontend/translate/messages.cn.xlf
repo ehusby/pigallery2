@@ -1,0 +1,2841 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="714730744313654167" datatype="html">
+        <source>Application version</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/admin/admin.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <target>应用版本</target>
+      </trans-unit>
+      <trans-unit id="4138612661014637777" datatype="html">
+        <source>Built at</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/admin/admin.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <target>构建于</target>
+      </trans-unit>
+      <trans-unit id="7076930552474914340" datatype="html">
+        <source>Git commit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/admin/admin.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <target>Git 提交</target>
+      </trans-unit>
+      <trans-unit id="6603859330588429140" datatype="html">
+        <source> Server notifications </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/admin/admin.component.html</context>
+          <context context-type="linenumber">17,18</context>
+        </context-group>
+        <target>服务器通知</target>
+      </trans-unit>
+      <trans-unit id="881767691558053357" datatype="html">
+        <source> To dismiss these notifications, restart the server. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/admin/admin.component.html</context>
+          <context context-type="linenumber">35,36</context>
+        </context-group>
+        <target>要关闭这些通知, 请重新启动服务器.</target>
+      </trans-unit>
+      <trans-unit id="1768748035579543849" datatype="html">
+        <source>App version:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/admin/admin.component.html</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+        <target>应用版本:</target>
+      </trans-unit>
+      <trans-unit id="1713271461473302108" datatype="html">
+        <source>Mode</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/admin/admin.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <target>模式</target>
+      </trans-unit>
+      <trans-unit id="6201638315245239510" datatype="html">
+        <source>Advanced</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/admin/admin.component.html</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <target>高级</target>
+      </trans-unit>
+      <trans-unit id="1220398077697020727" datatype="html">
+        <source>Simplified</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/admin/admin.component.html</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+        <target>简单</target>
+      </trans-unit>
+      <trans-unit id="2102825898069375693" datatype="html">
+        <source>Menu</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/admin/admin.component.html</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+        <note priority="1" from="description">title of left card in settings page that contains settings contents</note>
+        <target>菜单</target>
+      </trans-unit>
+      <trans-unit id="5052755121871408908" datatype="html">
+        <source>Up time</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/admin/admin.component.html</context>
+          <context context-type="linenumber">139</context>
+        </context-group>
+        <target>正常运行时间</target>
+      </trans-unit>
+      <trans-unit id="2904029998096758375" datatype="html">
+        <source> No duplicates found </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/duplicates/duplicates.component.html</context>
+          <context context-type="linenumber">9,10</context>
+        </context-group>
+        <target>未找到重复项</target>
+      </trans-unit>
+      <trans-unit id="1262530507063329624" datatype="html">
+        <source>No faces to show.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/faces/faces.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <target>没有发现人脸.</target>
+      </trans-unit>
+      <trans-unit id="2181154762165715522" datatype="html">
+        <source>Gallery</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/frame/frame.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <target>画廊</target>
+      </trans-unit>
+      <trans-unit id="169123739434171110" datatype="html">
+        <source>Faces</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/frame/frame.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <target>人脸</target>
+      </trans-unit>
+      <trans-unit id="5023800535212148222" datatype="html">
+        <source>duplicates</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/frame/frame.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <target>重复</target>
+      </trans-unit>
+      <trans-unit id="4930506384627295710" datatype="html">
+        <source>Settings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/frame/frame.component.html</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <target>设置</target>
+      </trans-unit>
+      <trans-unit id="3797778920049399855" datatype="html">
+        <source>Logout</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/frame/frame.component.html</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <target>登出</target>
+      </trans-unit>
+      <trans-unit id="2817799343282769458" datatype="html">
+        <source>Link availability</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/gallery.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <target>链接可用性</target>
+      </trans-unit>
+      <trans-unit id="7036284206110282007" datatype="html">
+        <source>days</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/gallery.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <target>天</target>
+      </trans-unit>
+      <trans-unit id="1018831956200649278" datatype="html">
+        <source> Too many results to show. Refine your search. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/gallery.component.html</context>
+          <context context-type="linenumber">55,56</context>
+        </context-group>
+        <target>结果太多无法显示. 请改善你的搜索条件.</target>
+      </trans-unit>
+      <trans-unit id="6631147598757213823" datatype="html">
+        <source>download</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/lightbox/controls/controls.lightbox.gallery.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <target>下载</target>
+      </trans-unit>
+      <trans-unit id="5920553521143471222" datatype="html">
+        <source>info key: i</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/lightbox/controls/controls.lightbox.gallery.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <target>信息 快捷键: i</target>
+      </trans-unit>
+      <trans-unit id="4199727168861044300" datatype="html">
+        <source>toggle fullscreen, key: f</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/lightbox/controls/controls.lightbox.gallery.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/lightbox/controls/controls.lightbox.gallery.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/map/lightbox/lightbox.map.gallery.component.html</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/map/lightbox/lightbox.map.gallery.component.html</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+        <target>切换全屏, 快捷键: f</target>
+      </trans-unit>
+      <trans-unit id="6587606691006859224" datatype="html">
+        <source>close, key: Escape</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/lightbox/controls/controls.lightbox.gallery.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/map/lightbox/lightbox.map.gallery.component.html</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <target>关闭, 快捷键: Esc</target>
+      </trans-unit>
+      <trans-unit id="4866232808329812257" datatype="html">
+        <source>key: left arrow</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/lightbox/controls/controls.lightbox.gallery.component.html</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+        <target>快捷键: 左箭头</target>
+      </trans-unit>
+      <trans-unit id="5015670487371268284" datatype="html">
+        <source>key: right arrow</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/lightbox/controls/controls.lightbox.gallery.component.html</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+        <target>快捷键: 右箭头</target>
+      </trans-unit>
+      <trans-unit id="2952982394711430494" datatype="html">
+        <source>Zoom out, key: '-'</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/lightbox/controls/controls.lightbox.gallery.component.html</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+        <target>缩小, 快捷键: '-'</target>
+      </trans-unit>
+      <trans-unit id="5841975167410475386" datatype="html">
+        <source>Zoom in, key: '+'</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/lightbox/controls/controls.lightbox.gallery.component.html</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+        <target>放大, 快捷键: '+'</target>
+      </trans-unit>
+      <trans-unit id="314315645942131479" datatype="html">
+        <source>Info</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/lightbox/infopanel/info-panel.lightbox.gallery.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <target>信息</target>
+      </trans-unit>
+      <trans-unit id="5602245631444655788" datatype="html">
+        <source>duration</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/lightbox/infopanel/info-panel.lightbox.gallery.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/progress/job-progress.settings.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+        <target>时长</target>
+      </trans-unit>
+      <trans-unit id="593870536587305607" datatype="html">
+        <source>bit rate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/lightbox/infopanel/info-panel.lightbox.gallery.component.html</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <target>比特率</target>
+      </trans-unit>
+      <trans-unit id="5294987439623514854" datatype="html">
+        <source>Error during loading the video.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/lightbox/lightbox.gallery.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <target>加载视频时出错.</target>
+      </trans-unit>
+      <trans-unit id="7778584211809714680" datatype="html">
+        <source> Most likely the video is not transcoded. It can be done in the settings. You need to transcode these videos to watch them online: </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/lightbox/lightbox.gallery.component.html</context>
+          <context context-type="linenumber">23,26</context>
+        </context-group>
+        <target>很可能视频没有转码. 可以通过设置进行转码. 这些视频转码之后才能在线观看</target>
+      </trans-unit>
+      <trans-unit id="7909798112576642157" datatype="html">
+        <source>Searching for:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/navigator/navigator.gallery.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <target>搜索:</target>
+      </trans-unit>
+      <trans-unit id="413346167952108153" datatype="html">
+        <source>items</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/navigator/navigator.gallery.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <target>项目</target>
+      </trans-unit>
+      <trans-unit id="3445823735428564189" datatype="html">
+        <source>Random link</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/random-query-builder/random-query-builder.gallery.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <target>随机链接</target>
+      </trans-unit>
+      <trans-unit id="6692759234829188012" datatype="html">
+        <source>Random Link creator</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/random-query-builder/random-query-builder.gallery.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <target>随机链接生成器</target>
+      </trans-unit>
+      <trans-unit id="5351591262168826856" datatype="html">
+        <source>Copy </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/random-query-builder/random-query-builder.gallery.component.html</context>
+          <context context-type="linenumber">29,30</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/share/share.gallery.component.html</context>
+          <context context-type="linenumber">32,33</context>
+        </context-group>
+        <target>复制</target>
+      </trans-unit>
+      <trans-unit id="8291852809381837252" datatype="html">
+        <source>At least this many</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/search/query-enrty/query-entry.search.gallery.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/search/query-enrty/query-entry.search.gallery.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <target>至少这么多</target>
+      </trans-unit>
+      <trans-unit id="5203279511751768967" datatype="html">
+        <source>From</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/search/query-enrty/query-entry.search.gallery.component.html</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <target>从</target>
+      </trans-unit>
+      <trans-unit id="5027564160787173789" datatype="html">
+        <source>From date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/search/query-enrty/query-entry.search.gallery.component.html</context>
+          <context context-type="linenumber">104</context>
+        </context-group>
+        <target>从日期</target>
+      </trans-unit>
+      <trans-unit id="1701167908768267527" datatype="html">
+        <source>To date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/search/query-enrty/query-entry.search.gallery.component.html</context>
+          <context context-type="linenumber">116</context>
+        </context-group>
+        <target>迄今为止</target>
+      </trans-unit>
+      <trans-unit id="7832159846251736760" datatype="html">
+        <source>Minimum Rating</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/search/query-enrty/query-entry.search.gallery.component.html</context>
+          <context context-type="linenumber">128</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/search/query-enrty/query-entry.search.gallery.component.html</context>
+          <context context-type="linenumber">157</context>
+        </context-group>
+        <target>最低评分</target>
+      </trans-unit>
+      <trans-unit id="3363276748319081476" datatype="html">
+        <source>Maximum Rating</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/search/query-enrty/query-entry.search.gallery.component.html</context>
+          <context context-type="linenumber">142</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/search/query-enrty/query-entry.search.gallery.component.html</context>
+          <context context-type="linenumber">174</context>
+        </context-group>
+        <target>最高评分</target>
+      </trans-unit>
+      <trans-unit id="9024440163320108713" datatype="html">
+        <source>Portrait</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/search/query-enrty/query-entry.search.gallery.component.html</context>
+          <context context-type="linenumber">196</context>
+        </context-group>
+        <target>垂直</target>
+      </trans-unit>
+      <trans-unit id="1403507799985368460" datatype="html">
+        <source>Landscape</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/search/query-enrty/query-entry.search.gallery.component.html</context>
+          <context context-type="linenumber">197</context>
+        </context-group>
+        <target>水平</target>
+      </trans-unit>
+      <trans-unit id="4580988005648117665" datatype="html">
+        <source>Search</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/search/search-field/search-field.gallery.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/search/search.gallery.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <target>搜索</target>
+      </trans-unit>
+      <trans-unit id="7419704019640008953" datatype="html">
+        <source>Share</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/share/share.gallery.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/share/share.gallery.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <target>分享</target>
+      </trans-unit>
+      <trans-unit id="7682626963030103121" datatype="html">
+        <source>Sharing:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/share/share.gallery.component.html</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <target>分享:</target>
+      </trans-unit>
+      <trans-unit id="106602772352937359" datatype="html">
+        <source>Include subfolders:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/share/share.gallery.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <target>包括子文件夹:</target>
+      </trans-unit>
+      <trans-unit id="1431416938026210429" datatype="html">
+        <source>Password</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/share/share.gallery.component.html</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/share/share.gallery.component.html</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/login/login.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/database/database.settings.component.html</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/usermanager/usermanager.settings.component.html</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/sharelogin/share-login.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <target>密码</target>
+      </trans-unit>
+      <trans-unit id="3621339913652620986" datatype="html">
+        <source>Valid:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/share/share.gallery.component.html</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+        <target>有效期:</target>
+      </trans-unit>
+      <trans-unit id="5531237363767747080" datatype="html">
+        <source>Minutes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/share/share.gallery.component.html</context>
+          <context context-type="linenumber">104</context>
+        </context-group>
+        <target>分钟</target>
+      </trans-unit>
+      <trans-unit id="8070396816726827304" datatype="html">
+        <source>Hours</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/share/share.gallery.component.html</context>
+          <context context-type="linenumber">105</context>
+        </context-group>
+        <target>小时</target>
+      </trans-unit>
+      <trans-unit id="840951359074313455" datatype="html">
+        <source>Days</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/share/share.gallery.component.html</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+        <target>天</target>
+      </trans-unit>
+      <trans-unit id="4845030128243887325" datatype="html">
+        <source>Months</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/share/share.gallery.component.html</context>
+          <context context-type="linenumber">107</context>
+        </context-group>
+        <target>月</target>
+      </trans-unit>
+      <trans-unit id="1692815930495952260" datatype="html">
+        <source>Please log in</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/login/login.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <target>请登录</target>
+      </trans-unit>
+      <trans-unit id="1023046241952262024" datatype="html">
+        <source> Wrong username or password </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/login/login.component.html</context>
+          <context context-type="linenumber">13,14</context>
+        </context-group>
+        <target>错误的用户名或密码</target>
+      </trans-unit>
+      <trans-unit id="5248717555542428023" datatype="html">
+        <source>Username</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/login/login.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/database/database.settings.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/usermanager/usermanager.settings.component.html</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <target>用户名</target>
+      </trans-unit>
+      <trans-unit id="931252989873527145" datatype="html">
+        <source>Remember me</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/login/login.component.html</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <target>记住账号</target>
+      </trans-unit>
+      <trans-unit id="5173115640670709698" datatype="html">
+        <source>Login </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/login/login.component.html</context>
+          <context context-type="linenumber">68,69</context>
+        </context-group>
+        <target>登录</target>
+      </trans-unit>
+      <trans-unit id="5253186130625984783" datatype="html">
+        <source> It seems that you are running the application in a Docker container. This setting should not be changed in docker. Make sure, that you know what you are doing.
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/_abstract/settings-entry/settings-entry.component.html</context>
+          <context context-type="linenumber">2,5</context>
+        </context-group>
+        <target>您似乎是在 Docker 容器中运行该应用程序. Docker内的这个配置不应该被修改，除非您知道你在做什么.</target>
+      </trans-unit>
+      <trans-unit id="5769292297914455214" datatype="html">
+        <source>Disabled</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/_abstract/settings-entry/settings-entry.component.html</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/faces/faces.settings.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">137</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">170</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/map/map.settings.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/metafiles/metafile.settings.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/random-photo/random-photo.settings.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/search/search.settings.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/share/share.settings.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <target>已禁用</target>
+      </trans-unit>
+      <trans-unit id="4816216590591222133" datatype="html">
+        <source>Enabled</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/_abstract/settings-entry/settings-entry.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/faces/faces.settings.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">138</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">171</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/map/map.settings.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/metafiles/metafile.settings.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/random-photo/random-photo.settings.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/search/search.settings.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/share/share.settings.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <target>已启用</target>
+      </trans-unit>
+      <trans-unit id="933361080941409912" datatype="html">
+        <source>Page title</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/basic/basic.settings.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <target>页面标题</target>
+      </trans-unit>
+      <trans-unit id="6641024648411549335" datatype="html">
+        <source>Host</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/basic/basic.settings.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/database/database.settings.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <target>服务器IP</target>
+      </trans-unit>
+      <trans-unit id="5922774431911312513" datatype="html">
+        <source>Server will accept connections from this IPv6 or IPv4 address.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/basic/basic.settings.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <target>服务器将接受来自此 IPv6 或 IPv4 地址的连接.</target>
+      </trans-unit>
+      <trans-unit id="6117946241126833991" datatype="html">
+        <source>Port</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/basic/basic.settings.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/database/database.settings.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+        <target>端口号</target>
+      </trans-unit>
+      <trans-unit id="2521241309786115337" datatype="html">
+        <source>Port number. Port 80 is usually what you need.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/basic/basic.settings.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+        <target>端口号.</target>
+      </trans-unit>
+      <trans-unit id="4487775872787805732" datatype="html">
+        <source>Images folder</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/basic/basic.settings.component.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+        <target>图片文件夹</target>
+      </trans-unit>
+      <trans-unit id="3675884621668409255" datatype="html">
+        <source>Images are loaded from this folder (read permission required)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/basic/basic.settings.component.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+        <target>图像从此文件夹加载(需要读取权限)</target>
+      </trans-unit>
+      <trans-unit id="2771235786507007543" datatype="html">
+        <source>Temp folder</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/basic/basic.settings.component.html</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <target>临时文件夹</target>
+      </trans-unit>
+      <trans-unit id="4802007208364001087" datatype="html">
+        <source>Thumbnails, converted photos, videos will be stored here (write
+            permission required)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/basic/basic.settings.component.html</context>
+          <context context-type="linenumber">54,55</context>
+        </context-group>
+        <target>缩略图、转换后的照片、视频将存储在这里(需要写入权限)</target>
+      </trans-unit>
+      <trans-unit id="5093650417970469070" datatype="html">
+        <source>Page public url</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/basic/basic.settings.component.html</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <target>页面公共url地址</target>
+      </trans-unit>
+      <trans-unit id="2110640000884210371" datatype="html">
+        <source>If you access the page form local network its good to know the public
+            url for creating sharing link</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/basic/basic.settings.component.html</context>
+          <context context-type="linenumber">68,69</context>
+        </context-group>
+        <target>如果您从本地网络访问页面, 最好知道用于创建共享链接的公共 url地址</target>
+      </trans-unit>
+      <trans-unit id="4312373114061005708" datatype="html">
+        <source>Url Base</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/basic/basic.settings.component.html</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <target>基础url地址</target>
+      </trans-unit>
+      <trans-unit id="8123674628102378756" datatype="html">
+        <source>If you access the gallery under a sub url (like:
+            http://mydomain.com/myGallery), set it here. If it is not working you might miss the '/' from the beginning
+            of the
+            url.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/basic/basic.settings.component.html</context>
+          <context context-type="linenumber">78,81</context>
+        </context-group>
+        <target>如果您在子URL下访问画廊(例如: http://mydomain.com/myGallery), 请在此处进行设置. 如果不生效，可能是你漏掉了开头的'/'.</target>
+      </trans-unit>
+      <trans-unit id="720620266004315853" datatype="html">
+        <source> The public url and the url base are not matching. Some of the functionality might not work. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/basic/basic.settings.component.html</context>
+          <context context-type="linenumber">91,92</context>
+        </context-group>
+        <target>公共网址和网址基础不匹配. 一些功能可能会失效.</target>
+      </trans-unit>
+      <trans-unit id="662506850593821474" datatype="html">
+        <source>Save </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/basic/basic.settings.component.html</context>
+          <context context-type="linenumber">96,97</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/database/database.settings.component.html</context>
+          <context context-type="linenumber">77,78</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/faces/faces.settings.component.html</context>
+          <context context-type="linenumber">51,52</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">64,65</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">221,222</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/map/map.settings.component.html</context>
+          <context context-type="linenumber">104,105</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/metafiles/metafile.settings.component.html</context>
+          <context context-type="linenumber">30,31</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">105,106</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/photo/photo.settings.component.html</context>
+          <context context-type="linenumber">39,40</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/random-photo/random-photo.settings.component.html</context>
+          <context context-type="linenumber">40,41</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/search/search.settings.component.html</context>
+          <context context-type="linenumber">53,54</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/share/share.settings.component.html</context>
+          <context context-type="linenumber">45,46</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/thumbnail/thumbnail.settings.component.html</context>
+          <context context-type="linenumber">54,55</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">143,144</context>
+        </context-group>
+        <target>保存</target>
+      </trans-unit>
+      <trans-unit id="5562099532623028109" datatype="html">
+        <source>Reset </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/basic/basic.settings.component.html</context>
+          <context context-type="linenumber">100,101</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/database/database.settings.component.html</context>
+          <context context-type="linenumber">81,82</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/faces/faces.settings.component.html</context>
+          <context context-type="linenumber">55,56</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">68,69</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">225,226</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/map/map.settings.component.html</context>
+          <context context-type="linenumber">108,109</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/metafiles/metafile.settings.component.html</context>
+          <context context-type="linenumber">34,35</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">109,110</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/photo/photo.settings.component.html</context>
+          <context context-type="linenumber">43,44</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/random-photo/random-photo.settings.component.html</context>
+          <context context-type="linenumber">44,45</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/search/search.settings.component.html</context>
+          <context context-type="linenumber">57,58</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/share/share.settings.component.html</context>
+          <context context-type="linenumber">49,50</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/thumbnail/thumbnail.settings.component.html</context>
+          <context context-type="linenumber">58,59</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">147,148</context>
+        </context-group>
+        <target>重置</target>
+      </trans-unit>
+      <trans-unit id="8650499415827640724" datatype="html">
+        <source>Type</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/database/database.settings.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <target>类型</target>
+      </trans-unit>
+      <trans-unit id="7143074042212519365" datatype="html">
+        <source>Install manually mysql node module to use mysql (npm install mysql) </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/database/database.settings.component.html</context>
+          <context context-type="linenumber">15,16</context>
+        </context-group>
+        <target>手动安装mysql模块来使用mysql(npm install mysql)</target>
+      </trans-unit>
+      <trans-unit id="9183561046697462335" datatype="html">
+        <source>Database folder</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/database/database.settings.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <target>数据库文件夹</target>
+      </trans-unit>
+      <trans-unit id="7377248215122830355" datatype="html">
+        <source>All file-based data will be stored here (sqlite database, user database in case of memory db, job history data)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/database/database.settings.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <target>所有基于文件的数据都将存储在这里(sqlite 数据库, 用户数据库, 任务历史数据)</target>
+      </trans-unit>
+      <trans-unit id="4198035112366277884" datatype="html">
+        <source>Database</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/database/database.settings.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <target>数据库</target>
+      </trans-unit>
+      <trans-unit id="6946816815826261880" datatype="html">
+        <source>Override keywords</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/faces/faces.settings.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <target>覆盖关键字</target>
+      </trans-unit>
+      <trans-unit id="60528833843807470" datatype="html">
+        <source>If a photo has the same face (person) name and keyword, the app removes the duplicate, keeping the face only.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/faces/faces.settings.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <target>如果照片具有相同的面部(人)名称和关键字, 应用程序将删除重复项, 仅保留面部.</target>
+      </trans-unit>
+      <trans-unit id="6000343568689359565" datatype="html">
+        <source>Face starring right</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/faces/faces.settings.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <target>朝向右边的人脸</target>
+      </trans-unit>
+      <trans-unit id="2357112787691547745" datatype="html">
+        <source>Required minimum right to star (favourite) a face.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/faces/faces.settings.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <target>为(最喜欢的)人脸加注星标所需的最低权限.</target>
+      </trans-unit>
+      <trans-unit id="3603301297464446974" datatype="html">
+        <source> Faces are not supported with these settings. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/faces/faces.settings.component.html</context>
+          <context context-type="linenumber">47,48</context>
+        </context-group>
+        <target>这些设置不支持人脸.</target>
+      </trans-unit>
+      <trans-unit id="6357673643373020262" datatype="html">
+        <source>Index cache timeout [ms]</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <target>索引缓存超时 [ms]</target>
+      </trans-unit>
+      <trans-unit id="30504472355546071" datatype="html">
+        <source>If there was no indexing in this time, it reindexes. (skipped if indexes are in DB and sensitivity is low)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <target>如果此时没有索引, 则重新索引. (如果索引在数据库内并且灵敏度为低时会跳过)</target>
+      </trans-unit>
+      <trans-unit id="1334817424484159222" datatype="html">
+        <source>Folder reindexing sensitivity</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <target>文件夹重新索引灵敏度</target>
+      </trans-unit>
+      <trans-unit id="230762791747912786" datatype="html">
+        <source>Set the reindexing sensitivity. High value check the folders for change more often.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <target>设置重新索引灵敏度. 越高则扫描文件夹变动越频繁.</target>
+      </trans-unit>
+      <trans-unit id="3568851002082270949" datatype="html">
+        <source>Exclude Folder List</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <target>排除文件夹列表</target>
+      </trans-unit>
+      <trans-unit id="8154546674891165404" datatype="html">
+        <source>Folders to exclude from indexing</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <target>要从索引中排除的文件夹</target>
+      </trans-unit>
+      <trans-unit id="1169525535504005135" datatype="html">
+        <source>';' separated strings. If an entry starts with '/' it is treated as an absolute path. If it doesn't start with '/' but contains a '/', the path is relative to the image directory. If it doesn't contain a '/', any folder with this name will be excluded. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">37,40</context>
+        </context-group>
+        <target>';'分隔的字符串. 如果以'/'开头，会被当作绝对路径. 如果不以'/'开头，但是包含'/', 则会被当作相对路径. 如果没有包含'/', 任何以此为命名的文件夹都会被排除.</target>
+      </trans-unit>
+      <trans-unit id="1086546411028005438" datatype="html">
+        <source>Exclude File List</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+        <target>排除文件列表</target>
+      </trans-unit>
+      <trans-unit id="5009351713579861364" datatype="html">
+        <source>Files that mark a folder to be excluded from indexing</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+        <target>将文件夹标记为从索引中排除的文件</target>
+      </trans-unit>
+      <trans-unit id="429061027181061512" datatype="html">
+        <source>';' separated strings. Any folder that contains a file with this name will be excluded from indexing. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">53,55</context>
+        </context-group>
+        <target>';'分隔的字符串. 任何一个包含有这个名字文件的文件夹都会被从索引中排除.</target>
+      </trans-unit>
+      <trans-unit id="866376767671178317" datatype="html">
+        <source>If you add a new folder to your gallery, the site indexes it automatically.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <target>如果您将新文件夹添加到您的画廊, 网站会自动将其编入索引.</target>
+      </trans-unit>
+      <trans-unit id="2303963554177961618" datatype="html">
+        <source>If you would like to trigger indexing manually, click index button.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+        <target>如果您想手动触发索引, 请单击索引按钮.</target>
+      </trans-unit>
+      <trans-unit id="2690075001126576478" datatype="html">
+        <source>Note: search only works among the indexed directories</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+        <target>注意: 搜索仅适用于已索引目录</target>
+      </trans-unit>
+      <trans-unit id="3466167636009088678" datatype="html">
+        <source> Statistic: </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">105,106</context>
+        </context-group>
+        <target>统计:</target>
+      </trans-unit>
+      <trans-unit id="1205037876874222931" datatype="html">
+        <source>Folders</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+        <target>文件夹</target>
+      </trans-unit>
+      <trans-unit id="8405309693308875139" datatype="html">
+        <source>Photos</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+        <target>相片</target>
+      </trans-unit>
+      <trans-unit id="8936704404804793618" datatype="html">
+        <source>Videos</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">116</context>
+        </context-group>
+        <target>视频</target>
+      </trans-unit>
+      <trans-unit id="258586247001688466" datatype="html">
+        <source>Persons</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+        <target>人物</target>
+      </trans-unit>
+      <trans-unit id="45739481977493163" datatype="html">
+        <source>Size</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.html</context>
+          <context context-type="linenumber">125</context>
+        </context-group>
+        <target>尺寸</target>
+      </trans-unit>
+      <trans-unit id="9128681615749206002" datatype="html">
+        <source>Trigger job run manually</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/button/job-button.settings.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <target>手动触发任务运行</target>
+      </trans-unit>
+      <trans-unit id="1442537757726795809" datatype="html">
+        <source>Run now</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/button/job-button.settings.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <target>现在运行</target>
+      </trans-unit>
+      <trans-unit id="2159130950882492111" datatype="html">
+        <source>Cancel</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/button/job-button.settings.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <target>取消</target>
+      </trans-unit>
+      <trans-unit id="8293670171001042991" datatype="html">
+        <source>every</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">118</context>
+        </context-group>
+        <target>每一个</target>
+      </trans-unit>
+      <trans-unit id="4101442988100757762" datatype="html">
+        <source>never</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <target>绝不</target>
+      </trans-unit>
+      <trans-unit id="6334092464207199213" datatype="html">
+        <source>after</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <target>后</target>
+      </trans-unit>
+      <trans-unit id="6458677044022639721" datatype="html">
+        <source>Job:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <target>任务:</target>
+      </trans-unit>
+      <trans-unit id="3770273819204930148" datatype="html">
+        <source>Periodicity:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <target>周期性:</target>
+      </trans-unit>
+      <trans-unit id="1545019447684907468" datatype="html">
+        <source>Set the time to run the job. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">76,77</context>
+        </context-group>
+        <target>设置运行任务的时间.</target>
+      </trans-unit>
+      <trans-unit id="1598058373778280238" datatype="html">
+        <source>After:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+        <target>后:</target>
+      </trans-unit>
+      <trans-unit id="1963407138412411589" datatype="html">
+        <source>The job will run after that job finishes. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">93,94</context>
+        </context-group>
+        <target>这个任务会在那个任务完成后运行.</target>
+      </trans-unit>
+      <trans-unit id="7479716926471212179" datatype="html">
+        <source>At:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+        <target>在:</target>
+      </trans-unit>
+      <trans-unit id="2663284587089894626" datatype="html">
+        <source>Allow parallel run</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+        <target>允许并行运行</target>
+      </trans-unit>
+      <trans-unit id="6820090689099376148" datatype="html">
+        <source>Enables the job to start even if an other job is already running. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">145,146</context>
+        </context-group>
+        <target>即使其他任务已在运行, 也能使任务启动.</target>
+      </trans-unit>
+      <trans-unit id="5242498003738057671" datatype="html">
+        <source>';' separated integers. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">200,201</context>
+        </context-group>
+        <target>';'</target>
+      </trans-unit>
+      <trans-unit id="8008862212814574384" datatype="html">
+        <source>+ Add Job </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">228,229</context>
+        </context-group>
+        <target>+ 添加任务</target>
+      </trans-unit>
+      <trans-unit id="8500119868694688450" datatype="html">
+        <source>Add new job</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">243</context>
+        </context-group>
+        <target>添加新任务</target>
+      </trans-unit>
+      <trans-unit id="2893483139524749280" datatype="html">
+        <source>Select a job to schedule. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">257,258</context>
+        </context-group>
+        <target>选择要安排的任务.</target>
+      </trans-unit>
+      <trans-unit id="7819314041543176992" datatype="html">
+        <source>Close</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">262</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/usermanager/usermanager.settings.component.html</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+        <target>关闭</target>
+      </trans-unit>
+      <trans-unit id="6188210409712327095" datatype="html">
+        <source>Add Job </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.html</context>
+          <context context-type="linenumber">265,266</context>
+        </context-group>
+        <target>添加任务</target>
+      </trans-unit>
+      <trans-unit id="3615321865355398203" datatype="html">
+        <source> Last run: </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/progress/job-progress.settings.component.html</context>
+          <context context-type="linenumber">3,4</context>
+        </context-group>
+        <target>最后运行:</target>
+      </trans-unit>
+      <trans-unit id="8770180893388957738" datatype="html">
+        <source>Run between</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/progress/job-progress.settings.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <target>在此期间运行</target>
+      </trans-unit>
+      <trans-unit id="5611592591303869712" datatype="html">
+        <source>Status</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/progress/job-progress.settings.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <target>状态</target>
+      </trans-unit>
+      <trans-unit id="509736707516044180" datatype="html">
+        <source>Cancelling...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/progress/job-progress.settings.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+        <target>取消中...</target>
+      </trans-unit>
+      <trans-unit id="2284946191054601015" datatype="html">
+        <source>time elapsed</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/progress/job-progress.settings.component.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+        <target>经过时间</target>
+      </trans-unit>
+      <trans-unit id="4749295647449765550" datatype="html">
+        <source>Processed</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/progress/job-progress.settings.component.html</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+        <target>已处理</target>
+      </trans-unit>
+      <trans-unit id="7611487429832462405" datatype="html">
+        <source>Skipped</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/progress/job-progress.settings.component.html</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
+        <target>已跳过</target>
+      </trans-unit>
+      <trans-unit id="5246819740476460403" datatype="html">
+        <source>Left</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/progress/job-progress.settings.component.html</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+        <target>剩余</target>
+      </trans-unit>
+      <trans-unit id="1616102757855967475" datatype="html">
+        <source>All</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/progress/job-progress.settings.component.html</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+        <target>全部</target>
+      </trans-unit>
+      <trans-unit id="344985694001196609" datatype="html">
+        <source> Logs </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/progress/job-progress.settings.component.html</context>
+          <context context-type="linenumber">111,112</context>
+        </context-group>
+        <target>日志</target>
+      </trans-unit>
+      <trans-unit id="6751875790342223128" datatype="html">
+        <source>Use image markers</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/map/map.settings.component.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <target>使用图像标记</target>
+      </trans-unit>
+      <trans-unit id="7016588915008667535" datatype="html">
+        <source>Map will use thumbnail images as markers instead of the default pin.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/map/map.settings.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <target>地图将使用缩略图作为标记而不是默认的图钉.</target>
+      </trans-unit>
+      <trans-unit id="3187574854736372962" datatype="html">
+        <source>Map provider</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/map/map.settings.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <target>地图提供者</target>
+      </trans-unit>
+      <trans-unit id="8953033926734869941" datatype="html">
+        <source>Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/map/map.settings.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/usermanager/usermanager.settings.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <target>名称</target>
+      </trans-unit>
+      <trans-unit id="3853557835274460749" datatype="html">
+        <source>Tile Url*</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/map/map.settings.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <target>图块网址*</target>
+      </trans-unit>
+      <trans-unit id="2480088071603915284" datatype="html">
+        <source>*The map module will use these urls to fetch the map tiles.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/map/map.settings.component.html</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <target>*地图模块将使用这些网址来获取地图图块.</target>
+      </trans-unit>
+      <trans-unit id="5559929655128993973" datatype="html">
+        <source>+ Add Layer </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/map/map.settings.component.html</context>
+          <context context-type="linenumber">82,83</context>
+        </context-group>
+        <target>添加图层</target>
+      </trans-unit>
+      <trans-unit id="5860141610052555892" datatype="html">
+        <source>Mapbox access token</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/map/map.settings.component.html</context>
+          <context context-type="linenumber">89</context>
+        </context-group>
+        <target>Mapbox 访问令牌</target>
+      </trans-unit>
+      <trans-unit id="8791502131202615784" datatype="html">
+        <source>MapBox needs an access token to work, create one at</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/map/map.settings.component.html</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <target>MapBox 需要访问令牌才能运行, 请在以下位置创建一个</target>
+      </trans-unit>
+      <trans-unit id="6436469052297709486" datatype="html">
+        <source>Reads and show *.gpx files on the map</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/metafiles/metafile.settings.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <target>读取并在地图上显示 *.gpx 文件</target>
+      </trans-unit>
+      <trans-unit id="3145443688760998546" datatype="html">
+        <source>Error: </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <target>错误:</target>
+      </trans-unit>
+      <trans-unit id="8753478755670991971" datatype="html">
+        <source>Threads:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <target>线程:</target>
+      </trans-unit>
+      <trans-unit id="115517097860869209" datatype="html">
+        <source>Threading</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <target>线程</target>
+      </trans-unit>
+      <trans-unit id="6018314912172678622" datatype="html">
+        <source>Runs directory scanning in a different thread.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <target>在不同的线程中运行目录扫描.</target>
+      </trans-unit>
+      <trans-unit id="4920945982811848923" datatype="html">
+        <source>Thumbnail threads</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <target>缩略图线程</target>
+      </trans-unit>
+      <trans-unit id="8717006349426499039" datatype="html">
+        <source>Number of threads that are used to generate thumbnails. If auto, number of CPU cores -1 threads will be used.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <target>用于生成缩略图的线程数. 如果设为自动, 则使用cpu核心数减1个线程</target>
+      </trans-unit>
+      <trans-unit id="4513537095004330348" datatype="html">
+        <source>Misc:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <target>杂项:</target>
+      </trans-unit>
+      <trans-unit id="1555465647399115479" datatype="html">
+        <source>Scroll based thumbnail generation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+        <target>基于滚动的缩略图生成</target>
+      </trans-unit>
+      <trans-unit id="2408284962530107777" datatype="html">
+        <source>Those thumbnails get higher priority that are visible on the screen.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <target>那些在屏幕上可见的缩略图获得更高的优先级.</target>
+      </trans-unit>
+      <trans-unit id="4694991840267723534" datatype="html">
+        <source>Lazy image rendering</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+        <target>延迟图像渲染</target>
+      </trans-unit>
+      <trans-unit id="5428258036954807355" datatype="html">
+        <source>Shows only the required amount of photos at once. Renders more if page bottom is reached.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+        <target>一次仅显示所需数量的照片. 到了页面底部才渲染更多.</target>
+      </trans-unit>
+      <trans-unit id="6385104003676355545" datatype="html">
+        <source>Cache</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+        <target>缓存</target>
+      </trans-unit>
+      <trans-unit id="4527546780564866281" datatype="html">
+        <source>Caches directory contents and search results for better performance.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <target>缓存目录内容和搜索结果以获得更好的性能.</target>
+      </trans-unit>
+      <trans-unit id="138256296895235303" datatype="html">
+        <source>Caption first naming</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <target>标题优先命名</target>
+      </trans-unit>
+      <trans-unit id="5529709926880329339" datatype="html">
+        <source>Show the caption (IPTC 120) tags from the EXIF data instead of the filenames.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <target>显示 EXIF 数据中的标题 (IPTC 120) 标签而不是文件名.</target>
+      </trans-unit>
+      <trans-unit id="7828128386671267084" datatype="html">
+        <source>Navigation bar:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <target>导航栏:</target>
+      </trans-unit>
+      <trans-unit id="221212791975935245" datatype="html">
+        <source>Show item count</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+        <target>显示项目数</target>
+      </trans-unit>
+      <trans-unit id="6952912037252536884" datatype="html">
+        <source>Show the number of items (photos) in the folder.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <target>显示文件夹中的项目(照片)数量.</target>
+      </trans-unit>
+      <trans-unit id="9187000156365172901" datatype="html">
+        <source>Default photo sorting method</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+        <target>默认照片排序方式</target>
+      </trans-unit>
+      <trans-unit id="4152397028845147341" datatype="html">
+        <source>Sort directories by date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+        <target>按日期排序目录</target>
+      </trans-unit>
+      <trans-unit id="3147181893618230466" datatype="html">
+        <source>If enabled, directories will be sorted by date, like photos, otherwise by name. Directory date is the last modification time of that directory not the creation date of the oldest photo.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.html</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+        <target>如果启用, 目录将和照片一样按日期排序, 否则按名称排序.</target>
+      </trans-unit>
+      <trans-unit id="4382892554410370373" datatype="html">
+        <source>Photo converting:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/photo/photo.settings.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <target>照片转换:</target>
+      </trans-unit>
+      <trans-unit id="3097222075770179061" datatype="html">
+        <source>Converting</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/photo/photo.settings.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <target>转换</target>
+      </trans-unit>
+      <trans-unit id="3630628211668602534" datatype="html">
+        <source>Downsizes photos for faster preview loading. (Zooming in to the photo loads the original).</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/photo/photo.settings.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <target>缩小照片以加快预览加载速度. (放大加载原图)</target>
+      </trans-unit>
+      <trans-unit id="4328921999658902771" datatype="html">
+        <source>On the fly converting</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/photo/photo.settings.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <target>即时转换</target>
+      </trans-unit>
+      <trans-unit id="2470605681014912285" datatype="html">
+        <source>Converts photos on the fly, when they are requested.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/photo/photo.settings.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <target>在请求时即时转换照片.</target>
+      </trans-unit>
+      <trans-unit id="1963136290621768454" datatype="html">
+        <source>Resolution</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/photo/photo.settings.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <target>分辨率</target>
+      </trans-unit>
+      <trans-unit id="7423094978007045780" datatype="html">
+        <source>The shorter edge of the converted photo will be scaled down to this, while keeping the aspect ratio.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/photo/photo.settings.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <target>转换后照片的较短边缘将按比例缩小, 同时保持纵横比.</target>
+      </trans-unit>
+      <trans-unit id="8687697587531033527" datatype="html">
+        <source> This feature enables you to generate 'random photo' urls. That URL returns a photo random selected from your gallery. You can use the url with 3rd party application like random changing desktop background. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/random-photo/random-photo.settings.component.html</context>
+          <context context-type="linenumber">29,32</context>
+        </context-group>
+        <target>此功能使您能够生成"随机照片"网址. 这个URL地址会返回一张你的相册中随机的照片. 你可以配合第三方应用来实现诸如随机桌面壁纸的效果.</target>
+      </trans-unit>
+      <trans-unit id="7279049492322958709" datatype="html">
+        <source> Random Photo is not supported with these settings </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/random-photo/random-photo.settings.component.html</context>
+          <context context-type="linenumber">36,37</context>
+        </context-group>
+        <target>这些设置不支持随机照片</target>
+      </trans-unit>
+      <trans-unit id="6507738516307254402" datatype="html">
+        <source>Autocomplete</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/search/search.settings.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+        <target>自动补全</target>
+      </trans-unit>
+      <trans-unit id="7703111577289302879" datatype="html">
+        <source>Show hints while typing search query.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/search/search.settings.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <target>在键入搜索查询时显示提示.</target>
+      </trans-unit>
+      <trans-unit id="5429277931967412566" datatype="html">
+        <source>Instant search</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/search/search.settings.component.html</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <target>即时搜索</target>
+      </trans-unit>
+      <trans-unit id="2114338569863886800" datatype="html">
+        <source>Enables showing search results, while typing search query.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/search/search.settings.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <target>在键入搜索查询时启用显示搜索结果.</target>
+      </trans-unit>
+      <trans-unit id="2110159159447052410" datatype="html">
+        <source> Search is not supported with these settings </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/search/search.settings.component.html</context>
+          <context context-type="linenumber">49,50</context>
+        </context-group>
+        <target>这些设置不支持搜索</target>
+      </trans-unit>
+      <trans-unit id="166448092104563965" datatype="html">
+        <source>Password protected</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/share/share.settings.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <target>密码保护</target>
+      </trans-unit>
+      <trans-unit id="4655262361738444589" datatype="html">
+        <source>Enables password protected sharing links.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/share/share.settings.component.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <target>启用受密码保护的共享链接.</target>
+      </trans-unit>
+      <trans-unit id="5314273501490247820" datatype="html">
+        <source> Sharing is not supported with these settings </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/share/share.settings.component.html</context>
+          <context context-type="linenumber">39,40</context>
+        </context-group>
+        <target>这些设置不支持共享</target>
+      </trans-unit>
+      <trans-unit id="7877424948316464725" datatype="html">
+        <source>Shared links:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/share/share.settings.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <target>共享链接:</target>
+      </trans-unit>
+      <trans-unit id="2176659033176029418" datatype="html">
+        <source>Key</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/share/share.settings.component.html</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <target>密钥</target>
+      </trans-unit>
+      <trans-unit id="7046259383943324039" datatype="html">
+        <source>Folder</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/share/share.settings.component.html</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+        <target>文件夹</target>
+      </trans-unit>
+      <trans-unit id="1043390381565182083" datatype="html">
+        <source>Creator</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/share/share.settings.component.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <target>创造者</target>
+      </trans-unit>
+      <trans-unit id="8037476586059399916" datatype="html">
+        <source>Expires</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/share/share.settings.component.html</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <target>过期</target>
+      </trans-unit>
+      <trans-unit id="4938468904180779002" datatype="html">
+        <source> No sharing was created. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/share/share.settings.component.html</context>
+          <context context-type="linenumber">85,86</context>
+        </context-group>
+        <target>没有创建共享.</target>
+      </trans-unit>
+      <trans-unit id="8544082464902365458" datatype="html">
+        <source>Thumbnail Quality</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/thumbnail/thumbnail.settings.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <target>缩略图质量</target>
+      </trans-unit>
+      <trans-unit id="3683254909541246725" datatype="html">
+        <source>High quality may be slow.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/thumbnail/thumbnail.settings.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <target>高质量可能会很慢.</target>
+      </trans-unit>
+      <trans-unit id="8660596054751792946" datatype="html">
+        <source>Icon size</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/thumbnail/thumbnail.settings.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <target>图标大小</target>
+      </trans-unit>
+      <trans-unit id="5685971437887935419" datatype="html">
+        <source>Icon size (used on maps).</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/thumbnail/thumbnail.settings.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <target>图标大小(用于地图).</target>
+      </trans-unit>
+      <trans-unit id="1164574322837752416" datatype="html">
+        <source>Thumbnail sizes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/thumbnail/thumbnail.settings.component.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <target>缩略图大小</target>
+      </trans-unit>
+      <trans-unit id="303606423265609501" datatype="html">
+        <source>Size of the thumbnails.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/thumbnail/thumbnail.settings.component.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <target>缩略图的大小.</target>
+      </trans-unit>
+      <trans-unit id="9168085709932370234" datatype="html">
+        <source>The best matching size will be generated. (More sizes give better quality, but use more storage and CPU to render.) </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/thumbnail/thumbnail.settings.component.html</context>
+          <context context-type="linenumber">39,41</context>
+        </context-group>
+        <target>将生成最佳匹配尺寸. (尺寸越大质量越好, 但是要消耗更多的存储和CPU用于渲染.)</target>
+      </trans-unit>
+      <trans-unit id="4240916069361249816" datatype="html">
+        <source>';' separated integers. If size is 240, that shorter side of the thumbnail will have 160 pixels. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/thumbnail/thumbnail.settings.component.html</context>
+          <context context-type="linenumber">43,45</context>
+        </context-group>
+        <target>';' 分隔的数字. 如果大小是240, 那么缩略图的短边则为160像素.</target>
+      </trans-unit>
+      <trans-unit id="4145496584631696119" datatype="html">
+        <source>Role</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/usermanager/usermanager.settings.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <target>角色</target>
+      </trans-unit>
+      <trans-unit id="4686867435965660873" datatype="html">
+        <source>+ Add user </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/usermanager/usermanager.settings.component.html</context>
+          <context context-type="linenumber">55,56</context>
+        </context-group>
+        <target>+ 添加用户</target>
+      </trans-unit>
+      <trans-unit id="1804954897767721868" datatype="html">
+        <source> To protect the site with password / have login enable this. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/usermanager/usermanager.settings.component.html</context>
+          <context context-type="linenumber">59,60</context>
+        </context-group>
+        <target>要使用密码保护站点 / 必须登录来启用此功能.</target>
+      </trans-unit>
+      <trans-unit id="1996265061837601864" datatype="html">
+        <source>Add new User</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/usermanager/usermanager.settings.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <target>添加新用户</target>
+      </trans-unit>
+      <trans-unit id="4032325907350308427" datatype="html">
+        <source>Add User </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/usermanager/usermanager.settings.component.html</context>
+          <context context-type="linenumber">90,91</context>
+        </context-group>
+        <target>添加用户</target>
+      </trans-unit>
+      <trans-unit id="212156329687359765" datatype="html">
+        <source>Video support uses ffmpeg. ffmpeg and ffprobe binaries need to be available in the PATH or the @ffmpeg-installer/ffmpeg and @ffprobe-installer/ffprobe optional node packages need to be installed. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">26,29</context>
+        </context-group>
+        <target>视频支持使用 ffmpeg. PATH环境变量中需要有ffmpeg和ffprobe, 或者安装 @ffmpeg-installer/ffmpeg 和 @ffprobe-installer/ffprobe 这两个包.</target>
+      </trans-unit>
+      <trans-unit id="687377800275150177" datatype="html">
+        <source>Video transcoding:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <target>视频转码:</target>
+      </trans-unit>
+      <trans-unit id="6550506711010052550" datatype="html">
+        <source>To ensure smooth video playback, video transcoding is recommended to a lower bit rate than the server's upload rate. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">35,38</context>
+        </context-group>
+        <target>为保证视频播放流畅, 视频转码建议码率低于服务器上传码率.</target>
+      </trans-unit>
+      <trans-unit id="7244300458695330435" datatype="html">
+        <source>The transcoded videos will be save to the thumbnail folder.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <target>转码后的视频将保存到缩略图文件夹中.</target>
+      </trans-unit>
+      <trans-unit id="5785407814671438620" datatype="html">
+        <source>You can trigger the transcoding manually, but you can also create an automatic encoding job in advanced settings mode. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">40,43</context>
+        </context-group>
+        <target>您可以手动触发转码, 但您也可以在高级设置模式下创建自动编码任务.</target>
+      </trans-unit>
+      <trans-unit id="7513076467032912668" datatype="html">
+        <source>Format</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+        <target>格式</target>
+      </trans-unit>
+      <trans-unit id="4094960161662677662" datatype="html">
+        <source>Codec</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <target>编解码器</target>
+      </trans-unit>
+      <trans-unit id="8355011535250584768" datatype="html">
+        <source>The height of the output video will be scaled down to this, while keeping the aspect ratio.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <target>输出视频的高度将缩小, 同时保持纵横比.</target>
+      </trans-unit>
+      <trans-unit id="3228666320262483835" datatype="html">
+        <source>FPS</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+        <target>FPS</target>
+      </trans-unit>
+      <trans-unit id="1755420511646795750" datatype="html">
+        <source>Target frame per second (fps) of the output video will be scaled down this this.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+        <target>输出视频的每秒目标帧数 (fps) 将按比例缩小.</target>
+      </trans-unit>
+      <trans-unit id="306805200938050070" datatype="html">
+        <source>Bit rate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <target>比特率</target>
+      </trans-unit>
+      <trans-unit id="2478892300465956089" datatype="html">
+        <source>Target bit rate of the output video will be scaled down this this. This should be less than the upload rate of your home server.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">104,106</context>
+        </context-group>
+        <target>输出视频的目标比特率将按比例缩小. 建议低于服务器上传码率</target>
+      </trans-unit>
+      <trans-unit id="8500867820372719149" datatype="html">
+        <source>CRF</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+        <target>CRF</target>
+      </trans-unit>
+      <trans-unit id="639575417147182282" datatype="html">
+        <source>The range of the Constant Rate Factor (CRF) scale is 0–51, where 0 is lossless, 23 is the default, and 51 is worst quality possible.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+        <target>恒定速率因子 (CRF) 标度的范围是 0–51,其中 0 是无损, 23 是默认值, 51 是最差.</target>
+      </trans-unit>
+      <trans-unit id="6333857424161463201" datatype="html">
+        <source>Preset</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+        <target>预设</target>
+      </trans-unit>
+      <trans-unit id="5666144931223883408" datatype="html">
+        <source>A preset is a collection of options that will provide a certain encoding speed to compression ratio. A slower preset will provide better compression (compression is quality per filesize).</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+        <target>预设是一组选项, 可提供特定的编码速度与压缩比. 越慢的预设可以提供更高的压缩比(会影响画质).</target>
+      </trans-unit>
+      <trans-unit id="3703299113324006523" datatype="html">
+        <source>Custom Options</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">130</context>
+        </context-group>
+        <target>自定义选项</target>
+      </trans-unit>
+      <trans-unit id="8678746734680046146" datatype="html">
+        <source>; separated values. It will be sent to ffmpeg as it is, as custom options.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.html</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+        <target>; 分隔的值. 会被作为自定义参数传给ffmpeg.</target>
+      </trans-unit>
+      <trans-unit id="3295341328615597076" datatype="html">
+        <source> Wrong password </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/sharelogin/share-login.component.html</context>
+          <context context-type="linenumber">12,13</context>
+        </context-group>
+        <target>密码错误</target>
+      </trans-unit>
+      <trans-unit id="8443199995255821192" datatype="html">
+        <source>Enter </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/sharelogin/share-login.component.html</context>
+          <context context-type="linenumber">41,42</context>
+        </context-group>
+        <target>进入</target>
+      </trans-unit>
+      <trans-unit id="5732878542640870310" datatype="html">
+        <source>Size to generate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/model/backendtext.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>生成大小</target>
+      </trans-unit>
+      <trans-unit id="8013041896880554958" datatype="html">
+        <source>These thumbnails will be generated. The list should be a subset of the enabled thumbnail sizes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/model/backendtext.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>将生成这些缩略图. 列表是开启缩略图大小的一部分.</target>
+      </trans-unit>
+      <trans-unit id="3188623303493603851" datatype="html">
+        <source>Indexed only</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/model/backendtext.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>仅索引</target>
+      </trans-unit>
+      <trans-unit id="613209736940517083" datatype="html">
+        <source>Only checks indexed files.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/model/backendtext.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>只检查索引文件.</target>
+      </trans-unit>
+      <trans-unit id="4973087105311508591" datatype="html">
+        <source>Indexing</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/model/backendtext.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>索引</target>
+      </trans-unit>
+      <trans-unit id="1450675569154063839" datatype="html">
+        <source>Database Reset</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/model/backendtext.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>数据库重置</target>
+      </trans-unit>
+      <trans-unit id="992332743525399881" datatype="html">
+        <source>Thumbnail Generation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/model/backendtext.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>缩略图生成</target>
+      </trans-unit>
+      <trans-unit id="3065040946301318733" datatype="html">
+        <source>Photo Converting</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/model/backendtext.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>照片转换</target>
+      </trans-unit>
+      <trans-unit id="5318730037252758397" datatype="html">
+        <source>Video Converting</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/model/backendtext.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>视频转换</target>
+      </trans-unit>
+      <trans-unit id="1549098823304357760" datatype="html">
+        <source>Temp Folder Cleaning</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/model/backendtext.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>清理临时文件夹</target>
+      </trans-unit>
+      <trans-unit id="1677142486230902467" datatype="html">
+        <source>Server error</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/model/notification.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/model/notification.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>服务器错误</target>
+      </trans-unit>
+      <trans-unit id="2642163697922706049" datatype="html">
+        <source>Server info</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/model/notification.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>服务器信息</target>
+      </trans-unit>
+      <trans-unit id="8398233202919865612" datatype="html">
+        <source>h</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/pipes/DurationPipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="meaning">hour</note>
+        <target>时</target>
+      </trans-unit>
+      <trans-unit id="8033953731717586115" datatype="html">
+        <source>m</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/pipes/DurationPipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="meaning">minute</note>
+        <target>分</target>
+      </trans-unit>
+      <trans-unit id="2155832126259145609" datatype="html">
+        <source>s</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/pipes/DurationPipe.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="meaning">second</note>
+        <target>秒</target>
+      </trans-unit>
+      <trans-unit id="8214150102443660196" datatype="html">
+        <source>ascending name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/pipes/StringifySortingMethod.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>名称升序</target>
+      </trans-unit>
+      <trans-unit id="3980925891294984568" datatype="html">
+        <source>descending name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/pipes/StringifySortingMethod.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>名称降序</target>
+      </trans-unit>
+      <trans-unit id="6855905689297288578" datatype="html">
+        <source>ascending date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/pipes/StringifySortingMethod.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>日期升序</target>
+      </trans-unit>
+      <trans-unit id="3789846122694325400" datatype="html">
+        <source>descending date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/pipes/StringifySortingMethod.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>日期降序</target>
+      </trans-unit>
+      <trans-unit id="8893285757291009420" datatype="html">
+        <source>random</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/pipes/StringifySortingMethod.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>随机的</target>
+      </trans-unit>
+      <trans-unit id="414887388288176527" datatype="html">
+        <source>Images</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/navigator/navigator.gallery.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>图片</target>
+      </trans-unit>
+      <trans-unit id="8681331350836567926" datatype="html">
+        <source>Url has been copied to clipboard</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/random-query-builder/random-query-builder.gallery.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/share/share.gallery.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>网址已复制到剪贴板</target>
+      </trans-unit>
+      <trans-unit id="2807800733729323332" datatype="html">
+        <source>Yes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/share/share.gallery.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>是</target>
+      </trans-unit>
+      <trans-unit id="3542042671420335679" datatype="html">
+        <source>No</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/share/share.gallery.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>否</target>
+      </trans-unit>
+      <trans-unit id="765974048716015903" datatype="html">
+        <source>loading..</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/share/share.gallery.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/gallery/share/share.gallery.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>正在加载..</target>
+      </trans-unit>
+      <trans-unit id="1353646366342026793" datatype="html">
+        <source>settings saved</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/_abstract/abstract.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>设置已保存</target>
+      </trans-unit>
+      <trans-unit id="4648900870671159218" datatype="html">
+        <source>Success</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/_abstract/abstract.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/usermanager/usermanager.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/usermanager/usermanager.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>成功</target>
+      </trans-unit>
+      <trans-unit id="3279583516959443817" datatype="html">
+        <source>readonly</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/_abstract/settings-entry/settings-entry.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>只读</target>
+      </trans-unit>
+      <trans-unit id="2331083694651605942" datatype="html">
+        <source>default value</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/_abstract/settings-entry/settings-entry.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>默认值</target>
+      </trans-unit>
+      <trans-unit id="8643289769990675407" datatype="html">
+        <source>Basic</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/basic/basic.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>基础</target>
+      </trans-unit>
+      <trans-unit id="7522636860183719635" datatype="html">
+        <source>Restart the server to apply the new settings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/basic/basic.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>重新启动服务器以应用新设置</target>
+      </trans-unit>
+      <trans-unit id="4727311471133444690" datatype="html">
+        <source>Folder indexing</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>文件夹索引</target>
+      </trans-unit>
+      <trans-unit id="7897565236366850950" datatype="html">
+        <source>low</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>低</target>
+      </trans-unit>
+      <trans-unit id="4688460977394283086" datatype="html">
+        <source>medium</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>中</target>
+      </trans-unit>
+      <trans-unit id="2602838849414645735" datatype="html">
+        <source>high</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>高</target>
+      </trans-unit>
+      <trans-unit id="8600969352447706682" datatype="html">
+        <source>Folder indexing started</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>文件夹索引开始</target>
+      </trans-unit>
+      <trans-unit id="7752045260127147962" datatype="html">
+        <source>Folder indexing interrupted</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>文件夹索引中断</target>
+      </trans-unit>
+      <trans-unit id="7112590034883471455" datatype="html">
+        <source>Resetting  database</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/indexing/indexing.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>重置数据库</target>
+      </trans-unit>
+      <trans-unit id="3030272344799552884" datatype="html">
+        <source>Job started</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/button/job-button.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>任务开始</target>
+      </trans-unit>
+      <trans-unit id="2836205394227530190" datatype="html">
+        <source>Stopping job</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/button/job-button.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>停止任务</target>
+      </trans-unit>
+      <trans-unit id="3229595422546554334" datatype="html">
+        <source>Jobs</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>任务</target>
+      </trans-unit>
+      <trans-unit id="1461196514655349848" datatype="html">
+        <source>periodic</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>定期的</target>
+      </trans-unit>
+      <trans-unit id="151283875747851076" datatype="html">
+        <source>scheduled</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>预定</target>
+      </trans-unit>
+      <trans-unit id="8739442281958563044" datatype="html">
+        <source>Monday</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>周一</target>
+      </trans-unit>
+      <trans-unit id="9176037901730521018" datatype="html">
+        <source>Tuesday</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>周二</target>
+      </trans-unit>
+      <trans-unit id="8798932904948432529" datatype="html">
+        <source>Wednesday</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>周三</target>
+      </trans-unit>
+      <trans-unit id="1433683192825895947" datatype="html">
+        <source>Thursday</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>周四</target>
+      </trans-unit>
+      <trans-unit id="3730139500618908668" datatype="html">
+        <source>Friday</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>周五</target>
+      </trans-unit>
+      <trans-unit id="1830554030016307335" datatype="html">
+        <source>Saturday</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>周六</target>
+      </trans-unit>
+      <trans-unit id="6950140976689343775" datatype="html">
+        <source>Sunday</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>周日</target>
+      </trans-unit>
+      <trans-unit id="6320319413541466015" datatype="html">
+        <source>day</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/jobs.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>日</target>
+      </trans-unit>
+      <trans-unit id="6816983613862053954" datatype="html">
+        <source>processed</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/progress/job-progress.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>已处理</target>
+      </trans-unit>
+      <trans-unit id="2136984849049323349" datatype="html">
+        <source>skipped</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/progress/job-progress.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>已跳过</target>
+      </trans-unit>
+      <trans-unit id="7126464771610287155" datatype="html">
+        <source>all</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/progress/job-progress.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>全部</target>
+      </trans-unit>
+      <trans-unit id="4000123028861070708" datatype="html">
+        <source>running</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/progress/job-progress.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>运行中</target>
+      </trans-unit>
+      <trans-unit id="2919141718048459530" datatype="html">
+        <source>cancelling</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/progress/job-progress.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>取消中</target>
+      </trans-unit>
+      <trans-unit id="5955314125015446309" datatype="html">
+        <source>canceled</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/progress/job-progress.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>已取消</target>
+      </trans-unit>
+      <trans-unit id="8013973649266860157" datatype="html">
+        <source>interrupted</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/progress/job-progress.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>已中断</target>
+      </trans-unit>
+      <trans-unit id="2059708434886905909" datatype="html">
+        <source>finished</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/jobs/progress/job-progress.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>已完成</target>
+      </trans-unit>
+      <trans-unit id="5813867925497374051" datatype="html">
+        <source>Map</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/map/map.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>地图</target>
+      </trans-unit>
+      <trans-unit id="5007962937899031099" datatype="html">
+        <source>Meta file</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/metafiles/metafile.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>元文件</target>
+      </trans-unit>
+      <trans-unit id="8693603235657020323" datatype="html">
+        <source>Other</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/other/other.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>其他</target>
+      </trans-unit>
+      <trans-unit id="5750485945694679561" datatype="html">
+        <source>Photo</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/photo/photo.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>照片</target>
+      </trans-unit>
+      <trans-unit id="943622778225300320" datatype="html">
+        <source>(recommended)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/photo/photo.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>(推荐)</target>
+      </trans-unit>
+      <trans-unit id="3565724666233872817" datatype="html">
+        <source>(deprecated, will be removed)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/photo/photo.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>(已弃用, 将被删除)</target>
+      </trans-unit>
+      <trans-unit id="6185382492926150685" datatype="html">
+        <source>Random Photo</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/random-photo/random-photo.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>随机照片</target>
+      </trans-unit>
+      <trans-unit id="7393380261620707212" datatype="html">
+        <source>Job finished</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/scheduled-jobs.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>任务完成</target>
+      </trans-unit>
+      <trans-unit id="3434410278501759813" datatype="html">
+        <source>Thumbnail</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/thumbnail/thumbnail.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>缩略图</target>
+      </trans-unit>
+      <trans-unit id="7321299026311900359" datatype="html">
+        <source>Password protection</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/usermanager/usermanager.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>密码保护</target>
+      </trans-unit>
+      <trans-unit id="802458941707537739" datatype="html">
+        <source>Low</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/usermanager/usermanager.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>低</target>
+      </trans-unit>
+      <trans-unit id="8063651736083474594" datatype="html">
+        <source>High</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/usermanager/usermanager.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>高</target>
+      </trans-unit>
+      <trans-unit id="3045212756852862690" datatype="html">
+        <source>Password protection enabled</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/usermanager/usermanager.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>密码保护已启用</target>
+      </trans-unit>
+      <trans-unit id="6686475463493886772" datatype="html">
+        <source>Server restart is recommended.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/usermanager/usermanager.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>建议重启服务器.</target>
+      </trans-unit>
+      <trans-unit id="573767317440649405" datatype="html">
+        <source>Password protection disabled</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/usermanager/usermanager.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>密码保护已禁用</target>
+      </trans-unit>
+      <trans-unit id="6549265851868599441" datatype="html">
+        <source>Video</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/frontend/app/ui/settings/video/video.settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target>视频</target>
+      </trans-unit>
+      <trans-unit id="1821735653273245237" datatype="html">
+        <source>User creation error!</source>
+        <target>用户创建错误！</target>
+      </trans-unit>
+      <trans-unit id="233324084168950985" datatype="html">
+        <source>Forever</source>
+        <target>永远</target>
+      </trans-unit>
+      <trans-unit id="9104939499698249234" datatype="html">
+        <source>Load full resolution image on zoom</source>
+        <target>在缩放时加载全分辨率图像</target>
+      </trans-unit>
+      <trans-unit id="6870206109332559881" datatype="html">
+        <source>Enables loading the full resolution image on zoom in the ligthbox (preview).</source>
+        <target>启用在 ligthbox(预览)中缩放时加载全分辨率图像.</target>
+      </trans-unit>
+      <trans-unit id="7747085006165494563" datatype="html">
+        <source>Maximum media result</source>
+        <target>最多媒体数量</target>
+      </trans-unit>
+      <trans-unit id="1146747007849883580" datatype="html">
+        <source>Maximum number of photos and videos that listed in one search result</source>
+        <target>一个搜索结果中列出的最大照片和视频数量</target>
+      </trans-unit>
+      <trans-unit id="1524055079900109760" datatype="html">
+        <source>Download Zip</source>
+        <target>下载压缩包</target>
+      </trans-unit>
+      <trans-unit id="8061493549899716713" datatype="html">
+        <source>Enable download zip of a directory contents</source>
+        <target>启用目录打zip包下载</target>
+      </trans-unit>
+      <trans-unit id="8335094363935357421" datatype="html">
+        <source>Index changes only</source>
+        <target>仅索引更改</target>
+      </trans-unit>
+      <trans-unit id="2887355625408505193" datatype="html">
+        <source>Only indexes a folder if it got changed.</source>
+        <target>仅在文件夹更改时索引.</target>
+      </trans-unit>
+      <trans-unit id="759454492324260485" datatype="html">
+        <source>Maximum number of photos and videos that listed in one search result.</source>
+        <target>一个搜索结果中列出的最大照片和视频数量.</target>
+      </trans-unit>
+      <trans-unit id="3200342440195656274" datatype="html">
+        <source>Insert</source>
+        <target>插入</target>
+      </trans-unit>
+      <trans-unit id="5788628366491057479" datatype="html">
+        <source>List directories"</source>
+        <target>列出目录"</target>
+      </trans-unit>
+      <trans-unit id="1627438365479766712" datatype="html">
+        <source>Search will also return with directories"</source>
+        <target>搜索也将目录返回"</target>
+      </trans-unit>
+      <trans-unit id="7786160088790041328" datatype="html">
+        <source>Add saved search</source>
+        <target>添加保存的搜索</target>
+      </trans-unit>
+      <trans-unit id="3231059240281443547" datatype="html">
+        <source>No albums to show.</source>
+        <target>没有可显示的相册.</target>
+      </trans-unit>
+      <trans-unit id="3017479276216613525" datatype="html">
+        <source>Album is locked, cannot be deleted from the webpage.</source>
+        <target>相册已被锁, 无法从页面上删除.</target>
+      </trans-unit>
+      <trans-unit id="5466947574428856253" datatype="html">
+        <source>Save search to album</source>
+        <target>保存搜索到相册.</target>
+      </trans-unit>
+      <trans-unit id="1692479277642537323" datatype="html">
+        <source>This saved search will be loaded from file during gallery indexing and it will survive a database reset."</source>
+        <target>这个保存的搜索会在相册索引的时候从文件中加载, 并且不会因为数据库重置而消失.</target>
+      </trans-unit>
+      <trans-unit id="2861315058248271208" datatype="html">
+        <source>Add this json to a '.saved_searches.pg2conf' file in your gallery:</source>
+        <target>将这个json数据加入到你相册中的 '.saved_searches.pg2conf' 文件:</target>
+      </trans-unit>
+      <trans-unit id="6733799876332344576" datatype="html">
+        <source>Saved Search to .saved_searches.pg2conf</source>
+        <target>将搜索保存到 .saved_searches.pg2conf</target>
+      </trans-unit>
+      <trans-unit id="4531897455936063912" datatype="html">
+        <source>To .pg2conf</source>
+        <target>到 .pg2.conf</target>
+      </trans-unit>
+      <trans-unit id="5043933900720743682" datatype="html">
+        <source>Albums</source>
+        <target>相册</target>
+      </trans-unit>
+      <trans-unit id="3913155609891930218" datatype="html">
+        <source>Note: custom albums are not supported, see:</source>
+        <target>注意: 自定义相册不支持, 详见:</target>
+      </trans-unit>
+      <trans-unit id="3211593807292156099" datatype="html">
+        <source>Shows albums tab in the top bar and enables creating saved searches.</source>
+        <target>在顶部显示相册标签并且允许创建保存搜索</target>
+      </trans-unit>
+      <trans-unit id="709142926386769059" datatype="html">
+        <source>List metafiles</source>
+        <target>列出元文件</target>
+      </trans-unit>
+      <trans-unit id="500999559591740527" datatype="html">
+        <source>Search also returns with metafiles from directories that contain a media file of the matched search result</source>
+        <target>搜索也返回元数据中包含搜索结果的元文件</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

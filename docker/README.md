@@ -1,10 +1,14 @@
 # PiGallery2 docker installation [![Docker build](https://github.com/bpatrik/pigallery2/workflows/docker-buildx/badge.svg)](https://github.com/bpatrik/pigallery2/actions)
 
+## NOTE: docker tag `latest` does not work currently use its alias: `latest-debian-buster` instead until it gets fixed.
+
 You can use [docker](https://docs.docker.com/install/) to run PiGallery2. See all available docker tags [here](https://hub.docker.com/r/bpatrik/pigallery2/tags/).
 available tags:
  - `v*` (stable): built from the a release with the same version name.
  - `latest` (stable): same as the latest `v*`, built with debian stretch
  - `nightly` : built from the current state of `master`. This might break from time to time. 
+
+**Note**: Some changes may require database reset or config changes, see [#317](https://github.com/bpatrik/pigallery2/issues/317) (If you want to reduce the frequency of those, use stable builds (`latest`)
 
 We support multiple architectures, including `amd64`, `arm32v7`, `arm64v8`.
 

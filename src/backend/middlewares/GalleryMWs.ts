@@ -1,28 +1,28 @@
 import * as path from 'path';
 import {promises as fsp} from 'fs';
+import * as archiver from 'archiver';
 import {NextFunction, Request, Response} from 'express';
 import {ErrorCodes, ErrorDTO} from '../../common/entities/Error';
-import {DirectoryDTO} from '../../common/entities/DirectoryDTO';
+import {DirectoryDTOUtils, ParentDirectoryDTO} from '../../common/entities/DirectoryDTO';
 import {ObjectManagers} from '../model/ObjectManagers';
-import {SearchTypes} from '../../common/entities/AutoCompleteItem';
 import {ContentWrapper} from '../../common/entities/ConentWrapper';
 import {PhotoDTO} from '../../common/entities/PhotoDTO';
 import {ProjectPath} from '../ProjectPath';
 import {Config} from '../../common/config/private/Config';
-import {UserDTO} from '../../common/entities/UserDTO';
-import {RandomQuery} from '../model/database/interfaces/IGalleryManager';
-import {MediaDTO} from '../../common/entities/MediaDTO';
+import {UserDTOUtils} from '../../common/entities/UserDTO';
+import {MediaDTO, MediaDTOUtils} from '../../common/entities/MediaDTO';
 import {VideoDTO} from '../../common/entities/VideoDTO';
 import {Utils} from '../../common/Utils';
 import {QueryParams} from '../../common/QueryParams';
 import {VideoProcessing} from '../model/fileprocessing/VideoProcessing';
-import {DiskMangerWorker} from '../model/threading/DiskMangerWorker';
-
+import {SearchQueryDTO, SearchQueryTypes} from '../../common/entities/SearchQueryDTO';
+import {LocationLookupException} from '../exceptions/LocationLookupException';
+import {SupportedFormats} from '../../common/SupportedFormats';
 
 export class GalleryMWs {
 
 
-  public static async listDirectory(req: Request, res: Response, next: NextFunction) {
+  public static async listDirectory(req: Request, res: Response, next: NextFunction): Promise<any> {
     const directoryName = req.params.directory || '/';
     const absoluteDirectoryName = path.join(ProjectPath.ImageFolder, directoryName);
     try {
@@ -36,8 +36,8 @@ export class GalleryMWs {
     try {
       const directory = await ObjectManagers.getInstance()
         .GalleryManager.listDirectory(directoryName,
-          parseInt(req.query[QueryParams.gallery.knownLastModified], 10),
-          parseInt(req.query[QueryParams.gallery.knownLastScanned], 10));
+          parseInt(req.query[QueryParams.gallery.knownLastModified] as string, 10),
+          parseInt(req.query[QueryParams.gallery.knownLastScanned] as string, 10));
 
       if (directory == null) {
         req.resultPipe = new ContentWrapper(null, null, true);
@@ -46,8 +46,8 @@ export class GalleryMWs {
       if (req.session.user.permissions &&
         req.session.user.permissions.length > 0 &&
         req.session.user.permissions[0] !== '/*') {
-        (<DirectoryDTO>directory).directories = (<DirectoryDTO>directory).directories.filter(d =>
-          UserDTO.isDirectoryAvailable(d, req.session.user.permissions));
+        directory.directories = directory.directories.filter((d): boolean =>
+          UserDTOUtils.isDirectoryAvailable(d, req.session.user.permissions));
       }
       req.resultPipe = new ContentWrapper(directory, null);
       return next();
@@ -57,8 +57,58 @@ export class GalleryMWs {
     }
   }
 
+  public static async zipDirectory(req: Request, res: Response, next: NextFunction): Promise<any> {
+    if (Config.Client.Other.enableDownloadZip === false) {
+      return next();
+    }
+    const directoryName = req.params.directory || '/';
+    const absoluteDirectoryName = path.join(ProjectPath.ImageFolder, directoryName);
+    try {
+      if ((await fsp.stat(absoluteDirectoryName)).isDirectory() === false) {
+        return next();
+      }
+    } catch (e) {
+      return next();
+    }
 
-  public static cleanUpGalleryResults(req: Request, res: Response, next: NextFunction) {
+    try {
+      res.set('Content-Type', 'application/zip');
+      res.set('Content-Disposition', 'attachment; filename=Gallery.zip');
+
+      const archive = archiver('zip', {
+        store: true, // disable compression
+      });
+
+      res.on('close', () => {
+        console.log('zip ' + archive.pointer() + ' bytes');
+      });
+
+      archive.on('error', (err: any) => {
+        throw err;
+      });
+
+      archive.pipe(res);
+
+      // append photos in absoluteDirectoryName
+      // using case-insensitive glob of extensions
+      for (const ext of SupportedFormats.WithDots.Photos) {
+        archive.glob(`*${ext}`, {cwd: absoluteDirectoryName, nocase: true});
+      }
+      // append videos in absoluteDirectoryName
+      // using case-insensitive glob of extensions
+      for (const ext of SupportedFormats.WithDots.Videos) {
+        archive.glob(`*${ext}`, {cwd: absoluteDirectoryName, nocase: true});
+      }
+
+      await archive.finalize();
+      return next();
+
+    } catch (err) {
+      return next(new ErrorDTO(ErrorCodes.GENERAL_ERROR, 'Error creating zip', err));
+    }
+  }
+
+  public static cleanUpGalleryResults(req: Request, res: Response, next: NextFunction): any {
     if (!req.resultPipe) {
       return next();
     }
@@ -68,45 +118,44 @@ export class GalleryMWs {
       return next();
     }
 
-    const cleanUpMedia = (media: MediaDTO[]) => {
-      media.forEach(m => {
-        if (MediaDTO.isPhoto(m)) {
-          delete (<VideoDTO>m).metadata.bitRate;
-          delete (<VideoDTO>m).metadata.duration;
-        } else if (MediaDTO.isVideo(m)) {
-          delete (<PhotoDTO>m).metadata.caption;
-          delete (<PhotoDTO>m).metadata.cameraData;
-          delete (<PhotoDTO>m).metadata.orientation;
-          delete (<PhotoDTO>m).metadata.orientation;
-          delete (<PhotoDTO>m).metadata.keywords;
-          delete (<PhotoDTO>m).metadata.positionData;
+    const cleanUpMedia = (media: MediaDTO[]): void => {
+      media.forEach((m): void => {
+        if (MediaDTOUtils.isPhoto(m)) {
+          delete (m as VideoDTO).metadata.bitRate;
+          delete (m as VideoDTO).metadata.duration;
+        } else if (MediaDTOUtils.isVideo(m)) {
+          delete (m as PhotoDTO).metadata.rating;
+          delete (m as PhotoDTO).metadata.caption;
+          delete (m as PhotoDTO).metadata.cameraData;
+          delete (m as PhotoDTO).metadata.orientation;
+          delete (m as PhotoDTO).metadata.orientation;
+          delete (m as PhotoDTO).metadata.keywords;
+          delete (m as PhotoDTO).metadata.positionData;
         }
         Utils.removeNullOrEmptyObj(m);
       });
     };
 
     if (cw.directory) {
-      DirectoryDTO.removeReferences(cw.directory);
-      // TODO: remove when typeorm inheritance is fixed
+      DirectoryDTOUtils.packDirectory(cw.directory);
+      // TODO: remove when typeorm inheritance is fixed (and handles proper inheritance)
       cleanUpMedia(cw.directory.media);
     }
     if (cw.searchResult) {
+      cw.searchResult.directories.forEach(d => DirectoryDTOUtils.packDirectory(d));
       cleanUpMedia(cw.searchResult.media);
     }
 
 
     if (Config.Client.Media.Video.enabled === false) {
       if (cw.directory) {
-        const removeVideos = (dir: DirectoryDTO) => {
-          dir.media = dir.media.filter(m => !MediaDTO.isVideo(m));
-          if (dir.directories) {
-            dir.directories.forEach(d => removeVideos(d));
-          }
+        const removeVideos = (dir: ParentDirectoryDTO): void => {
+          dir.media = dir.media.filter((m): boolean => !MediaDTOUtils.isVideo(m));
         };
         removeVideos(cw.directory);
       }
       if (cw.searchResult) {
-        cw.searchResult.media = cw.searchResult.media.filter(m => !MediaDTO.isVideo(m));
+        cw.searchResult.media = cw.searchResult.media.filter((m): boolean => !MediaDTOUtils.isVideo(m));
       }
     }
 
@@ -114,54 +163,7 @@ export class GalleryMWs {
   }
 
 
-  public static async getRandomImage(req: Request, res: Response, next: NextFunction) {
-    if (Config.Client.RandomPhoto.enabled === false) {
-      return next();
-    }
-    try {
-      const query: RandomQuery = {};
-      if (req.query.directory) {
-        query.directory = DiskMangerWorker.normalizeDirPath(req.query.directory);
-      }
-      if (req.query.recursive === 'true') {
-        query.recursive = true;
-      }
-      if (req.query.orientation) {
-        query.orientation = parseInt(req.query.orientation.toString(), 10);
-      }
-      if (req.query.maxResolution) {
-        query.maxResolution = parseFloat(req.query.maxResolution.toString());
-      }
-      if (req.query.minResolution) {
-        query.minResolution = parseFloat(req.query.minResolution.toString());
-      }
-      if (req.query.fromDate) {
-        query.fromDate = new Date(req.query.fromDate);
-      }
-      if (req.query.toDate) {
-        query.toDate = new Date(req.query.toDate);
-      }
-      if (query.minResolution && query.maxResolution && query.maxResolution < query.minResolution) {
-        return next(new ErrorDTO(ErrorCodes.INPUT_ERROR, 'Input error: min resolution is greater than the max resolution'));
-      }
-      if (query.toDate && query.fromDate && query.toDate.getTime() < query.fromDate.getTime()) {
-        return next(new ErrorDTO(ErrorCodes.INPUT_ERROR, 'Input error: to date is earlier than from date'));
-      }
-
-      const photo = await ObjectManagers.getInstance()
-        .GalleryManager.getRandomPhoto(query);
-      if (!photo) {
-        return next(new ErrorDTO(ErrorCodes.INPUT_ERROR, 'No photo found'));
-      }
-
-      req.params.mediaPath = path.join(photo.directory.path, photo.directory.name, photo.name);
-      return next();
-    } catch (e) {
-      return next(new ErrorDTO(ErrorCodes.GENERAL_ERROR, 'Can\'t get random photo: ' + e.toString()));
-    }
-  }
-
-  public static async loadFile(req: Request, res: Response, next: NextFunction) {
+  public static async loadFile(req: Request, res: Response, next: NextFunction): Promise<any> {
     if (!(req.params.mediaPath)) {
       return next();
     }
@@ -181,7 +183,7 @@ export class GalleryMWs {
     return next();
   }
 
-  public static async loadBestFitVideo(req: Request, res: Response, next: NextFunction) {
+  public static async loadBestFitVideo(req: Request, res: Response, next: NextFunction): Promise<any> {
     if (!(req.resultPipe)) {
       return next();
     }
@@ -201,51 +203,29 @@ export class GalleryMWs {
   }
 
 
-  public static async search(req: Request, res: Response, next: NextFunction) {
-    if (Config.Client.Search.enabled === false) {
+  public static async search(req: Request, res: Response, next: NextFunction): Promise<any> {
+    if (Config.Client.Search.enabled === false || !(req.params.searchQueryDTO)) {
       return next();
     }
 
-    if (!(req.params.text)) {
-      return next();
-    }
+    const query: SearchQueryDTO = JSON.parse(req.params.searchQueryDTO as any);
 
-    let type: SearchTypes;
-    if (req.query[QueryParams.gallery.search.type]) {
-      type = parseInt(req.query[QueryParams.gallery.search.type], 10);
-    }
     try {
-      const result = await ObjectManagers.getInstance().SearchManager.search(req.params.text, type);
+      const result = await ObjectManagers.getInstance().SearchManager.search(query);
 
-      result.directories.forEach(dir => dir.media = dir.media || []);
+      result.directories.forEach((dir): MediaDTO[] => dir.media = dir.media || []);
       req.resultPipe = new ContentWrapper(null, result);
       return next();
     } catch (err) {
+      if (err instanceof LocationLookupException) {
+        return next(new ErrorDTO(ErrorCodes.LocationLookUp_ERROR, 'Cannot find location: ' + err.location, err));
+      }
       return next(new ErrorDTO(ErrorCodes.GENERAL_ERROR, 'Error during searching', err));
     }
   }
 
-  public static async instantSearch(req: Request, res: Response, next: NextFunction) {
-    if (Config.Client.Search.instantSearchEnabled === false) {
-      return next();
-    }
 
-    if (!(req.params.text)) {
-      return next();
-    }
-
-    try {
-      const result = await ObjectManagers.getInstance().SearchManager.instantSearch(req.params.text);
-
-      result.directories.forEach(dir => dir.media = dir.media || []);
-      req.resultPipe = new ContentWrapper(null, result);
-      return next();
-    } catch (err) {
-      return next(new ErrorDTO(ErrorCodes.GENERAL_ERROR, 'Error during searching', err));
-    }
-  }
-
-  public static async autocomplete(req: Request, res: Response, next: NextFunction) {
+  public static async autocomplete(req: Request, res: Response, next: NextFunction): Promise<any> {
     if (Config.Client.Search.AutoComplete.enabled === false) {
       return next();
     }
@@ -253,13 +233,39 @@ export class GalleryMWs {
       return next();
     }
 
+    let type: SearchQueryTypes = SearchQueryTypes.any_text;
+    if (req.query[QueryParams.gallery.search.type]) {
+      type = parseInt(req.query[QueryParams.gallery.search.type] as string, 10);
+    }
     try {
-      req.resultPipe = await ObjectManagers.getInstance().SearchManager.autocomplete(req.params.text);
+      req.resultPipe = await ObjectManagers.getInstance().SearchManager.autocomplete(req.params.text, type);
       return next();
     } catch (err) {
       return next(new ErrorDTO(ErrorCodes.GENERAL_ERROR, 'Error during searching', err));
     }
 
+  }
+
+
+  public static async getRandomImage(req: Request, res: Response, next: NextFunction): Promise<any> {
+    if (Config.Client.RandomPhoto.enabled === false || !(req.params.searchQueryDTO)) {
+      return next();
+    }
+
+    try {
+      const query: SearchQueryDTO = JSON.parse(req.params.searchQueryDTO as any);
+
+      const photo = await ObjectManagers.getInstance()
+        .SearchManager.getRandomPhoto(query);
+      if (!photo) {
+        return next(new ErrorDTO(ErrorCodes.INPUT_ERROR, 'No photo found'));
+      }
+
+      req.params.mediaPath = path.join(photo.directory.path, photo.directory.name, photo.name);
+      return next();
+    } catch (e) {
+      return next(new ErrorDTO(ErrorCodes.GENERAL_ERROR, 'Can\'t get random photo: ' + e.toString()));
+    }
   }
 
 

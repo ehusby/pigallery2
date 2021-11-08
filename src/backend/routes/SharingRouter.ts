@@ -6,7 +6,7 @@ import * as express from 'express';
 import {QueryParams} from '../../common/QueryParams';
 
 export class SharingRouter {
-  public static route(app: express.Express) {
+  public static route(app: express.Express): void {
 
     this.addShareLogin(app);
     this.addGetSharing(app);
@@ -16,7 +16,7 @@ export class SharingRouter {
     this.addDeleteSharing(app);
   }
 
-  private static addShareLogin(app: express.Express) {
+  private static addShareLogin(app: express.Express): void {
     app.post('/api/share/login',
       AuthenticationMWs.inverseAuthenticate,
       AuthenticationMWs.shareLogin,
@@ -24,7 +24,7 @@ export class SharingRouter {
     );
   }
 
-  private static addGetSharing(app: express.Express) {
+  private static addGetSharing(app: express.Express): void {
     app.get('/api/share/:' + QueryParams.gallery.sharingKey_params,
       AuthenticationMWs.authenticate,
       AuthenticationMWs.authorise(UserRoles.LimitedGuest),
@@ -33,7 +33,7 @@ export class SharingRouter {
     );
   }
 
-  private static addCreateSharing(app: express.Express) {
+  private static addCreateSharing(app: express.Express): void {
     app.post(['/api/share/:directory(*)', '/api/share/', '/api/share//'],
       AuthenticationMWs.authenticate,
       AuthenticationMWs.authorise(UserRoles.User),
@@ -42,7 +42,7 @@ export class SharingRouter {
     );
   }
 
-  private static addUpdateSharing(app: express.Express) {
+  private static addUpdateSharing(app: express.Express): void {
     app.put(['/api/share/:directory(*)', '/api/share/', '/api/share//'],
       AuthenticationMWs.authenticate,
       AuthenticationMWs.authorise(UserRoles.User),
@@ -52,16 +52,16 @@ export class SharingRouter {
   }
 
 
-  private static addDeleteSharing(app: express.Express) {
+  private static addDeleteSharing(app: express.Express): void {
     app.delete(['/api/share/:sharingKey'],
       AuthenticationMWs.authenticate,
       AuthenticationMWs.authorise(UserRoles.Admin),
       SharingMWs.deleteSharing,
-      RenderingMWs.renderOK
+      RenderingMWs.renderResult
     );
   }
 
-  private static addListSharing(app: express.Express) {
+  private static addListSharing(app: express.Express): void {
     app.get(['/api/share/list'],
       AuthenticationMWs.authenticate,
       AuthenticationMWs.authorise(UserRoles.User),

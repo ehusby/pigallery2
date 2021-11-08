@@ -1,0 +1,225 @@
+<div class="row mt-1 mb-1" *ngIf="queryEntry">
+  <ng-container *ngIf="IsListQuery">
+    <div class="input-group col-md-3">
+      <select
+        id="listSearchType"
+        name="listSearchType"
+        class="form-control"
+        [(ngModel)]="queryEntry.type"
+        (ngModelChange)="onChangeType()">
+        <option *ngFor="let opt of SearchQueryTypesEnum" [ngValue]="opt.key">{{opt.value}}
+        </option>
+      </select>
+    </div>
+    <ng-container *ngIf="queryEntry.type == SearchQueryTypes.SOME_OF">
+      <label class="col-md-4 control-label" for="someOfMinValue">
+        <ng-container i18n>At least this many</ng-container>
+        (1-{{AsListQuery.list.length}}):</label>
+      <input
+        type="number" min="1" [max]="AsListQuery.list.length" class="form-control col-md-2" placeholder="1"
+        title="At least this many"
+        i18n-title
+        [(ngModel)]="AsSomeOfQuery.min"
+        (ngModelChange)="onChange()"
+        name="someOfMinValue"
+        id="someOfMinValue"
+        required="required">
+      <div class="col-md-2"></div>
+    </ng-container>
+
+    <ng-container *ngIf="queryEntry.type != SearchQueryTypes.SOME_OF">
+      <div class="col-md-8"></div>
+    </ng-container>
+
+    <button [ngClass]="'btn-danger'"
+            class="btn float-right col-md-1"
+            (click)="deleteItem()">
+      <span class="oi oi-trash" aria-hidden="true" aria-label="Delete"></span>
+    </button>
+    <div class="container query-list">
+      <app-gallery-search-query-entry *ngFor="let sq of AsListQuery.list; index as i"
+                                      [(ngModel)]="AsListQuery.list[i]"
+                                      (delete)="itemDeleted(i)">
+      </app-gallery-search-query-entry>
+    </div>
+    <button class="btn btn-primary mx-auto" (click)="addQuery()">
+      <span class="oi oi-plus" aria-hidden="true" aria-label="Add"> Add</span>
+    </button>
+  </ng-container>
+  <ng-container *ngIf="!IsListQuery">
+    <div class="input-group col-md-3">
+      <select
+        id="searchType"
+        name="searchType"
+        class="form-control"
+        [(ngModel)]="queryEntry.type"
+        (ngModelChange)="onChangeType()">
+        <option *ngFor="let opt of SearchQueryTypesEnum" [ngValue]="opt.key">{{opt.value}}
+        </option>
+      </select>
+    </div>
+    <div class="input-group col-md-8" *ngIf="IsTextQuery">
+      <span title="exact match"
+            p18n-title
+            class="match-type"
+            (click)="toggleMatchType()"
+            [class.exact-match]="AsTextQuery.matchType === TextSearchQueryMatchTypes.exact_match">"</span>
+      <input
+        id="searchField"
+        name="searchField"
+        placeholder="Search text"
+        class="form-control input-md"
+        [(ngModel)]="AsTextQuery.text"
+        (change)="onChange()"
+        (ngModelChange)="onChange()"
+        type="text"/>
+      <span title="exact match"
+            p18n-title
+            class="match-type"
+            (click)="toggleMatchType()"
+            [class.exact-match]="AsTextQuery.matchType === TextSearchQueryMatchTypes.exact_match">"</span>
+    </div>
+    <ng-container [ngSwitch]="queryEntry.type">
+      <div *ngSwitchCase="SearchQueryTypes.distance" class="col-md-8 d-flex">
+        <div class="input-group col-md-4">
+          <input type="number" class="form-control" placeholder="1"
+                 id="distance"
+                 min="0"
+                 step="0.1"
+                 [(ngModel)]="AsDistanceQuery.distance"
+                 (ngModelChange)="onChange()"
+                 name="distance" required>
+          <div class="input-group-append">
+            <span class="input-group-text">km</span>
+          </div>
+        </div>
+        <div class="input-group col-md-8">
+          <label class="col-md-4 control-label" for="maxResolution">From</label>
+          <input id="from"
+                 name="from"
+                 title="From"
+                 placeholder="New York"
+                 i18n-title
+                 class="form-control input-md"
+                 [(ngModel)]="AsDistanceQuery.from.text"
+                 (ngModelChange)="onChange()"
+                 type="text">
+        </div>
+      </div>
+      <!-- Range Search Query -->
+      <div *ngSwitchCase="SearchQueryTypes.from_date" class="col-md-8 input-group ">
+        <label class="col-md-4 control-label" for="from_date">From:</label>
+        <input id="from_date"
+               name="from_date"
+               title="From date"
+               i18n-title
+               [ngModel]="AsRangeQuery.value | date:'yyyy-MM-dd'"
+               (ngModelChange)="AsRangeQuery.value = $event; onChange(queryEntry) "
+               [value]="AsRangeQuery.value | date:'yyyy-MM-dd'" #from_date="ngModel"
+               class="form-control input-md"
+               type="date">
+      </div>
+      <div *ngSwitchCase="SearchQueryTypes.to_date" class="col-md-8 input-group">
+        <label class="col-md-4 control-label" for="to_date">To:</label>
+        <input id="to_date"
+               name="to_date"
+               title="To date"
+               i18n-title
+               [ngModel]="AsRangeQuery.value | date:'yyyy-MM-dd'"
+               (ngModelChange)="AsRangeQuery.value = $event; onChange(queryEntry) "
+               [value]="AsRangeQuery.value | date:'yyyy-MM-dd'" #to_date="ngModel"
+               class="form-control input-md"
+               type="date">
+      </div>
+      <div *ngSwitchCase="SearchQueryTypes.min_rating" class="col-md-8 input-group">
+        <label class="col-md-4 control-label" for="maxResolution">Min:</label>
+        <input id="minRating"
+               name="minRating"
+               title="Minimum Rating"
+               placeholder="0"
+               i18n-title
+               min="0"
+               max="5"
+               class="form-control input-md"
+               [(ngModel)]="AsRangeQuery.value"
+               (ngModelChange)="onChange()"
+               type="number">
+      </div>
+      <div *ngSwitchCase="SearchQueryTypes.max_rating" class="col-md-8 input-group">
+        <label class="col-md-4 control-label" for="maxResolution">Max:</label>
+        <input id="maxRating"
+               name="maxRating"
+               title="Maximum Rating"
+               placeholder="5"
+               i18n-title
+               min="0"
+               max="5"
+               class="form-control input-md"
+               [(ngModel)]="AsRangeQuery.value"
+               (ngModelChange)="onChange()"
+               type="number">
+      </div>
+      <div *ngSwitchCase="SearchQueryTypes.min_resolution" class="col-md-8 input-group">
+
+        <label class="col-md-4 control-label" for="maxResolution">Min:</label>
+        <input id="minResolution"
+               name="minResolution"
+               title="Minimum Rating"
+               placeholder="0"
+               i18n-title
+               min="0"
+               class="form-control input-md"
+               [(ngModel)]="AsRangeQuery.value"
+               (ngModelChange)="onChange()"
+               type="number">
+        <div class="input-group-append">
+          <span class="input-group-text">Mpx</span>
+        </div>
+      </div>
+
+      <div *ngSwitchCase="SearchQueryTypes.max_resolution" class="col-md-8 input-group">
+        <label class="col-md-4 control-label" for="maxResolution">Max:</label>
+        <input id="maxResolution"
+               name="maxResolution"
+               title="Maximum Rating"
+               placeholder="5"
+               i18n-title
+               [min]="0"
+               class="form-control input-md"
+               [(ngModel)]="AsRangeQuery.value"
+               (ngModelChange)="onChange()"
+               type="number">
+        <div class="input-group-append">
+          <span class="input-group-text">Mpx</span>
+        </div>
+      </div>
+      <div *ngSwitchCase="SearchQueryTypes.orientation" class="col-md-8 d-flex">
+        <div class="input-group col-md-6">
+          <bSwitch
+            class="switch"
+            id="orientation"
+            name="orientation"
+            title="Orientation"
+            switch-on-color="primary"
+            switch-off-color="primary"
+            switch-inverse="true"
+            switch-off-text="Portrait"
+            switch-on-text="Landscape"
+            i18n-switch-off-text
+            i18n-switch-on-text
+            switch-handle-width="100"
+            switch-label-width="20"
+            (ngModelChange)="onChange()"
+            [(ngModel)]="AsOrientationQuery.landscape">
+          </bSwitch>
+        </div>
+      </div>
+    </ng-container>
+    <button [ngClass]="'btn-danger'"
+            class="btn float-right col-md-1"
+            (click)="deleteItem()">
+      <span class="oi oi-trash" aria-hidden="true" aria-label="Delete"></span>
+    </button>
+  </ng-container>
+
+</div>

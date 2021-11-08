@@ -1,17 +1,15 @@
-export enum SearchTypes {
-  directory = 1,
-  person = 2,
-  keyword = 3,
-  position = 5,
-  photo = 6,
-  video = 7
+import {SearchQueryTypes} from './SearchQueryDTO';
+
+export interface IAutoCompleteItem {
+  text: string;
+  type?: SearchQueryTypes;
 }
 
-export class AutoCompleteItem {
-  constructor(public text: string, public type: SearchTypes) {
+export class AutoCompleteItem implements IAutoCompleteItem {
+  constructor(public text: string, public type: SearchQueryTypes = null) {
   }
 
-  equals(other: AutoCompleteItem) {
+  equals(other: AutoCompleteItem): boolean {
     return this.text === other.text && this.type === other.type;
   }
 }

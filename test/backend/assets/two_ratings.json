@@ -1,0 +1,18 @@
+{
+  "cameraData": {
+    "ISO": 500,
+    "exposure": 0.01,
+    "fStop": 2.4,
+    "focalLength": 4.32,
+    "make": "samsung",
+    "model": "SM-G975F"
+  },
+  "creationDate": 1619181527000,
+  "fileSize": 4877,
+  "orientation": 1,
+  "rating":3,
+  "size": {
+    "height": 5,
+    "width": 10
+  }
+}

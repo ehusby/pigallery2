@@ -1,0 +1,18 @@
+version: '3'
+services:
+  pigallery2:
+    entrypoint: [ "node", "./benchmark/index",  "--config-path=/app/data/config/config.json",  "--bm-config-path=/app/data/config/bm_config.json", "--Server-Database-dbFolder=/app/data/db/bm" ]
+    image: bpatrik/pigallery2:latest
+    container_name: pigallery2
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - "./pigallery2/benchmark_config:/app/data/config" # CHANGE ME
+      - "db-benchmark-data:/app/data/db"
+      - "./pigallery2/images:/app/data/images" # CHANGE ME
+      - "./pigallery2/tmp:/app/data/tmp" # CHANGE ME
+    expose:
+      - "80"
+
+volumes:
+  db-benchmark-data:

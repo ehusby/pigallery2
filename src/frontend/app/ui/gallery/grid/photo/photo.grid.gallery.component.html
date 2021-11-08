@@ -11,22 +11,19 @@
   </app-gallery-grid-photo-loading>
 
 
-  <div *ngIf="gridMedia.isVideo()" class="video-indicator"
-       [style.marginTop.px]="-container.nativeElement.offsetHeight"
-       [style.marginLeft.px]="container.nativeElement.offsetWidth">
+  <div *ngIf="gridMedia.isVideo()" class="video-indicator">
     {{gridMedia.Video.metadata.duration  | duration}} <span class="oi oi-video"></span></div>
 
 
   <!--Info box -->
   <div class="info"
-       *ngIf="infoBarVisible"
-       [style.width.px]="container.nativeElement.offsetWidth">
+       *ngIf="infoBarVisible" >
     <div class="photo-name">{{Title}}</div>
 
     <div class="photo-position" *ngIf="gridMedia.hasPositionData()">
       <span class="oi oi-map-marker"></span>
       <ng-template [ngIf]="getPositionText()">
-        <a [routerLink]="['/search', getPositionText(), {type:SearchTypes[SearchTypes.position]}]"
+        <a [routerLink]="['/search', getPositionSearchQuery()]"
            *ngIf="searchEnabled">
           {{getPositionText()}}
         </a>
@@ -37,13 +34,13 @@
     <div class="photo-keywords" *ngIf="keywords">
       <ng-template ngFor let-keyword [ngForOf]="keywords" let-last="last">
         <a *ngIf="searchEnabled"
-           [routerLink]="['/search', keyword.value, {type: SearchTypes[keyword.type]}]" [ngSwitch]="keyword.type">
-          <ng-template [ngSwitchCase]="SearchTypes.keyword">#</ng-template><!--
-       --><ng-template [ngSwitchCase]="SearchTypes.person"><span class="oi oi-person"></span></ng-template><!--
+           [routerLink]="['/search', getTextSearchQuery(keyword.value,keyword.type)]" [ngSwitch]="keyword.type">
+          <ng-template [ngSwitchCase]="SearchQueryTypes.keyword">#</ng-template><!--
+       --><ng-template [ngSwitchCase]="SearchQueryTypes.person"><span class="oi oi-person"></span></ng-template><!--
        -->{{keyword.value}}</a>
         <span *ngIf="!searchEnabled" [ngSwitch]="keyword.type">
-          <ng-template [ngSwitchCase]="SearchTypes.keyword">#</ng-template><!--
-       --><ng-template [ngSwitchCase]="SearchTypes.person"><span class="oi oi-person"></span></ng-template><!--
+          <ng-template [ngSwitchCase]="SearchQueryTypes.keyword">#</ng-template><!--
+       --><ng-template [ngSwitchCase]="SearchQueryTypes.person"><span class="oi oi-person"></span></ng-template><!--
        -->{{keyword.value}}</span>
         <ng-template [ngIf]="!last">,&#160;</ng-template>
       </ng-template>

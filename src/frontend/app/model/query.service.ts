@@ -5,7 +5,7 @@ import {QueryParams} from '../../../common/QueryParams';
 import {Utils} from '../../../common/Utils';
 import {GalleryService} from '../ui/gallery/gallery.service';
 import {Config} from '../../../common/config/public/Config';
-import {DirectoryDTO} from '../../../common/entities/DirectoryDTO';
+import {ParentDirectoryDTO, SubDirectoryDTO} from '../../../common/entities/DirectoryDTO';
 
 @Injectable()
 export class QueryService {
@@ -36,7 +36,7 @@ export class QueryService {
     return query;
   }
 
-  getParamsForDirs(directory: DirectoryDTO) {
+  getParamsForDirs(directory: ParentDirectoryDTO | SubDirectoryDTO): { [key: string]: any } {
     const params: { [key: string]: any } = {};
     if (Config.Client.Sharing.enabled === true) {
       if (this.shareService.isSharing()) {

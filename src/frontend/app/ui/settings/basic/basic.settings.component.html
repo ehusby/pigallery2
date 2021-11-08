@@ -33,7 +33,7 @@
         i18n-description i18n-name
         [ngModel]="states.port"
         required="true"
-        [dockerWarning]="(_settingsService.Settings | async).Server.Environment.isDocker"
+        [dockerWarning]="(settingsService.Settings | async).Server.Environment.isDocker"
         [simplifiedMode]="simplifiedMode">
       </app-settings-entry>
 
@@ -44,7 +44,7 @@
         placeholder="path"
         i18n-description i18n-name
         required
-        [dockerWarning]="(_settingsService.Settings | async).Server.Environment.isDocker"
+        [dockerWarning]="(settingsService.Settings | async).Server.Environment.isDocker"
         [ngModel]="states.imagesFolder">
       </app-settings-entry>
 
@@ -56,14 +56,14 @@
         placeholder="path"
         i18n-description i18n-name
         required="true"
-        [dockerWarning]="(_settingsService.Settings | async).Server.Environment.isDocker"
+        [dockerWarning]="(settingsService.Settings | async).Server.Environment.isDocker"
         [ngModel]="states.tempFolder">
       </app-settings-entry>
 
 
       <app-settings-entry
         name="Page public url"
-        [(ngModel)]="states.publicUrl"
+        [ngModel]="states.publicUrl"
         (change)="onUrlChanged()"
         description="If you access the page form local network its good to know the public
             url for creating sharing link"

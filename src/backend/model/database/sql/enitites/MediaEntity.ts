@@ -2,9 +2,9 @@ import {Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn, Tab
 import {DirectoryEntity} from './DirectoryEntity';
 import {MediaDimension, MediaDTO, MediaMetadata} from '../../../../../common/entities/MediaDTO';
 import {OrientationTypes} from 'ts-exif-parser';
-import {CameraMetadataEntity, PositionMetaDataEntity} from './PhotoEntity';
 import {FaceRegionEntry} from './FaceRegionEntry';
 import {columnCharsetCS} from './EntityUtils';
+import {CameraMetadata, GPSMetadata, PositionMetaData} from '../../../../../common/entities/PhotoDTO';
 
 export class MediaDimensionEntity implements MediaDimension {
 
@@ -16,6 +16,80 @@ export class MediaDimensionEntity implements MediaDimension {
 }
 
 
+export class CameraMetadataEntity implements CameraMetadata {
+
+  @Column('int', {nullable: true, unsigned: true})
+  ISO: number;
+
+
+  @Column({
+    type: 'text', nullable: true,
+    charset: columnCharsetCS.charset,
+    collation: columnCharsetCS.collation
+  })
+  model: string;
+
+
+  @Column({
+    type: 'text', nullable: true,
+    charset: columnCharsetCS.charset,
+    collation: columnCharsetCS.collation
+  })
+  make: string;
+
+  @Column('float', {nullable: true})
+  fStop: number;
+
+  @Column('float', {nullable: true})
+  exposure: number;
+
+  @Column('float', {nullable: true})
+  focalLength: number;
+
+  @Column('text', {nullable: true})
+  lens: string;
+}
+
+
+export class GPSMetadataEntity implements GPSMetadata {
+
+  @Column('float', {nullable: true})
+  latitude: number;
+  @Column('float', {nullable: true})
+  longitude: number;
+  @Column('int', {nullable: true})
+  altitude: number;
+}
+
+
+export class PositionMetaDataEntity implements PositionMetaData {
+
+  @Column(type => GPSMetadataEntity)
+  GPSData: GPSMetadataEntity;
+
+  @Column({
+    type: 'text', nullable: true,
+    charset: columnCharsetCS.charset,
+    collation: columnCharsetCS.collation
+  })
+  country: string;
+
+  @Column({
+    type: 'text', nullable: true,
+    charset: columnCharsetCS.charset,
+    collation: columnCharsetCS.collation
+  })
+  state: string;
+
+  @Column({
+    type: 'text', nullable: true,
+    charset: columnCharsetCS.charset,
+    collation: columnCharsetCS.collation
+  })
+  city: string;
+}
+
+
 export class MediaMetadataEntity implements MediaMetadata {
   @Column('text')
   caption: string;
@@ -23,8 +97,13 @@ export class MediaMetadataEntity implements MediaMetadata {
   @Column(type => MediaDimensionEntity)
   size: MediaDimensionEntity;
 
+  /**
+   * Date in local timezone
+   * Reason: If you look back your holiday photos from a different timezone,
+   * you do not want to see 2AM next to a photo that was taken during lunch
+   */
   @Column('bigint', {
-    unsigned: true, transformer: {
+    transformer: {
       from: v => parseInt(v, 10),
       to: v => v
     }
@@ -34,7 +113,11 @@ export class MediaMetadataEntity implements MediaMetadata {
   @Column('int', {unsigned: true})
   fileSize: number;
 
-  @Column('simple-array')
+  @Column({
+    type: 'simple-array',
+    charset: columnCharsetCS.charset,
+    collation: columnCharsetCS.collation
+  })
   keywords: string[];
 
   @Column(type => CameraMetadataEntity)
@@ -43,11 +126,24 @@ export class MediaMetadataEntity implements MediaMetadata {
   @Column(type => PositionMetaDataEntity)
   positionData: PositionMetaDataEntity;
 
+  @Column('tinyint', {unsigned: true})
+  rating: 0 | 1 | 2 | 3 | 4 | 5;
+
   @Column('tinyint', {unsigned: true, default: OrientationTypes.TOP_LEFT})
   orientation: OrientationTypes;
 
   @OneToMany(type => FaceRegionEntry, faceRegion => faceRegion.media)
   faces: FaceRegionEntry[];
+
+  /**
+   * Caches the list of persons. Only used for searching
+   */
+  @Column({
+    type: 'simple-array', select: false, nullable: true,
+    charset: columnCharsetCS.charset,
+    collation: columnCharsetCS.collation
+  })
+  persons: string[];
 
   @Column('int', {unsigned: true})
   bitRate: number;
@@ -60,7 +156,7 @@ export class MediaMetadataEntity implements MediaMetadata {
 // TODO: fix inheritance once its working in typeorm
 @Entity()
 @Unique(['name', 'directory'])
-@TableInheritance({column: {type: 'varchar', name: 'type', length: 32}})
+@TableInheritance({column: {type: 'varchar', name: 'type', length: 16}})
 export abstract class MediaEntity implements MediaDTO {
 
   @Index()

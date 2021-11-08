@@ -1,17 +1,19 @@
 import {Injectable} from '@angular/core';
-import {DirectoryDTO} from '../../../../common/entities/DirectoryDTO';
+import {DirectoryDTOUtils, DirectoryPathDTO, ParentDirectoryDTO} from '../../../../common/entities/DirectoryDTO';
 import {Utils} from '../../../../common/Utils';
 import {Config} from '../../../../common/config/public/Config';
-import {AutoCompleteItem, SearchTypes} from '../../../../common/entities/AutoCompleteItem';
+import {IAutoCompleteItem} from '../../../../common/entities/AutoCompleteItem';
 import {SearchResultDTO} from '../../../../common/entities/SearchResultDTO';
 import {MediaDTO} from '../../../../common/entities/MediaDTO';
 import {SortingMethods} from '../../../../common/entities/SortingMethods';
 import {VersionService} from '../../model/version.service';
+import {SearchQueryDTO, SearchQueryTypes} from '../../../../common/entities/SearchQueryDTO';
 
 interface CacheItem<T> {
   timestamp: number;
   item: T;
 }
+
 
 @Injectable()
 export class GalleryCacheService {
@@ -21,10 +23,15 @@ export class GalleryCacheService {
   private static readonly INSTANT_SEARCH_PREFIX = 'instant_search:';
   private static readonly SEARCH_PREFIX = 'search:';
   private static readonly SORTING_PREFIX = 'sorting:';
-  private static readonly SEARCH_TYPE_PREFIX = ':type:';
   private static readonly VERSION = 'version';
 
   constructor(private versionService: VersionService) {
+
+    // if it was a forced reload not a navigation, clear cache
+    if (GalleryCacheService.wasAReload()) {
+      GalleryCacheService.deleteCache();
+    }
+
     const onNewVersion = (ver: string) => {
       if (ver !== null &&
         localStorage.getItem(GalleryCacheService.VERSION) !== ver) {
@@ -36,11 +43,16 @@ export class GalleryCacheService {
     onNewVersion(this.versionService.version.value);
   }
 
+  private static wasAReload(): boolean {
+    const perfEntries = performance.getEntriesByType('navigation') as PerformanceNavigationTiming [];
+    return perfEntries && perfEntries[0] && perfEntries[0].type === 'reload';
+  }
+
   private static loadCacheItem(key: string): SearchResultDTO {
     const tmp = localStorage.getItem(key);
     if (tmp != null) {
       const value: CacheItem<SearchResultDTO> = JSON.parse(tmp);
-      if (value.timestamp < Date.now() - Config.Client.Search.instantSearchCacheTimeout) {
+      if (value.timestamp < Date.now() - Config.Client.Search.searchCacheTimeout) {
         localStorage.removeItem(key);
         return null;
       }
@@ -50,7 +62,7 @@ export class GalleryCacheService {
     return null;
   }
 
-  private static deleteCache() {
+  private static deleteCache(): void {
     try {
       const toRemove = [];
       for (let i = 0; i < localStorage.length; i++) {
@@ -63,15 +75,15 @@ export class GalleryCacheService {
         }
       }
 
-      for (let i = 0; i < toRemove.length; i++) {
-        localStorage.removeItem(toRemove[i]);
+      for (const item of toRemove) {
+        localStorage.removeItem(item);
       }
     } catch (e) {
 
     }
   }
 
-  public getSorting(dir: DirectoryDTO): SortingMethods {
+  public getSorting(dir: DirectoryPathDTO): SortingMethods {
     const key = GalleryCacheService.SORTING_PREFIX + dir.path + '/' + dir.name;
     const tmp = localStorage.getItem(key);
     if (tmp != null) {
@@ -80,7 +92,7 @@ export class GalleryCacheService {
     return null;
   }
 
-  public removeSorting(dir: DirectoryDTO) {
+  public removeSorting(dir: DirectoryPathDTO): void {
     try {
       const key = GalleryCacheService.SORTING_PREFIX + dir.path + '/' + dir.name;
       localStorage.removeItem(key);
@@ -90,7 +102,7 @@ export class GalleryCacheService {
     }
   }
 
-  public setSorting(dir: DirectoryDTO, sorting: SortingMethods): SortingMethods {
+  public setSorting(dir: DirectoryPathDTO, sorting: SortingMethods): SortingMethods {
     try {
       const key = GalleryCacheService.SORTING_PREFIX + dir.path + '/' + dir.name;
       localStorage.setItem(key, sorting.toString());
@@ -101,14 +113,14 @@ export class GalleryCacheService {
     return null;
   }
 
-  public getAutoComplete(text: string): AutoCompleteItem[] {
+  public getAutoComplete(text: string, type: SearchQueryTypes): IAutoCompleteItem[] {
     if (Config.Client.Other.enableCache === false) {
       return null;
     }
-    const key = GalleryCacheService.AUTO_COMPLETE_PREFIX + text;
+    const key = GalleryCacheService.AUTO_COMPLETE_PREFIX + text + (type ? '_' + type : '');
     const tmp = localStorage.getItem(key);
     if (tmp != null) {
-      const value: CacheItem<AutoCompleteItem[]> = JSON.parse(tmp);
+      const value: CacheItem<IAutoCompleteItem[]> = JSON.parse(tmp);
       if (value.timestamp < Date.now() - Config.Client.Search.AutoComplete.cacheTimeout) {
         localStorage.removeItem(key);
         return null;
@@ -118,16 +130,17 @@ export class GalleryCacheService {
     return null;
   }
 
-  public setAutoComplete(text: string, items: Array<AutoCompleteItem>): void {
+  public setAutoComplete(text: string, type: SearchQueryTypes, items: Array<IAutoCompleteItem>): void {
     if (Config.Client.Other.enableCache === false) {
       return;
     }
-    const tmp: CacheItem<Array<AutoCompleteItem>> = {
+    const key = GalleryCacheService.AUTO_COMPLETE_PREFIX + text + (type ? '_' + type : '');
+    const tmp: CacheItem<Array<IAutoCompleteItem>> = {
       timestamp: Date.now(),
       item: items
     };
     try {
-      localStorage.setItem(GalleryCacheService.AUTO_COMPLETE_PREFIX + text, JSON.stringify(tmp));
+      localStorage.setItem(key, JSON.stringify(tmp));
     } catch (e) {
       this.reset();
       console.error(e);
@@ -158,19 +171,15 @@ export class GalleryCacheService {
     }
   }
 
-  public getSearch(text: string, type?: SearchTypes): SearchResultDTO {
+  public getSearch(query: SearchQueryDTO): SearchResultDTO {
     if (Config.Client.Other.enableCache === false) {
       return null;
     }
-    let key = GalleryCacheService.SEARCH_PREFIX + text;
-    if (typeof type !== 'undefined' && type !== null) {
-      key += GalleryCacheService.SEARCH_TYPE_PREFIX + type;
-    }
-
+    const key = GalleryCacheService.SEARCH_PREFIX + JSON.stringify(query);
     return GalleryCacheService.loadCacheItem(key);
   }
 
-  public setSearch(text: string, type: SearchTypes, searchResult: SearchResultDTO): void {
+  public setSearch(query: SearchQueryDTO, searchResult: SearchResultDTO): void {
     if (Config.Client.Other.enableCache === false) {
       return;
     }
@@ -178,10 +187,7 @@ export class GalleryCacheService {
       timestamp: Date.now(),
       item: searchResult
     };
-    let key = GalleryCacheService.SEARCH_PREFIX + text;
-    if (typeof type !== 'undefined' && type !== null) {
-      key += GalleryCacheService.SEARCH_TYPE_PREFIX + type;
-    }
+    const key = GalleryCacheService.SEARCH_PREFIX + JSON.stringify(query);
     try {
       localStorage.setItem(key, JSON.stringify(tmp));
     } catch (e) {
@@ -190,16 +196,16 @@ export class GalleryCacheService {
     }
   }
 
-  public getDirectory(directoryName: string): DirectoryDTO {
+  public getDirectory(directoryName: string): ParentDirectoryDTO {
     if (Config.Client.Other.enableCache === false) {
       return null;
     }
     try {
       const value = localStorage.getItem(GalleryCacheService.CONTENT_PREFIX + Utils.concatUrls(directoryName));
       if (value != null) {
-        const directory: DirectoryDTO = JSON.parse(value);
+        const directory: ParentDirectoryDTO = JSON.parse(value);
 
-        DirectoryDTO.addReferences(directory);
+        DirectoryDTOUtils.unpackDirectory(directory);
         return directory;
       }
     } catch (e) {
@@ -207,7 +213,7 @@ export class GalleryCacheService {
     return null;
   }
 
-  public setDirectory(directory: DirectoryDTO): void {
+  public setDirectory(directory: ParentDirectoryDTO): void {
     if (Config.Client.Other.enableCache === false) {
       return;
     }
@@ -220,10 +226,10 @@ export class GalleryCacheService {
     try {
       // try to fit it
       localStorage.setItem(key, JSON.stringify(directory));
-      directory.directories.forEach((dir: DirectoryDTO) => {
-        const sub_key = GalleryCacheService.CONTENT_PREFIX + Utils.concatUrls(dir.path, dir.name);
-        if (localStorage.getItem(sub_key) == null) { // don't override existing
-          localStorage.setItem(sub_key, JSON.stringify(dir));
+      directory.directories.forEach((dir) => {
+        const subKey = GalleryCacheService.CONTENT_PREFIX + Utils.concatUrls(dir.path, dir.name);
+        if (localStorage.getItem(subKey) == null) { // don't override existing
+          localStorage.setItem(subKey, JSON.stringify(dir));
         }
       });
     } catch (e) {
@@ -235,7 +241,7 @@ export class GalleryCacheService {
 
   /**
    * Update media state at cache too (Eg.: thumbnail rendered)
-   * @param media
+   * @param media: MediaBaseDTO
    */
   public mediaUpdated(media: MediaDTO): void {
 
@@ -247,7 +253,7 @@ export class GalleryCacheService {
       const directoryName = Utils.concatUrls(media.directory.path, media.directory.name);
       const value = localStorage.getItem(directoryName);
       if (value != null) {
-        const directory: DirectoryDTO = JSON.parse(value);
+        const directory: ParentDirectoryDTO = JSON.parse(value);
         directory.media.forEach((p) => {
           if (p.name === media.name) {
             // update data
@@ -267,7 +273,7 @@ export class GalleryCacheService {
 
   }
 
-  private reset() {
+  private reset(): void {
     try {
       const currentUserStr = localStorage.getItem('currentUser');
       localStorage.clear();

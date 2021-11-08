@@ -9,7 +9,7 @@
 
       <app-settings-entry
         name="Thumbnail Quality"
-        description="High quality may be slow. Especially with Jimp."
+        description="High quality may be slow."
         i18n-description i18n-name
         [ngModel]="states.server.qualityPriority"
         [simplifiedMode]="simplifiedMode">
@@ -61,7 +61,7 @@
 
       <app-settings-job-button class="mt-2 mt-md-0 float-left"
                                [soloRun]="true"
-                               (error)="error=$event"
+                               (jobError)="error=$event"
                                [jobName]="jobName"
                                [allowParallelRun]="false"
                                [config]="Config"></app-settings-job-button>

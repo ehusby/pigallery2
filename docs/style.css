@@ -80,6 +80,7 @@ body {
   .masthead-brand {
     float: left;
   }
+
   .nav-masthead {
     float: right;
   }
@@ -92,47 +93,52 @@ body {
 .cover {
   padding: 0 1.5rem;
 }
+
 .cover .btn-lg {
   padding: .75rem 1.25rem;
   font-weight: 700;
 }
 
 
-
-.feature{
+.feature {
   margin-top: 30px;
   margin-bottom: 10px;
 }
 
-.feature .col{
+.feature .col {
   margin: auto;
 }
 
-.feature .col h3{
+.feature .col h3 {
   text-align: left;
 }
 
-.feature .col{
+.feature .col {
   text-align: justify;
 }
 
 
-.feature img{
+.feature img {
   width: 100%;
 }
 
-.section-header{
+.section-header {
   margin-top: 30px;
   text-align: left;
 }
-hr{
+
+hr {
   background: white;
   margin-top: 0;
 }
-.github-button-wrapper{
+
+.github-button-wrapper {
   margin-top: 10px;
   float: right;
 }
-.banner-photo{
+
+.banner-photo {
   margin-bottom: 30px;
 }
+
+

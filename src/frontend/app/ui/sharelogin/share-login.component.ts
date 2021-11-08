@@ -14,24 +14,26 @@ export class ShareLoginComponent implements OnInit {
   loginError = false;
   title: string;
 
-  constructor(private _authService: AuthenticationService, private _navigation: NavigationService) {
+  constructor(private authService: AuthenticationService,
+              private navigation: NavigationService) {
     this.title = Config.Client.applicationTitle;
   }
 
-  ngOnInit() {
-    if (this._authService.isAuthenticated()) {
-      this._navigation.toGallery();
+  ngOnInit(): void {
+    if (this.authService.isAuthenticated()) {
+      this.navigation.toGallery();
     }
   }
 
-  async onLogin() {
+  async onLogin(): Promise<void> {
     this.loginError = false;
 
     try {
-      await this._authService.shareLogin(this.password);
+      await this.authService.shareLogin(this.password);
 
     } catch (error) {
-      if (error && error.code === ErrorCodes.CREDENTIAL_NOT_FOUND) {
+      if (error && error.code === ErrorCodes.CREDENTIAL_NOT_FOUND ||
+        error === 'Unauthorized') {
         this.loginError = true;
       }
     }

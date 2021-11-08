@@ -1,5 +1,5 @@
-export interface IVersionManager {
-  getDataVersion(): Promise<string>;
+import {IObjectManager} from './IObjectManager';
 
-  updateDataVersion(): Promise<void>;
+export interface IVersionManager extends IObjectManager {
+  getDataVersion(): Promise<string>;
 }

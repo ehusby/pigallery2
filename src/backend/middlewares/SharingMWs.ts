@@ -11,14 +11,14 @@ import {UserRoles} from '../../common/entities/UserDTO';
 export class SharingMWs {
 
 
-  public static async getSharing(req: Request, res: Response, next: NextFunction) {
+  public static async getSharing(req: Request, res: Response, next: NextFunction): Promise<any> {
     if (Config.Client.Sharing.enabled === false) {
       return next();
     }
     const sharingKey = req.params[QueryParams.gallery.sharingKey_params];
 
     try {
-      req.resultPipe = await ObjectManagers.getInstance().SharingManager.findOne({sharingKey: sharingKey});
+      req.resultPipe = await ObjectManagers.getInstance().SharingManager.findOne({sharingKey});
       return next();
 
     } catch (err) {
@@ -27,7 +27,7 @@ export class SharingMWs {
 
   }
 
-  public static async createSharing(req: Request, res: Response, next: NextFunction) {
+  public static async createSharing(req: Request, res: Response, next: NextFunction): Promise<any> {
     if (Config.Client.Sharing.enabled === false) {
       return next();
     }
@@ -40,7 +40,7 @@ export class SharingMWs {
     // create one not yet used
     while (true) {
       try {
-        await ObjectManagers.getInstance().SharingManager.findOne({sharingKey: sharingKey});
+        await ObjectManagers.getInstance().SharingManager.findOne({sharingKey});
         sharingKey = this.generateKey();
       } catch (err) {
         break;
@@ -51,11 +51,13 @@ export class SharingMWs {
     const directoryName = path.normalize(req.params.directory || '/');
     const sharing: SharingDTO = {
       id: null,
-      sharingKey: sharingKey,
+      sharingKey,
       path: directoryName,
       password: createSharing.password,
       creator: req.session.user,
-      expires: Date.now() + createSharing.valid,
+      expires: createSharing.valid >= 0 ? // if === -1 its forever
+        Date.now() + createSharing.valid :
+        (new Date(9999, 0, 1)).getTime(), // never expire
       includeSubfolders: createSharing.includeSubfolders,
       timeStamp: Date.now()
     };
@@ -71,7 +73,7 @@ export class SharingMWs {
     }
   }
 
-  public static async updateSharing(req: Request, res: Response, next: NextFunction) {
+  public static async updateSharing(req: Request, res: Response, next: NextFunction): Promise<any> {
     if (Config.Client.Sharing.enabled === false) {
       return next();
     }
@@ -86,7 +88,9 @@ export class SharingMWs {
       sharingKey: '',
       password: (updateSharing.password && updateSharing.password !== '') ? updateSharing.password : null,
       creator: req.session.user,
-      expires: Date.now() + updateSharing.valid,
+      expires: updateSharing.valid >= 0 // if === -1 its forever
+        ? Date.now() + updateSharing.valid :
+        (new Date(9999, 0, 1)).getTime(), // never expire
       includeSubfolders: updateSharing.includeSubfolders,
       timeStamp: Date.now()
     };
@@ -102,7 +106,7 @@ export class SharingMWs {
   }
 
 
-  public static async deleteSharing(req: Request, res: Response, next: NextFunction) {
+  public static async deleteSharing(req: Request, res: Response, next: NextFunction): Promise<any> {
     if (Config.Client.Sharing.enabled === false) {
       return next();
     }
@@ -113,6 +117,7 @@ export class SharingMWs {
 
     try {
       req.resultPipe = await ObjectManagers.getInstance().SharingManager.deleteSharing(sharingKey);
+      req.resultPipe = 'ok';
       return next();
     } catch (err) {
       return next(new ErrorDTO(ErrorCodes.GENERAL_ERROR, 'Error during deleting sharing', err));
@@ -120,7 +125,7 @@ export class SharingMWs {
 
   }
 
-  public static async listSharing(req: Request, res: Response, next: NextFunction) {
+  public static async listSharing(req: Request, res: Response, next: NextFunction): Promise<any> {
     if (Config.Client.Sharing.enabled === false) {
       return next();
     }
@@ -133,7 +138,7 @@ export class SharingMWs {
   }
 
   private static generateKey(): string {
-    function s4() {
+    function s4(): string {
       return Math.floor((1 + Math.random()) * 0x10000)
         .toString(16)
         .substring(1);

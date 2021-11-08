@@ -17,7 +17,7 @@ export class JobProgressManager {
   private timer: NodeJS.Timeout = null;
 
   constructor() {
-    this.dbPath = path.join(ProjectPath.getAbsolutePath(Config.Server.Database.dbFolder), 'jobs.db');
+    this.dbPath = path.join(ProjectPath.DBFolder, 'jobs.db');
     this.loadDB().catch(console.error);
   }
 
@@ -33,12 +33,12 @@ export class JobProgressManager {
   }
 
 
-  onJobProgressUpdate(progress: JobProgressDTO) {
-    this.db.progresses[progress.HashName] = {progress: progress, timestamp: Date.now()};
+  onJobProgressUpdate(progress: JobProgressDTO): void {
+    this.db.progresses[progress.HashName] = {progress, timestamp: Date.now()};
     this.delayedSave();
   }
 
-  private async loadDB() {
+  private async loadDB(): Promise<void> {
     try {
       await fsp.access(this.dbPath);
     } catch (e) {
@@ -69,15 +69,15 @@ export class JobProgressManager {
     }
   }
 
-  private async saveDB() {
+  private async saveDB(): Promise<void> {
     await fsp.writeFile(this.dbPath, JSON.stringify(this.db));
   }
 
-  private delayedSave() {
+  private delayedSave(): void {
     if (this.timer !== null) {
       return;
     }
-    this.timer = setTimeout(async () => {
+    this.timer = setTimeout(async (): Promise<void> => {
       this.saveDB().catch(console.error);
       this.timer = null;
     }, 5000);

@@ -1,27 +1,13 @@
-<ng-template [ngIf]="mapPhotos.length>0">
+<ng-template [ngIf]="markerLayer.length>0">
   <app-gallery-map-lightbox [photos]="photos" [gpxFiles]="gpxFiles"></app-gallery-map-lightbox>
-  <div id="map" #map>
-
-    <yaga-map #yagaMap
-              [draggingEnabled]="false"
-              [keyboardEnabled]="false"
-              [tapEnabled]="false"
-              [boxZoomEnabled]="false"
-              [doubleClickZoomEnabled]="false">
-      <yaga-marker
-        *ngFor="let photo of mapPhotos"
-        [lat]="photo.lat"
-        [lng]="photo.lng">
-      </yaga-marker>
-      <yaga-attribution-control
-        prefix=""
-        [attributions]="mapService.ShortAttributions">
-      </yaga-attribution-control>
-      <yaga-tile-layer [url]="mapService.MapLayer"></yaga-tile-layer>
-    </yaga-map>
-    <div class="overlay" (click)="click()"
-         [style.margin-top.px]="-height"
-         [style.height.px]="height">
+  <div class="clickable" id="map" #map (click)="click()">
+    <div
+      class="leaflet-map"
+      leaflet
+      [leafletOptions]="options"
+      [leafletLayers]="markerLayer"
+      (leafletMapReady)="onMapReady($event)">
     </div>
+
   </div>
 </ng-template>

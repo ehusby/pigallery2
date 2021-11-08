@@ -6,7 +6,7 @@ import {UserRequestConstrainsMWs} from '../middlewares/user/UserRequestConstrain
 import {RenderingMWs} from '../middlewares/RenderingMWs';
 
 export class UserRouter {
-  public static route(app: Express) {
+  public static route(app: Express): void {
     this.addLogin(app);
     this.addLogout(app);
     this.addGetSessionUser(app);
@@ -19,7 +19,7 @@ export class UserRouter {
     this.addChangeRole(app);
   }
 
-  private static addLogin(app: Express) {
+  private static addLogin(app: Express): void {
     app.post('/api/user/login',
       AuthenticationMWs.inverseAuthenticate,
       AuthenticationMWs.login,
@@ -27,7 +27,7 @@ export class UserRouter {
     );
   }
 
-  private static addLogout(app: Express) {
+  private static addLogout(app: Express): void {
     app.post('/api/user/logout',
       AuthenticationMWs.logout,
       RenderingMWs.renderOK
@@ -35,7 +35,7 @@ export class UserRouter {
   }
 
 
-  private static addGetSessionUser(app: Express) {
+  private static addGetSessionUser(app: Express): void {
     app.get('/api/user/me',
       AuthenticationMWs.authenticate,
       RenderingMWs.renderSessionUser
@@ -43,7 +43,7 @@ export class UserRouter {
   }
 
 
-  private static addChangePassword(app: Express) {
+  private static addChangePassword(app: Express): void {
     app.post('/api/user/:id/password',
       AuthenticationMWs.authenticate,
       UserRequestConstrainsMWs.forceSelfRequest,
@@ -53,7 +53,7 @@ export class UserRouter {
   }
 
 
-  private static addCreateUser(app: Express) {
+  private static addCreateUser(app: Express): void {
     app.put('/api/user',
       AuthenticationMWs.authenticate,
       AuthenticationMWs.authorise(UserRoles.Admin),
@@ -62,7 +62,7 @@ export class UserRouter {
     );
   }
 
-  private static addDeleteUser(app: Express) {
+  private static addDeleteUser(app: Express): void {
     app.delete('/api/user/:id',
       AuthenticationMWs.authenticate,
       AuthenticationMWs.authorise(UserRoles.Admin),
@@ -73,7 +73,7 @@ export class UserRouter {
   }
 
 
-  private static addListUsers(app: Express) {
+  private static addListUsers(app: Express): void {
     app.get('/api/user/list',
       AuthenticationMWs.authenticate,
       AuthenticationMWs.authorise(UserRoles.Admin),
@@ -82,7 +82,7 @@ export class UserRouter {
     );
   }
 
-  private static addChangeRole(app: Express) {
+  private static addChangeRole(app: Express): void {
     app.post('/api/user/:id/role',
       AuthenticationMWs.authenticate,
       AuthenticationMWs.authorise(UserRoles.Admin),

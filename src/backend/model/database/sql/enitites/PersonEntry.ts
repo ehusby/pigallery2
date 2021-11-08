@@ -1,12 +1,12 @@
-import {Column, Entity, Index, OneToMany, PrimaryGeneratedColumn, Unique} from 'typeorm';
+import {Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique} from 'typeorm';
 import {FaceRegionEntry} from './FaceRegionEntry';
-import {PersonDTO} from '../../../../../common/entities/PersonDTO';
 import {columnCharsetCS} from './EntityUtils';
+import {PersonWithSampleRegion} from '../../../../../common/entities/PersonDTO';
 
 
 @Entity()
 @Unique(['name'])
-export class PersonEntry implements PersonDTO {
+export class PersonEntry implements PersonWithSampleRegion {
 
   @Index()
   @PrimaryGeneratedColumn({unsigned: true})
@@ -23,6 +23,9 @@ export class PersonEntry implements PersonDTO {
 
   @OneToMany(type => FaceRegionEntry, faceRegion => faceRegion.person)
   public faces: FaceRegionEntry[];
+
+  @ManyToOne(type => FaceRegionEntry, {onDelete: 'SET NULL', nullable: true})
+  sampleRegion: FaceRegionEntry;
 
 
 }

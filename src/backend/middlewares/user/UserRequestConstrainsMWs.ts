@@ -5,7 +5,7 @@ import {ObjectManagers} from '../../model/ObjectManagers';
 
 export class UserRequestConstrainsMWs {
 
-  public static forceSelfRequest(req: Request, res: Response, next: NextFunction) {
+  public static forceSelfRequest(req: Request, res: Response, next: NextFunction): any {
     if ((typeof req.params === 'undefined') || (typeof req.params.id === 'undefined')) {
       return next();
     }
@@ -17,7 +17,7 @@ export class UserRequestConstrainsMWs {
   }
 
 
-  public static notSelfRequest(req: Request, res: Response, next: NextFunction) {
+  public static notSelfRequest(req: Request, res: Response, next: NextFunction): any {
     if ((typeof req.params === 'undefined') || (typeof req.params.id === 'undefined')) {
       return next();
     }
@@ -29,7 +29,7 @@ export class UserRequestConstrainsMWs {
     return next();
   }
 
-  public static async notSelfRequestOr2Admins(req: Request, res: Response, next: NextFunction) {
+  public static async notSelfRequestOr2Admins(req: Request, res: Response, next: NextFunction): Promise<any> {
     if ((typeof req.params === 'undefined') || (typeof req.params.id === 'undefined')) {
       return next();
     }

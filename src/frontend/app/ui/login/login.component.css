@@ -1,7 +1,7 @@
 .title h1 {
   font-size: 80px;
   font-weight: bold;
-  white-space: nowrap;
+  text-align: center;
 }
 
 .title img {

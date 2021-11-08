@@ -16,23 +16,24 @@ export class LoginComponent implements OnInit {
   title: string;
   inProgress = false;
 
-  constructor(private _authService: AuthenticationService, private _navigation: NavigationService) {
+  constructor(private authService: AuthenticationService,
+              private navigation: NavigationService) {
     this.loginCredential = new LoginCredential();
     this.title = Config.Client.applicationTitle;
   }
 
-  ngOnInit() {
-    if (this._authService.isAuthenticated()) {
-      this._navigation.toGallery();
+  ngOnInit(): void {
+    if (this.authService.isAuthenticated()) {
+      this.navigation.toGallery();
     }
   }
 
-  async onLogin() {
+  async onLogin(): Promise<void> {
     this.loginError = false;
 
     this.inProgress = true;
     try {
-      await this._authService.login(this.loginCredential);
+      await this.authService.login(this.loginCredential);
     } catch (error) {
       if (error && error.code === ErrorCodes.CREDENTIAL_NOT_FOUND) {
         this.loginError = true;

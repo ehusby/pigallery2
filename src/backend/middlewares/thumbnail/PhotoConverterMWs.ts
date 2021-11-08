@@ -5,7 +5,7 @@ import {Config} from '../../../common/config/private/Config';
 
 export class PhotoConverterMWs {
 
-  public static async convertPhoto(req: Request, res: Response, next: NextFunction) {
+  public static async convertPhoto(req: Request, res: Response, next: NextFunction): Promise<any> {
     if (!req.resultPipe) {
       return next();
     }

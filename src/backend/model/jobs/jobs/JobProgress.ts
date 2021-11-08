@@ -9,8 +9,8 @@ export class JobProgress {
   };
   private state = JobProgressStates.running;
   private time = {
-    start: <number>Date.now(),
-    end: <number>null,
+    start: Date.now() as number,
+    end: null as number,
   };
   private logCounter = 0;
   private logs: { id: number, timestamp: string, comment: string }[] = [];
@@ -77,10 +77,10 @@ export class JobProgress {
     return this.logs;
   }
 
-  onChange = (progress: JobProgress) => {
+  onChange = (progress: JobProgress): void => {
   };
 
-  log(log: string) {
+  log(log: string): void {
     while (this.logs.length > 10) {
       this.logs.shift();
     }

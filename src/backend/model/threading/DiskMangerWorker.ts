@@ -1,6 +1,6 @@
 import {promises as fsp, Stats} from 'fs';
 import * as path from 'path';
-import {DirectoryDTO} from '../../../common/entities/DirectoryDTO';
+import {ParentDirectoryDTO, SubDirectoryDTO} from '../../../common/entities/DirectoryDTO';
 import {PhotoDTO} from '../../../common/entities/PhotoDTO';
 import {ProjectPath} from '../../ProjectPath';
 import {Config} from '../../../common/config/private/Config';
@@ -11,12 +11,13 @@ import {Logger} from '../../Logger';
 import {SupportedFormats} from '../../../common/SupportedFormats';
 import {VideoProcessing} from '../fileprocessing/VideoProcessing';
 import {PhotoProcessing} from '../fileprocessing/PhotoProcessing';
+import {Utils} from '../../../common/Utils';
 
 
 export class DiskMangerWorker {
 
 
-  public static calcLastModified(stat: Stats) {
+  public static calcLastModified(stat: Stats): number {
     return Math.max(stat.ctime.getTime(), stat.mtime.getTime());
   }
 
@@ -33,14 +34,14 @@ export class DiskMangerWorker {
     return path.join(this.normalizeDirPath(path.join(parent.path, parent.name)), path.sep);
   }
 
-  public static dirName(name: string) {
+  public static dirName(name: string): any {
     if (name.trim().length === 0) {
       return '.';
     }
     return path.basename(name);
   }
 
-  public static async excludeDir(name: string, relativeDirectoryName: string, absoluteDirectoryName: string) {
+  public static async excludeDir(name: string, relativeDirectoryName: string, absoluteDirectoryName: string): Promise<boolean> {
     if (Config.Server.Indexing.excludeFolderList.length === 0 &&
       Config.Server.Indexing.excludeFileList.length === 0) {
       return false;
@@ -48,9 +49,7 @@ export class DiskMangerWorker {
     const absoluteName = path.normalize(path.join(absoluteDirectoryName, name));
     const relativeName = path.normalize(path.join(relativeDirectoryName, name));
 
-    for (let j = 0; j < Config.Server.Indexing.excludeFolderList.length; j++) {
-      const exclude = Config.Server.Indexing.excludeFolderList[j];
-
+    for (const exclude of Config.Server.Indexing.excludeFolderList) {
       if (exclude.startsWith('/')) {
         if (exclude === absoluteName) {
           return true;
@@ -66,9 +65,7 @@ export class DiskMangerWorker {
       }
     }
     // exclude dirs that have the given files (like .ignore)
-    for (let j = 0; j < Config.Server.Indexing.excludeFileList.length; j++) {
-      const exclude = Config.Server.Indexing.excludeFileList[j];
-
+    for (const exclude of Config.Server.Indexing.excludeFileList) {
       try {
         await fsp.access(path.join(absoluteName, exclude));
         return true;
@@ -80,13 +77,13 @@ export class DiskMangerWorker {
   }
 
   public static async scanDirectoryNoMetadata(relativeDirectoryName: string,
-                                              settings: DiskMangerWorker.DirectoryScanSettings = {}): Promise<DirectoryDTO<FileDTO>> {
+                                              settings: DirectoryScanSettings = {}): Promise<ParentDirectoryDTO<FileDTO>> {
     settings.noMetadata = true;
-    return this.scanDirectory(relativeDirectoryName, settings);
+    return (await this.scanDirectory(relativeDirectoryName, settings)) as ParentDirectoryDTO<FileDTO>;
   }
 
   public static async scanDirectory(relativeDirectoryName: string,
-                                    settings: DiskMangerWorker.DirectoryScanSettings = {}): Promise<DirectoryDTO> {
+                                    settings: DirectoryScanSettings = {}): Promise<ParentDirectoryDTO> {
 
     relativeDirectoryName = this.normalizeDirPath(relativeDirectoryName);
     const directoryName = DiskMangerWorker.dirName(relativeDirectoryName);
@@ -94,7 +91,7 @@ export class DiskMangerWorker {
     const absoluteDirectoryName = path.join(ProjectPath.ImageFolder, relativeDirectoryName);
 
     const stat = await fsp.stat(path.join(ProjectPath.ImageFolder, relativeDirectoryName));
-    const directory: DirectoryDTO = {
+    const directory: ParentDirectoryDTO = {
       id: null,
       parent: null,
       name: directoryName,
@@ -104,6 +101,7 @@ export class DiskMangerWorker {
       directories: [],
       isPartial: false,
       mediaCount: 0,
+      preview: null,
       media: [],
       metaFile: []
     };
@@ -113,11 +111,10 @@ export class DiskMangerWorker {
       return directory;
     }
     const list = await fsp.readdir(absoluteDirectoryName);
-    for (let i = 0; i < list.length; i++) {
-      const file = list[i];
+    for (const file of list) {
       const fullFilePath = path.normalize(path.join(absoluteDirectoryName, file));
       if ((await fsp.stat(fullFilePath)).isDirectory()) {
-        if (settings.noDirectory === true ||
+        if (settings.noDirectory === true || settings.previewOnly === true ||
           await DiskMangerWorker.excludeDir(file, relativeDirectoryName, absoluteDirectoryName)) {
           continue;
         }
@@ -125,55 +122,66 @@ export class DiskMangerWorker {
         // create preview directory
         const d = await DiskMangerWorker.scanDirectory(path.join(relativeDirectoryName, file),
           {
-            maxPhotos: Config.Server.Indexing.folderPreviewSize,
-            noMetaFile: true,
-            noVideo: true,
-            noDirectory: true,
-            noPhoto: settings.noChildDirPhotos || settings.noPhoto
+            previewOnly: true
           }
-        );
+        ) as SubDirectoryDTO;
 
         d.lastScanned = 0; // it was not a fully scan
         d.isPartial = true;
+
         directory.directories.push(d);
 
       } else if (PhotoProcessing.isPhoto(fullFilePath)) {
         if (settings.noPhoto === true) {
           continue;
         }
-        directory.media.push(<PhotoDTO>{
+
+        const photo = {
           name: file,
           directory: null,
           metadata: settings.noMetadata === true ? null : await MetadataLoader.loadPhotoMetadata(fullFilePath)
-        });
+        } as PhotoDTO;
 
+        if (!directory.preview) {
+          directory.preview = Utils.clone(photo);
 
-        if (settings.maxPhotos && directory.media.length > settings.maxPhotos) {
+          directory.preview.directory = {
+            path: directory.path,
+            name: directory.name
+          };
+        }
+        // add the preview photo to the list of media, so it will be saved to the DB
+        // and can be queried to populate previews,
+        // otherwise we do not return media list that is only partial
+        directory.media.push(photo);
+
+        if (settings.previewOnly === true) {
           break;
         }
+
       } else if (VideoProcessing.isVideo(fullFilePath)) {
-        if (Config.Client.Media.Video.enabled === false || settings.noVideo === true) {
+        if (Config.Client.Media.Video.enabled === false || settings.noVideo === true || settings.previewOnly === true) {
           continue;
         }
         try {
-          directory.media.push(<VideoDTO>{
+          directory.media.push({
             name: file,
             directory: null,
             metadata: settings.noMetadata === true ? null : await MetadataLoader.loadVideoMetadata(fullFilePath)
-          });
+          } as VideoDTO);
         } catch (e) {
           Logger.warn('Media loading error, skipping: ' + file + ', reason: ' + e.toString());
         }
 
       } else if (DiskMangerWorker.isMetaFile(fullFilePath)) {
-        if (Config.Client.MetaFile.enabled === false || settings.noMetaFile === true) {
+        if (Config.Client.MetaFile.enabled === false || settings.noMetaFile === true || settings.previewOnly === true) {
           continue;
         }
 
-        directory.metaFile.push(<FileDTO>{
+        directory.metaFile.push({
           name: file,
           directory: null,
-        });
+        } as FileDTO);
 
       }
     }
@@ -184,21 +192,19 @@ export class DiskMangerWorker {
   }
 
 
-  private static isMetaFile(fullPath: string) {
+  private static isMetaFile(fullPath: string): boolean {
     const extension = path.extname(fullPath).toLowerCase();
     return SupportedFormats.WithDots.MetaFiles.indexOf(extension) !== -1;
   }
 
 }
 
-export namespace DiskMangerWorker {
-  export interface DirectoryScanSettings {
-    maxPhotos?: number;
-    noMetaFile?: boolean;
-    noVideo?: boolean;
-    noPhoto?: boolean;
-    noDirectory?: boolean;
-    noMetadata?: boolean;
-    noChildDirPhotos?: boolean;
-  }
+export interface DirectoryScanSettings {
+  previewOnly?: boolean;
+  noMetaFile?: boolean;
+  noVideo?: boolean;
+  noPhoto?: boolean;
+  noDirectory?: boolean;
+  noMetadata?: boolean;
+  noChildDirPhotos?: boolean;
 }

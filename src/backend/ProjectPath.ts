@@ -9,12 +9,13 @@ class ProjectPathClass {
   public TranscodedFolder: string;
   public FacesFolder: string;
   public FrontendFolder: string;
+  public DBFolder: string;
 
   constructor() {
     this.reset();
   }
 
-  normalizeRelative(pathStr: string) {
+  normalizeRelative(pathStr: string): any {
     return path.join(pathStr, path.sep);
   }
 
@@ -26,13 +27,14 @@ class ProjectPathClass {
     return path.relative(this.ImageFolder, pathStr);
   }
 
-  reset() {
+  reset(): void {
     this.Root = path.join(__dirname, '/../../');
     this.FrontendFolder = path.join(this.Root, 'dist');
     this.ImageFolder = this.getAbsolutePath(Config.Server.Media.folder);
     this.TempFolder = this.getAbsolutePath(Config.Server.Media.tempFolder);
     this.TranscodedFolder = path.join(this.TempFolder, 'tc');
     this.FacesFolder = path.join(this.TempFolder, 'f');
+    this.DBFolder = this.getAbsolutePath(Config.Server.Database.dbFolder);
 
     // create thumbnail folder if not exist
     if (!fs.existsSync(this.TempFolder)) {

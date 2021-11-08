@@ -1,0 +1,64 @@
+[
+  {
+    "name": "Group photos",
+    "searchQuery": {
+      "type": 3,
+      "list": [
+        {
+          "type": 105,
+          "text": "Balu the bear",
+          "matchType": 1
+        },
+        {
+          "type": 105,
+          "text": "Boo-Boo Bear",
+          "matchType": 1
+        },
+        {
+          "type": 105,
+          "text": "Hugin the raven",
+          "matchType": 1
+        },
+        {
+          "type": 105,
+          "text": "Akela the wolf",
+          "matchType": 1
+        }
+      ],
+      "min": 2
+    }
+  },
+  {
+    "name": "Animals",
+    "searchQuery": {
+      "type": 2,
+      "list": [
+        {
+          "type": 105,
+          "text": "Balu the bear",
+          "matchType": 1
+        },
+        {
+          "type": 105,
+          "text": "Boo-Boo Bear",
+          "matchType": 1
+        },
+        {
+          "type": 105,
+          "text": "Hugin the raven",
+          "matchType": 1
+        },
+        {
+          "type": 105,
+          "text": "Akela the wolf",
+          "matchType": 1
+        },
+        {
+          "type": 105,
+          "text": "Alvin the Squirrel",
+          "matchType": 1
+        }
+      ]
+    }
+  }
+]

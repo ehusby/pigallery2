@@ -1,11 +1,10 @@
 import {Component} from '@angular/core';
-import {SettingsComponent} from '../_abstract/abstract.settings.component';
+import {SettingsComponentDirective} from '../_abstract/abstract.settings.component';
 import {AuthenticationService} from '../../../model/network/authentication.service';
 import {NavigationService} from '../../../model/navigation.service';
 import {NotificationService} from '../../../model/notification.service';
 import {RandomPhotoSettingsService} from './random-photo.settings.service';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import {ClientConfig} from '../../../../../common/config/public/ClientConfig';
+import {ClientRandomPhotoConfig} from '../../../../../common/config/public/ClientConfig';
 
 @Component({
   selector: 'app-settings-random-photo',
@@ -14,14 +13,13 @@ import {ClientConfig} from '../../../../../common/config/public/ClientConfig';
     '../_abstract/abstract.settings.component.css'],
   providers: [RandomPhotoSettingsService],
 })
-export class RandomPhotoSettingsComponent extends SettingsComponent<ClientConfig.RandomPhotoConfig> {
+export class RandomPhotoSettingsComponent extends SettingsComponentDirective<ClientRandomPhotoConfig> {
 
-  constructor(_authService: AuthenticationService,
-              _navigation: NavigationService,
-              _settingsService: RandomPhotoSettingsService,
-              notification: NotificationService,
-              i18n: I18n) {
-    super(i18n('Random Photo'), _authService, _navigation, _settingsService, notification, i18n, s => s.Client.RandomPhoto);
+  constructor(authService: AuthenticationService,
+              navigation: NavigationService,
+              settingsService: RandomPhotoSettingsService,
+              notification: NotificationService) {
+    super($localize`Random Photo`, authService, navigation, settingsService, notification, s => s.Client.RandomPhoto);
   }
 
 

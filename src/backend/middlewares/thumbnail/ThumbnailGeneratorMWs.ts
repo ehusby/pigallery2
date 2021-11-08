@@ -3,18 +3,17 @@ import * as fs from 'fs';
 import {NextFunction, Request, Response} from 'express';
 import {ErrorCodes, ErrorDTO} from '../../../common/entities/Error';
 import {ContentWrapper} from '../../../common/entities/ConentWrapper';
-import {DirectoryDTO} from '../../../common/entities/DirectoryDTO';
+import {ParentDirectoryDTO, SubDirectoryDTO} from '../../../common/entities/DirectoryDTO';
 import {ProjectPath} from '../../ProjectPath';
 import {Config} from '../../../common/config/private/Config';
 import {ThumbnailSourceType} from '../../model/threading/PhotoWorker';
 import {MediaDTO} from '../../../common/entities/MediaDTO';
-import {PersonWithPhoto} from '../PersonMWs';
 import {PhotoProcessing} from '../../model/fileprocessing/PhotoProcessing';
-import {PhotoDTO} from '../../../common/entities/PhotoDTO';
+import {PersonWithSampleRegion} from '../../../common/entities/PersonDTO';
 
 
 export class ThumbnailGeneratorMWs {
-  public static addThumbnailInformation(req: Request, res: Response, next: NextFunction) {
+  public static async addThumbnailInformation(req: Request, res: Response, next: NextFunction): Promise<any> {
     if (!req.resultPipe) {
       return next();
     }
@@ -32,6 +31,7 @@ export class ThumbnailGeneratorMWs {
       }
 
     } catch (error) {
+      console.error(error);
       return next(new ErrorDTO(ErrorCodes.SERVER_ERROR, 'error during postprocessing result (adding thumbnail info)', error.toString()));
 
     }
@@ -41,7 +41,8 @@ export class ThumbnailGeneratorMWs {
   }
 
 
-  public static addThumbnailInfoForPersons(req: Request, res: Response, next: NextFunction) {
+  // tslint:disable-next-line:typedef
+  public static addThumbnailInfoForPersons(req: Request, res: Response, next: NextFunction): void {
     if (!req.resultPipe) {
       return next();
     }
@@ -49,21 +50,26 @@ export class ThumbnailGeneratorMWs {
     try {
       const size: number = Config.Client.Media.Thumbnail.personThumbnailSize;
 
-      const persons: PersonWithPhoto[] = req.resultPipe;
-      for (let i = 0; i < persons.length; i++) {
+      const persons: PersonWithSampleRegion[] = req.resultPipe;
+
+      for (const item of persons) {
+        if (!item.sampleRegion) {
+          continue;
+        }
         // load parameters
         const mediaPath = path.join(ProjectPath.ImageFolder,
-          persons[i].samplePhoto.directory.path,
-          persons[i].samplePhoto.directory.name, persons[i].samplePhoto.name);
+          item.sampleRegion.media.directory.path,
+          item.sampleRegion.media.directory.name, item.sampleRegion.media.name);
 
         // generate thumbnail path
-        const thPath = PhotoProcessing.generatePersonThumbnailPath(mediaPath, persons[i].samplePhoto.metadata.faces[0], size);
+        const thPath = PhotoProcessing.generatePersonThumbnailPath(mediaPath, item.sampleRegion, size);
 
-        persons[i].readyThumbnail = fs.existsSync(thPath);
+        item.readyThumbnail = fs.existsSync(thPath);
       }
 
     } catch (error) {
-      return next(new ErrorDTO(ErrorCodes.SERVER_ERROR, 'error during postprocessing result (adding thumbnail info)', error.toString()));
+      return next(new ErrorDTO(ErrorCodes.SERVER_ERROR, 'error during postprocessing result (adding thumbnail info for persons)',
+        error.toString()));
 
     }
 
@@ -72,25 +78,26 @@ export class ThumbnailGeneratorMWs {
   }
 
 
-  public static async generatePersonThumbnail(req: Request, res: Response, next: NextFunction) {
+  public static async generatePersonThumbnail(req: Request, res: Response, next: NextFunction): Promise<any> {
     if (!req.resultPipe) {
       return next();
     }
-    const photo: PhotoDTO = req.resultPipe;
+    const person: PersonWithSampleRegion = req.resultPipe;
     try {
-      req.resultPipe = await PhotoProcessing.generatePersonThumbnail(photo);
+      req.resultPipe = await PhotoProcessing.generatePersonThumbnail(person);
       return next();
     } catch (error) {
       console.error(error);
       return next(new ErrorDTO(ErrorCodes.THUMBNAIL_GENERATION_ERROR,
-        'Error during generating face thumbnail: ' + photo.name, error.toString()));
+        'Error during generating face thumbnail: ' + person.name, error.toString()));
     }
 
   }
 
 
-  public static generateThumbnailFactory(sourceType: ThumbnailSourceType) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+  public static generateThumbnailFactory(sourceType: ThumbnailSourceType):
+    (req: Request, res: Response, next: NextFunction) => Promise<any> {
+    return async (req: Request, res: Response, next: NextFunction): Promise<any> => {
       if (!req.resultPipe) {
         return next();
       }
@@ -115,8 +122,9 @@ export class ThumbnailGeneratorMWs {
     };
   }
 
-  public static generateIconFactory(sourceType: ThumbnailSourceType) {
-    return async (req: Request, res: Response, next: NextFunction) => {
+  public static generateIconFactory(sourceType: ThumbnailSourceType):
+    (req: Request, res: Response, next: NextFunction) => Promise<any> {
+    return async (req: Request, res: Response, next: NextFunction): Promise<any> => {
       if (!req.resultPipe) {
         return next();
       }
@@ -136,35 +144,37 @@ export class ThumbnailGeneratorMWs {
   }
 
 
-  private static addThInfoTODir(directory: DirectoryDTO) {
+  private static addThInfoTODir(directory: ParentDirectoryDTO | SubDirectoryDTO): void {
     if (typeof directory.media !== 'undefined') {
       ThumbnailGeneratorMWs.addThInfoToPhotos(directory.media);
     }
-    if (typeof directory.directories !== 'undefined') {
-      for (let i = 0; i < directory.directories.length; i++) {
-        ThumbnailGeneratorMWs.addThInfoTODir(directory.directories[i]);
-      }
+    if (directory.preview) {
+      ThumbnailGeneratorMWs.addThInfoToAPhoto(directory.preview);
     }
   }
 
-  private static addThInfoToPhotos(photos: MediaDTO[]) {
-    for (let i = 0; i < photos.length; i++) {
-      const fullMediaPath = path.join(ProjectPath.ImageFolder, photos[i].directory.path, photos[i].directory.name, photos[i].name);
-      for (let j = 0; j < Config.Client.Media.Thumbnail.thumbnailSizes.length; j++) {
-        const size = Config.Client.Media.Thumbnail.thumbnailSizes[j];
-        const thPath = PhotoProcessing.generateConvertedPath(fullMediaPath, size);
-        if (fs.existsSync(thPath) === true) {
-          if (typeof photos[i].readyThumbnails === 'undefined') {
-            photos[i].readyThumbnails = [];
-          }
-          photos[i].readyThumbnails.push(size);
+  private static addThInfoToPhotos(photos: MediaDTO[]): void {
+    for (const item of photos) {
+      this.addThInfoToAPhoto(item);
+    }
+  }
+
+  private static addThInfoToAPhoto(photo: MediaDTO): void {
+    const fullMediaPath = path.join(ProjectPath.ImageFolder, photo.directory.path, photo.directory.name, photo.name);
+    for (const size of Config.Client.Media.Thumbnail.thumbnailSizes) {
+      const thPath = PhotoProcessing.generateConvertedPath(fullMediaPath, size);
+      if (fs.existsSync(thPath) === true) {
+        if (typeof photo.readyThumbnails === 'undefined') {
+          photo.readyThumbnails = [];
         }
-      }
-      const iconPath = PhotoProcessing.generateConvertedPath(fullMediaPath, Config.Client.Media.Thumbnail.iconSize);
-      if (fs.existsSync(iconPath) === true) {
-        photos[i].readyIcon = true;
+        photo.readyThumbnails.push(size);
       }
     }
+    const iconPath = PhotoProcessing.generateConvertedPath(fullMediaPath, Config.Client.Media.Thumbnail.iconSize);
+    if (fs.existsSync(iconPath) === true) {
+      photo.readyIcon = true;
+    }
+
   }
 
 }

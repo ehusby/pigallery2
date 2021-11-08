@@ -20,7 +20,7 @@ export class SharingManager implements ISharingManager {
 
   async deleteSharing(sharingKey: string): Promise<void> {
     const connection = await SQLConnection.getConnection();
-    const sharing = await connection.getRepository(SharingEntity).findOne({sharingKey: sharingKey});
+    const sharing = await connection.getRepository(SharingEntity).findOne({sharingKey});
     await connection.getRepository(SharingEntity).remove(sharing);
   }
 
@@ -52,7 +52,7 @@ export class SharingManager implements ISharingManager {
 
     const sharing = await connection.getRepository(SharingEntity).findOne({
       id: inSharing.id,
-      creator: <any>inSharing.creator.id,
+      creator: inSharing.creator.id as any,
       path: inSharing.path
     });
 

@@ -22,7 +22,7 @@
         description="All file-based data will be stored here (sqlite database, user database in case of memory db, job history data)"
         [ngModel]="states.dbFolder"
         i18n-name i18n-description
-        [dockerWarning]="(_settingsService.Settings | async).Server.Environment.isDocker"
+        [dockerWarning]="(settingsService.Settings | async).Server.Environment.isDocker"
         required="true">
       </app-settings-entry>
 

@@ -16,14 +16,6 @@
           required="true">
         </app-settings-entry>
 
-        <app-settings-entry
-          name="Sub folder preview size"
-          description="Reads this many photos from sub folders."
-          i18n-description i18n-name
-          [ngModel]="states.folderPreviewSize"
-          required="true">
-        </app-settings-entry>
-
 
         <app-settings-entry
           name="Folder reindexing sensitivity"
@@ -93,7 +85,7 @@
 
       <app-settings-job-button #indexingButton
                                [soloRun]="true"
-                               (error)="error=$event"
+                               (jobError)="error=$event"
                                [allowParallelRun]="false"
                                [jobName]="indexingJobName"></app-settings-job-button>
 
@@ -101,7 +93,7 @@
       <app-settings-job-button class="ml-md-2 mt-2 mt-md-0"
                                danger="true"
                                [soloRun]="true"
-                               (error)="error=$event"
+                               (jobError)="error=$event"
                                [allowParallelRun]="false"
                                [disabled]="indexingButton.Running"
                                [jobName]="resetJobName"></app-settings-job-button>
@@ -109,25 +101,29 @@
 
       <hr/>
       <div class="row statics">
-        <div class="col-md-4 col-12" i18n>
+        <div class="col-md-2 col-12" i18n>
           Statistic:
         </div>
         <div class="col-md-2 col-6">
           <span class="oi oi-folder" title="Folders" i18n-title aria-hidden="true">  </span>
-          {{_settingsService.statistic.value ? _settingsService.statistic.value.directories : '...'}}
+          {{settingsService.statistic.value ? settingsService.statistic.value.directories : '...'}}
         </div>
         <div class="col-md-2 col-6">
           <span class="oi oi-camera-slr" title="Photos" i18n-title aria-hidden="true">  </span>
-          {{_settingsService.statistic.value ? _settingsService.statistic.value.photos : '...'}}
+          {{settingsService.statistic.value ? settingsService.statistic.value.photos : '...'}}
         </div>
         <div class="col-md-2 col-6">
           <span class="oi oi-video" title="Videos" i18n-title aria-hidden="true">  </span>
-          {{_settingsService.statistic.value ? _settingsService.statistic.value.videos : '...'}}
+          {{settingsService.statistic.value ? settingsService.statistic.value.videos : '...'}}
 
         </div>
         <div class="col-md-2 col-6">
+          <span class="oi oi-people" title="Persons" i18n-title aria-hidden="true">  </span>
+          {{settingsService.statistic.value ? settingsService.statistic.value.persons : '...'}}
+        </div>
+        <div class="col-md-2 col-6">
           <span class="oi oi-pie-chart" title="Size" i18n-title aria-hidden="true">  </span>
-          {{_settingsService.statistic.value ? (_settingsService.statistic.value.diskUsage | fileSize) : '...'}}
+          {{settingsService.statistic.value ? (settingsService.statistic.value.diskUsage | fileSize) : '...'}}
         </div>
       </div>
     </div>

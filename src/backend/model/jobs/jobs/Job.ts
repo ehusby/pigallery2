@@ -1,6 +1,6 @@
 import {Logger} from '../../../Logger';
 import {IJob} from './IJob';
-import {ConfigTemplateEntry, JobDTO} from '../../../../common/entities/job/JobDTO';
+import {ConfigTemplateEntry, JobDTO, JobDTOUtils} from '../../../../common/entities/job/JobDTO';
 import {JobProgress} from './JobProgress';
 import {IJobListener} from './IJobListener';
 import {JobProgressStates} from '../../../../common/entities/job/JobProgressDTO';
@@ -45,9 +45,9 @@ export abstract class Job<T = void> implements IJob<T> {
       this.soloRun = soloRun;
       this.allowParallelRun = allowParallelRun;
       this.config = config;
-      this.progress = new JobProgress(this.Name, JobDTO.getHashName(this.Name, this.config));
+      this.progress = new JobProgress(this.Name, JobDTOUtils.getHashName(this.Name, this.config));
       this.progress.OnChange = this.jobListener.onProgressUpdate;
-      const pr = new Promise<void>((resolve) => {
+      const pr = new Promise<void>((resolve): void => {
         this.prResolve = resolve;
       });
       this.init().catch(console.error);
@@ -77,9 +77,13 @@ export abstract class Job<T = void> implements IJob<T> {
     };
   }
 
-  protected abstract async step(): Promise<boolean>;
+  /**
+   * Returns with true if more steps are left or false if no more
+   * @protected
+   */
+  protected abstract step(): Promise<boolean>;
 
-  protected abstract async init(): Promise<void>;
+  protected abstract init(): Promise<void>;
 
   private onFinish(): void {
     if (this.InProgress === false) {
@@ -103,8 +107,8 @@ export abstract class Job<T = void> implements IJob<T> {
     this.jobListener.onJobFinished(this, finishState, this.soloRun);
   }
 
-  private run() {
-    process.nextTick(async () => {
+  private run(): void {
+    process.nextTick(async (): Promise<void> => {
       try {
         if (this.Progress == null || this.Progress.State !== JobProgressStates.running) {
           this.onFinish();

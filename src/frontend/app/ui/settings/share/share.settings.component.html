@@ -1,6 +1,6 @@
 <form #settingsForm="ngForm">
   <div class="card mb-4"
-       [ngClass]="states.enabled.value && !_settingsService.isSupported()?'panel-warning':''">
+       [ngClass]="states.enabled.value && !settingsService.isSupported()?'panel-warning':''">
     <h5 class="card-header">
       {{Name}}
       <div class="switch-wrapper">
@@ -13,7 +13,7 @@
           switch-on-text="Enabled"
           i18n-switch-off-text
           i18n-switch-on-text
-          [switch-disabled]="inProgress || !_settingsService.isSupported()"
+          [switch-disabled]="inProgress || !settingsService.isSupported()"
           switch-handle-width="100"
           switch-label-width="20"
           [(ngModel)]="states.enabled.value">
@@ -23,7 +23,7 @@
     <div class="card-body">
       <div [hidden]="!error" class="alert alert-danger" role="alert"><strong>Error: </strong>{{error}}</div>
 
-      <ng-container *ngIf="states.enabled.value  || _settingsService.isSupported()">
+      <ng-container *ngIf="states.enabled.value  || settingsService.isSupported()">
 
         <app-settings-entry
           name="Password protected"
@@ -35,7 +35,7 @@
 
 
       </ng-container>
-      <div class="panel-info" *ngIf="(!states.enabled.value && !_settingsService.isSupported())" i18n>
+      <div class="panel-info" *ngIf="(!states.enabled.value && !settingsService.isSupported())" i18n>
         Sharing is not supported with these settings
       </div>
 

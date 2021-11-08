@@ -10,7 +10,7 @@ export class VersionService {
     this.version = new BehaviorSubject<string>(null);
   }
 
-  public onNewVersion(version: string) {
+  public onNewVersion(version: string): void {
     if (this.version.value === version) {
       return;
     }

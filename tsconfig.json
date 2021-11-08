@@ -2,19 +2,20 @@
   "compileOnSave": true,
   "compilerOptions": {
     "noImplicitAny": true,
-    "module": "commonjs",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
+    "downlevelIteration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es6",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
+    "target": "es2015",
+    "module": "commonjs",
     "lib": [
-      "es2017",
+      "es2018",
       "dom"
     ]
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false
   }
 }

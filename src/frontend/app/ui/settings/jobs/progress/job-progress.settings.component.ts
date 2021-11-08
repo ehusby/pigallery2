@@ -1,8 +1,7 @@
 import {Component, Input, OnChanges, OnDestroy, TemplateRef} from '@angular/core';
 import {JobProgressDTO, JobProgressStates} from '../../../../../../common/entities/job/JobProgressDTO';
 import {Subscription, timer} from 'rxjs';
-import {BsModalRef, BsModalService} from 'ngx-bootstrap';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 import {BackendtextService} from '../../../../model/backendtext.service';
 
 @Component({
@@ -19,16 +18,15 @@ export class JobProgressComponent implements OnDestroy, OnChanges {
   private timerSub: Subscription;
 
   constructor(private modalService: BsModalService,
-              public backendTextService: BackendtextService,
-              private i18n: I18n) {
+              public backendTextService: BackendtextService) {
   }
 
   get ProgressTitle(): string {
     if (!this.progress) {
       return '';
     }
-    return this.i18n('processed') + ':' + this.progress.steps.processed + ' + ' + this.i18n('skipped') + ':'
-      + this.progress.steps.skipped + ' / ' + this.i18n('all') + ':' + this.progress.steps.all;
+    return $localize`processed` + ':' + this.progress.steps.processed + ' + ' + $localize`skipped` + ':'
+      + this.progress.steps.skipped + ' / ' + $localize`all` + ':' + this.progress.steps.all;
   }
 
   get Name(): string {
@@ -46,11 +44,11 @@ export class JobProgressComponent implements OnDestroy, OnChanges {
       (this.progress.steps.processed) * (this.progress.steps.all - this.progress.steps.skipped);
   }
 
-  get Running() {
+  get Running(): boolean {
     return this.progress && (this.progress.state === JobProgressStates.running || this.progress.state === JobProgressStates.cancelling);
   }
 
-  get Stopped() {
+  get Stopped(): boolean {
     return this.progress && (this.progress.state !== JobProgressStates.running && this.progress.state !== JobProgressStates.cancelling);
   }
 
@@ -61,7 +59,7 @@ export class JobProgressComponent implements OnDestroy, OnChanges {
     return (this.progress.time.end - this.progress.time.start) / this.progress.steps.all;
   }
 
-  get TimeElapsed() {
+  get TimeElapsed(): number {
     if (!this.progress) {
       return 0;
     }
@@ -74,21 +72,21 @@ export class JobProgressComponent implements OnDestroy, OnChanges {
     }
     switch (this.progress.state) {
       case JobProgressStates.running:
-        return this.i18n('running');
+        return $localize`running`;
       case JobProgressStates.cancelling:
-        return this.i18n('cancelling');
+        return $localize`cancelling`;
       case JobProgressStates.canceled:
-        return this.i18n('canceled');
+        return $localize`canceled`;
       case JobProgressStates.interrupted:
-        return this.i18n('interrupted');
+        return $localize`interrupted`;
       case JobProgressStates.finished:
-        return this.i18n('finished');
+        return $localize`finished`;
       default:
         return 'unknown state';
     }
   }
 
-  openModal(template: TemplateRef<any>) {
+  openModal(template: TemplateRef<any>): void {
     this.modalRef = this.modalService.show(template, {class: 'modal-lg'});
   }
 

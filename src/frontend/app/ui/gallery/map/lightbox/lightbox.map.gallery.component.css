@@ -73,14 +73,73 @@
   opacity: 1.0;
 }
 
-.preview-loading {
+::ng-deep .lightbox-map-gallery-component-preview-loading {
   background-color: #bbbbbb;
   color: #7f7f7f;
   font-size: 50px;
 }
 
-.preview-loading span {
+::ng-deep .lightbox-map-gallery-component-preview-loading span {
   top: calc(50% - 25px);
   left: calc(50% - 25px);
 }
+
+::ng-deep .marker-cluster-small {
+  background-color: rgba(0, 148, 255, 0.6);
+  width: 30px;
+  height: 30px;
+  color: white;
+  border-radius: 50%!important;
+}
+
+::ng-deep .marker-cluster-small div {
+  background-color: #0094ff;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%!important;
+}
+
+::ng-deep .marker-cluster-small span {
+  line-height: 20px;
+}
+
+
+::ng-deep .marker-cluster-medium {
+  background-color: rgba(0, 123, 255, 0.6);
+  color: white;
+  border-radius: 50%!important;
+}
+
+::ng-deep .marker-cluster-medium div {
+  background-color: #007bff;
+  border-radius: 50%!important;
+}
+
+::ng-deep .marker-cluster-large {
+  background-color: rgba(0, 98, 255, 0.6);
+  width: 50px;
+  height: 50px;
+  color: white;
+  border-radius: 50%!important;
+}
+
+::ng-deep .marker-cluster-large div {
+  background-color: #0062ff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%!important;
+}
+
+::ng-deep .marker-cluster-large span {
+  font-size: 16px;
+  line-height: 39px;
+}
+
+::ng-deep img.leaflet-marker-icon.photo-icon {
+  border-radius: 50%!important;
+  border: 2px rgba(0, 123, 255, 0.6) solid;
+}
+
+
+
 

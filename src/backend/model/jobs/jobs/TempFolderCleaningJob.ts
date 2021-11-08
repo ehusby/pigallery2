@@ -1,14 +1,10 @@
 import {ConfigTemplateEntry, DefaultsJobs} from '../../../../common/entities/job/JobDTO';
 import * as path from 'path';
-import * as util from 'util';
-import {promises as fsp} from 'fs';
+import * as fs from 'fs';
 import {Job} from './Job';
 import {ProjectPath} from '../../../ProjectPath';
 import {PhotoProcessing} from '../../fileprocessing/PhotoProcessing';
 import {VideoProcessing} from '../../fileprocessing/VideoProcessing';
-import * as rimraf from 'rimraf';
-
-const rimrafPR = util.promisify(rimraf);
 
 
 export class TempFolderCleaningJob extends Job {
@@ -19,7 +15,7 @@ export class TempFolderCleaningJob extends Job {
   private tempRootCleaned = false;
 
 
-  protected async init() {
+  protected async init(): Promise<void> {
     this.tempRootCleaned = false;
     this.directoryQueue = [];
     this.directoryQueue.push(ProjectPath.TranscodedFolder);
@@ -42,7 +38,7 @@ export class TempFolderCleaningJob extends Job {
     const originalPath = path.join(ProjectPath.ImageFolder,
       path.relative(ProjectPath.TranscodedFolder, filePath));
     try {
-      await fsp.access(originalPath);
+      await fs.promises.access(originalPath);
       return true;
     } catch (e) {
     }
@@ -50,23 +46,23 @@ export class TempFolderCleaningJob extends Job {
   }
 
   protected async readDir(dirPath: string): Promise<string[]> {
-    return (await fsp.readdir(dirPath)).map(f => path.normalize(path.join(dirPath, f)));
+    return (await fs.promises.readdir(dirPath)).map(f => path.normalize(path.join(dirPath, f)));
   }
 
-  protected async stepTempDirectory() {
+  protected async stepTempDirectory(): Promise<boolean> {
     const files = await this.readDir(ProjectPath.TempFolder);
     const validFiles = [ProjectPath.TranscodedFolder, ProjectPath.FacesFolder];
-    for (let i = 0; i < files.length; ++i) {
-      if (validFiles.indexOf(files[i]) === -1) {
-        this.Progress.log('processing: ' + files[i]);
+    for (const file of files) {
+      if (validFiles.indexOf(file) === -1) {
+        this.Progress.log('processing: ' + file);
         this.Progress.Processed++;
-        if ((await fsp.stat(files[i])).isDirectory()) {
-          await rimrafPR(files[i]);
+        if ((await fs.promises.stat(file)).isDirectory()) {
+          await fs.promises.rmdir(file, {recursive: true});
         } else {
-          await fsp.unlink(files[i]);
+          await fs.promises.unlink(file);
         }
       } else {
-        this.Progress.log('skipping: ' + files[i]);
+        this.Progress.log('skipping: ' + file);
         this.Progress.Skipped++;
       }
     }
@@ -77,17 +73,17 @@ export class TempFolderCleaningJob extends Job {
 
   }
 
-  protected async stepConvertedDirectory() {
+  protected async stepConvertedDirectory(): Promise<boolean> {
 
     const filePath = this.directoryQueue.shift();
-    const stat = await fsp.stat(filePath);
+    const stat = await fs.promises.stat(filePath);
 
     this.Progress.Left = this.directoryQueue.length;
     if (stat.isDirectory()) {
       if (await this.isValidDirectory(filePath) === false) {
         this.Progress.log('processing: ' + filePath);
         this.Progress.Processed++;
-        await rimrafPR(filePath);
+        await fs.promises.rmdir(filePath, {recursive: true});
       } else {
         this.Progress.log('skipping: ' + filePath);
         this.Progress.Skipped++;
@@ -97,7 +93,7 @@ export class TempFolderCleaningJob extends Job {
       if (await this.isValidFile(filePath) === false) {
         this.Progress.log('processing: ' + filePath);
         this.Progress.Processed++;
-        await fsp.unlink(filePath);
+        await fs.promises.unlink(filePath);
       } else {
         this.Progress.log('skipping: ' + filePath);
         this.Progress.Skipped++;
@@ -109,6 +105,7 @@ export class TempFolderCleaningJob extends Job {
 
   protected async step(): Promise<boolean> {
     if (this.directoryQueue.length === 0) {
+      this.Progress.Left = 0;
       return false;
     }
     if (this.tempRootCleaned === false) {

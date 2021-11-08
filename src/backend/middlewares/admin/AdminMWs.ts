@@ -3,25 +3,29 @@ import {ErrorCodes, ErrorDTO} from '../../../common/entities/Error';
 import {ObjectManagers} from '../../model/ObjectManagers';
 import {Config} from '../../../common/config/private/Config';
 import {ISQLGalleryManager} from '../../model/database/sql/IGalleryManager';
-import {ServerConfig} from '../../../common/config/private/PrivateConfig';
+import {DatabaseType, ServerConfig} from '../../../common/config/private/PrivateConfig';
+import {ISQLPersonManager} from '../../model/database/sql/IPersonManager';
+import {StatisticDTO} from '../../../common/entities/settings/StatisticDTO';
 
 
 export class AdminMWs {
 
-  public static async loadStatistic(req: Request, res: Response, next: NextFunction) {
-    if (Config.Server.Database.type === ServerConfig.DatabaseType.memory) {
+  public static async loadStatistic(req: Request, res: Response, next: NextFunction): Promise<void> {
+    if (Config.Server.Database.type === DatabaseType.memory) {
       return next(new ErrorDTO(ErrorCodes.GENERAL_ERROR, 'Statistic is only available for indexed content'));
     }
 
 
-    const galleryManager = <ISQLGalleryManager>ObjectManagers.getInstance().GalleryManager;
+    const galleryManager = ObjectManagers.getInstance().GalleryManager as ISQLGalleryManager;
+    const personManager = ObjectManagers.getInstance().PersonManager as ISQLPersonManager;
     try {
       req.resultPipe = {
         directories: await galleryManager.countDirectories(),
         photos: await galleryManager.countPhotos(),
         videos: await galleryManager.countVideos(),
         diskUsage: await galleryManager.countMediaSize(),
-      };
+        persons: await personManager.countFaces(),
+      } as StatisticDTO;
       return next();
     } catch (err) {
       if (err instanceof Error) {
@@ -31,13 +35,13 @@ export class AdminMWs {
     }
   }
 
-  public static async getDuplicates(req: Request, res: Response, next: NextFunction) {
-    if (Config.Server.Database.type === ServerConfig.DatabaseType.memory) {
+  public static async getDuplicates(req: Request, res: Response, next: NextFunction): Promise<void> {
+    if (Config.Server.Database.type === DatabaseType.memory) {
       return next(new ErrorDTO(ErrorCodes.GENERAL_ERROR, 'Statistic is only available for indexed content'));
     }
 
 
-    const galleryManager = <ISQLGalleryManager>ObjectManagers.getInstance().GalleryManager;
+    const galleryManager = ObjectManagers.getInstance().GalleryManager as ISQLGalleryManager;
     try {
       req.resultPipe = await galleryManager.getPossibleDuplicates();
       return next();
@@ -50,7 +54,7 @@ export class AdminMWs {
   }
 
 
-  public static async startJob(req: Request, res: Response, next: NextFunction) {
+  public static async startJob(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const id = req.params.id;
       const JobConfig: any = req.body.config;
@@ -67,7 +71,7 @@ export class AdminMWs {
     }
   }
 
-  public static stopJob(req: Request, res: Response, next: NextFunction) {
+  public static stopJob(req: Request, res: Response, next: NextFunction): void {
     try {
       const id = req.params.id;
       ObjectManagers.getInstance().JobManager.stop(id);
@@ -81,7 +85,7 @@ export class AdminMWs {
     }
   }
 
-  public static getAvailableJobs(req: Request, res: Response, next: NextFunction) {
+  public static getAvailableJobs(req: Request, res: Response, next: NextFunction): void {
     try {
       req.resultPipe = ObjectManagers.getInstance().JobManager.getAvailableJobs();
       return next();
@@ -93,7 +97,7 @@ export class AdminMWs {
     }
   }
 
-  public static getJobProgresses(req: Request, res: Response, next: NextFunction) {
+  public static getJobProgresses(req: Request, res: Response, next: NextFunction): void {
     try {
       req.resultPipe = ObjectManagers.getInstance().JobManager.getProgresses();
       return next();

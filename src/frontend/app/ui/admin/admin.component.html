@@ -12,17 +12,21 @@
 <app-frame>
   <div body class="container-fluid">
 
-    <div class="card mb-4" *ngIf="notificationService.notifications.length>0">
+    <div class="card mb-4" *ngIf="notificationService.countedNotifications.length>0">
       <h5 class="card-header" i18n>
         Server notifications
       </h5>
       <div class="card-body">
-        <ng-container *ngFor="let notification of notificationService.notifications">
+        <ng-container *ngFor="let notification of notificationService.countedNotifications">
 
           <div class="alert alert-{{getCss(notification.type)}}" role="alert">
-            {{notification.message}}
+            ({{notification.count}}) {{notification.message}}
             <br *ngIf="notification.details"/>
             {{notification.details | json}}
+            <ng-container *ngIf="notification.request">
+              <br/>
+              Request: "{{notification.request.method}}", url: "{{notification.request.url}}", status code: "{{notification.request.statusCode}}"
+            </ng-container>
           </div>
         </ng-container>
       </div>
@@ -40,7 +44,7 @@
              class="version"
              href="https://github.com/bpatrik/pigallery2/releases">
             <span
-              i18n>App version:</span>&nbsp;<span>{{'v'+((settingsService.settings | async).Server.Environment.appVersion || '----')}}</span>
+              i18n>App version:</span>&nbsp;<span>{{'v' + ((settingsService.settings | async).Server.Environment.appVersion || '----')}}</span>
           </a>
         </div>
         <div class="form-group">
@@ -58,7 +62,8 @@
             i18n-switch-on-text
             switch-handle-width="100"
             switch-label-width="20"
-            [(ngModel)]="simplifiedMode">
+            [(ngModel)]="simplifiedMode"
+            (ngModelChange)="modeToggle()">
           </bSwitch>
         </div>
       </div>
@@ -69,7 +74,7 @@
         <nav class="nav flex-column sticky-top">
           <div class="card">
             <div class="card-body text-md-left text-center align-content-md-start align-content-center">
-              <h5 class="card-title">Menu</h5>
+              <h5 i18n="title of left card in settings page that contains settings contents" class="card-title">Menu</h5>
               <button class="btn btn-link nav-link  text-md-left py-md-1 px-md-0"
                       *ngFor="let s of contents; let i=index;"
                       (click)="scrollTo(i)"
@@ -120,6 +125,9 @@
         <app-settings-faces #setting #faces
                             [hidden]="!faces.HasAvailableSettings"
                             [simplifiedMode]="simplifiedMode"></app-settings-faces>
+        <app-settings-albums #setting #albums
+                            [hidden]="!albums.HasAvailableSettings"
+                            [simplifiedMode]="simplifiedMode"></app-settings-albums>
         <app-settings-indexing #setting #indexing
                                [hidden]="!indexing.HasAvailableSettings"
                                [simplifiedMode]="simplifiedMode"></app-settings-indexing>

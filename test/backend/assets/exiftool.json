@@ -1,0 +1,42 @@
+{
+  "cameraData": {
+    "ISO": 160,
+    "exposure": 0.0008,
+    "fStop": 5.6,
+    "focalLength": 85,
+    "lens": "EF-S15-85mm f/3.5-5.6 IS USM",
+    "make": "Canon",
+    "model": "Canon EOS 600D"
+  },
+  "creationDate": 1434116432000,
+  "faces": [
+    {
+      "box": {
+        "height": 626,
+        "left": 375,
+        "top": 353,
+        "width": 669
+      },
+      "name": "Alvin the Squirrel"
+    }
+  ],
+  "fileSize": 909930,
+  "keywords": [
+    "USA",
+    "Yosemite"
+  ],
+  "orientation": 1,
+  "positionData": {
+    "GPSData": {
+      "altitude": 1960,
+      "latitude": 37.746765,
+      "longitude": -119.52988333333333
+    },
+    "country": "United States",
+    "state": "California"
+  },
+  "size": {
+    "height": 1132,
+    "width": 1697
+  }
+}

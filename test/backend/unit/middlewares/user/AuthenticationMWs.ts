@@ -1,3 +1,4 @@
+/* tslint:disable:no-unused-expression */
 import {expect} from 'chai';
 import {AuthenticationMWs} from '../../../../../src/backend/middlewares/user/AuthenticationMWs';
 import {ErrorCodes, ErrorDTO} from '../../../../../src/common/entities/Error';
@@ -29,7 +30,7 @@ describe('Authentication middleware', () => {
         query: {},
         params: {}
       };
-      const next = (err: ErrorDTO) => {
+      const next: any = (err: ErrorDTO) => {
         expect(err).to.be.undefined;
         done();
       };
@@ -45,15 +46,15 @@ describe('Authentication middleware', () => {
         params: {}
       };
       Config.Client.authenticationRequired = true;
-      const next = (err: ErrorDTO) => {
+      const next: any = (err: ErrorDTO) => {
         expect(err).not.to.be.undefined;
         expect(err.code).to.be.eql(ErrorCodes.NOT_AUTHENTICATED);
         done();
       };
-      AuthenticationMWs.authenticate(req, <any>{
+      AuthenticationMWs.authenticate(req, {
         status: () => {
         }
-      }, next);
+      } as any, next);
 
     });
   });
@@ -63,7 +64,7 @@ describe('Authentication middleware', () => {
 
     const req = {
       session: {
-        user: {permissions: <string[]>null}
+        user: {permissions: null as string[]}
       },
       sessionOptions: {},
       query: {},
@@ -77,10 +78,9 @@ describe('Authentication middleware', () => {
     const test = (relativePath: string): Promise<string | number> => {
       return new Promise((resolve) => {
         req.params.path = path.normalize(relativePath);
-        authoriseDirPath(<any>req, <any>{sendStatus: resolve}, () => {
+        authoriseDirPath(req as any, {sendStatus: resolve} as any, () => {
           resolve('ok');
         });
-        resolve();
       });
     };
 
@@ -136,7 +136,7 @@ describe('Authentication middleware', () => {
         },
         sessionOptions: {},
       };
-      const next = (err: ErrorDTO) => {
+      const next: any = (err: ErrorDTO) => {
         expect(err).not.to.be.undefined;
         expect(err.code).to.be.eql(ErrorCodes.ALREADY_AUTHENTICATED);
         done();
@@ -156,7 +156,7 @@ describe('Authentication middleware', () => {
         },
         sessionOptions: {}
       };
-      const next = (err: ErrorDTO) => {
+      const next: any = (err: ErrorDTO) => {
         expect(err).to.be.undefined;
         done();
       };
@@ -173,7 +173,7 @@ describe('Authentication middleware', () => {
         },
         sessionOptions: {}
       };
-      const next = (err: ErrorDTO) => {
+      const next: any = (err: ErrorDTO) => {
         expect(err).not.to.be.undefined;
         expect(err.code).to.be.eql(ErrorCodes.NOT_AUTHORISED);
         done();
@@ -194,7 +194,7 @@ describe('Authentication middleware', () => {
           query: {},
           params: {}
         };
-        const next = (err: ErrorDTO) => {
+        const next: any = (err: ErrorDTO) => {
           expect(err).not.to.be.undefined;
           expect(err.code).to.be.eql(ErrorCodes.INPUT_ERROR);
           done();
@@ -209,7 +209,7 @@ describe('Authentication middleware', () => {
           query: {},
           params: {}
         };
-        const next = (err: ErrorDTO) => {
+        const next: any = (err: ErrorDTO) => {
           expect(err).not.to.be.undefined;
           expect(err.code).to.be.eql(ErrorCodes.INPUT_ERROR);
           done();
@@ -226,7 +226,7 @@ describe('Authentication middleware', () => {
           query: {},
           params: {}
         };
-        const next = (err: ErrorDTO) => {
+        const next: any = (err: ErrorDTO) => {
           expect(err).not.to.be.undefined;
           expect(err.code).to.be.eql(ErrorCodes.INPUT_ERROR);
           done();
@@ -248,16 +248,16 @@ describe('Authentication middleware', () => {
         query: {},
         params: {}
       };
-      const next = (err: ErrorDTO) => {
+      const next: any = (err: ErrorDTO) => {
         expect(err).not.to.be.undefined;
         expect(err.code).to.be.eql(ErrorCodes.CREDENTIAL_NOT_FOUND);
         done();
       };
-      ObjectManagers.getInstance().UserManager = <UserManager>{
+      ObjectManagers.getInstance().UserManager = {
         findOne: (filter): Promise<UserDTO> => {
           return Promise.reject(null);
         }
-      };
+      } as UserManager;
       AuthenticationMWs.login(req, null, next);
 
 
@@ -275,16 +275,16 @@ describe('Authentication middleware', () => {
         query: {},
         params: {}
       };
-      const next = (err: ErrorDTO) => {
+      const next: any = (err: ErrorDTO) => {
         expect(err).to.be.undefined;
         expect(req.session.user).to.be.eql('test user');
         done();
       };
-      ObjectManagers.getInstance().UserManager = <IUserManager>{
+      ObjectManagers.getInstance().UserManager = {
         findOne: (filter) => {
-          return Promise.resolve(<any>'test user');
+          return Promise.resolve('test user' as any);
         }
-      };
+      } as IUserManager;
       AuthenticationMWs.login(req, null, next);
 
 

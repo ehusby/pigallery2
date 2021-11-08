@@ -1,11 +1,10 @@
 import {Component, OnChanges} from '@angular/core';
-import {SettingsComponent} from '../_abstract/abstract.settings.component';
+import {SettingsComponentDirective} from '../_abstract/abstract.settings.component';
 import {AuthenticationService} from '../../../model/network/authentication.service';
 import {NavigationService} from '../../../model/navigation.service';
 import {NotificationService} from '../../../model/notification.service';
 import {OtherSettingsService} from './other.settings.service';
 import {OtherConfigDTO} from '../../../../../common/entities/settings/OtherConfigDTO';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Utils} from '../../../../../common/Utils';
 import {SortingMethods} from '../../../../../common/entities/SortingMethods';
 import {StringifySortingMethod} from '../../../pipes/StringifySortingMethod';
@@ -17,21 +16,20 @@ import {StringifySortingMethod} from '../../../pipes/StringifySortingMethod';
     '../_abstract/abstract.settings.component.css'],
   providers: [OtherSettingsService],
 })
-export class OtherSettingsComponent extends SettingsComponent<OtherConfigDTO> implements OnChanges {
+export class OtherSettingsComponent extends SettingsComponentDirective<OtherConfigDTO> implements OnChanges {
 
 
   types: { key: number; value: string }[] = [];
   threads: { key: number, value: string }[] = [{key: 0, value: 'auto'}].concat(Utils.createRange(1, 100)
-      .map(v => ({key: v, value: '' + v})));
+    .map(v => ({key: v, value: '' + v})));
   sortingMap: any;
 
-  constructor(_authService: AuthenticationService,
-              _navigation: NavigationService,
-              _settingsService: OtherSettingsService,
+  constructor(authService: AuthenticationService,
+              navigation: NavigationService,
+              settingsService: OtherSettingsService,
               notification: NotificationService,
-              i18n: I18n,
               private formatter: StringifySortingMethod) {
-    super(i18n('Other'), _authService, _navigation, _settingsService, notification, i18n, s => ({
+    super($localize`Other`, authService, navigation, settingsService, notification, s => ({
       Server: s.Server.Threading,
       Client: s.Client.Other
     }));
@@ -52,7 +50,7 @@ export class OtherSettingsComponent extends SettingsComponent<OtherConfigDTO> im
     const val = await super.save();
     if (val === true) {
 
-      this.notification.info(this.i18n('Restart the server to apply the new settings'), this.i18n('Info'));
+      this.notification.info($localize`Restart the server to apply the new settings`, $localize`Info`);
     }
     return val;
   }

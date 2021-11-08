@@ -1,5 +1,5 @@
 import {Component, ViewEncapsulation} from '@angular/core';
-import {RouterLink} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {AuthenticationService} from '../../model/network/authentication.service';
 import {UserDTO, UserRoles} from '../../../../common/entities/UserDTO';
 import {Config} from '../../../../common/config/public/Config';
@@ -16,29 +16,37 @@ import {QueryService} from '../../model/query.service';
 })
 export class FrameComponent {
 
-  user: BehaviorSubject<UserDTO>;
+  public readonly user: BehaviorSubject<UserDTO>;
   public readonly authenticationRequired = Config.Client.authenticationRequired;
   public readonly title = Config.Client.applicationTitle;
-  collapsed = true;
+  public collapsed = true;
 
-  constructor(private _authService: AuthenticationService,
+  constructor(private authService: AuthenticationService,
               public notificationService: NotificationService,
-              public queryService: QueryService) {
-    this.user = this._authService.user;
+              public queryService: QueryService,
+              private router: Router) {
+    this.user = this.authService.user;
   }
 
 
-  isAdmin() {
+  isAdmin(): boolean {
     return this.user.value && this.user.value.role >= UserRoles.Admin;
   }
 
-  isFacesAvailable() {
+  isFacesAvailable(): boolean {
     return Config.Client.Faces.enabled && this.user.value && this.user.value.role >= Config.Client.Faces.readAccessMinRole;
   }
 
+  isLinkActive(url: string): boolean {
+    return this.router.url.startsWith(url);
+  }
 
-  logout() {
-    this._authService.logout();
+  logout(): void {
+    this.authService.logout();
+  }
+
+  isAlbumsAvailable(): boolean {
+    return Config.Client.Album.enabled;
   }
 }
 

@@ -6,7 +6,7 @@ import {Config} from '../../../common/config/private/Config';
 
 export class UserMWs {
 
-  public static async changePassword(req: Request, res: Response, next: NextFunction) {
+  public static async changePassword(req: Request, res: Response, next: NextFunction): Promise<any> {
     if (Config.Client.authenticationRequired === false) {
       return next(new ErrorDTO(ErrorCodes.USER_MANAGEMENT_DISABLED));
     }
@@ -27,7 +27,7 @@ export class UserMWs {
   }
 
 
-  public static async createUser(req: Request, res: Response, next: NextFunction) {
+  public static async createUser(req: Request, res: Response, next: NextFunction): Promise<any> {
     if (Config.Client.authenticationRequired === false) {
       return next(new ErrorDTO(ErrorCodes.USER_MANAGEMENT_DISABLED));
     }
@@ -46,7 +46,7 @@ export class UserMWs {
 
   }
 
-  public static async deleteUser(req: Request, res: Response, next: NextFunction) {
+  public static async deleteUser(req: Request, res: Response, next: NextFunction): Promise<any> {
     if (Config.Client.authenticationRequired === false) {
       return next(new ErrorDTO(ErrorCodes.USER_MANAGEMENT_DISABLED));
     }
@@ -64,7 +64,7 @@ export class UserMWs {
     }
   }
 
-  public static async changeRole(req: Request, res: Response, next: NextFunction) {
+  public static async changeRole(req: Request, res: Response, next: NextFunction): Promise<any> {
     if (Config.Client.authenticationRequired === false) {
       return next(new ErrorDTO(ErrorCodes.USER_MANAGEMENT_DISABLED));
     }
@@ -83,7 +83,7 @@ export class UserMWs {
   }
 
 
-  public static async listUsers(req: Request, res: Response, next: NextFunction) {
+  public static async listUsers(req: Request, res: Response, next: NextFunction): Promise<any> {
     if (Config.Client.authenticationRequired === false) {
       return next(new ErrorDTO(ErrorCodes.USER_MANAGEMENT_DISABLED));
     }
@@ -91,8 +91,8 @@ export class UserMWs {
     try {
       let result = await ObjectManagers.getInstance().UserManager.find({});
       result = Utils.clone(result);
-      for (let i = 0; i < result.length; i++) {
-        result[i].password = '';
+      for (const item of result) {
+        item.password = '';
       }
       req.resultPipe = result;
       next();

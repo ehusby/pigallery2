@@ -6,4 +6,9 @@ export interface NotificationDTO {
   type: NotificationType;
   message: string;
   details?: any;
+  request?: {
+    method: string,
+    url: string,
+    statusCode: number
+  };
 }

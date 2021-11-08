@@ -6,12 +6,12 @@ import {Express} from 'express';
 import {VersionMWs} from '../middlewares/VersionMWs';
 
 export class NotificationRouter {
-  public static route(app: Express) {
+  public static route(app: Express): void {
 
     this.addGetNotifications(app);
   }
 
-  private static addGetNotifications(app: Express) {
+  private static addGetNotifications(app: Express): void {
     app.get('/api/notifications',
       AuthenticationMWs.authenticate,
       AuthenticationMWs.authorise(UserRoles.Guest),

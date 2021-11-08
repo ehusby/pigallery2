@@ -17,39 +17,39 @@ export class FullScreenService {
   OnFullScreenChange = new Event<boolean>();
 
   public isFullScreenEnabled(): boolean {
-    return !!(document['fullscreenElement'] ||
-      document['mozFullScreenElement'] ||
-      document['webkitFullscreenElement']);
+    return !!(document.fullscreenElement ||
+      document.mozFullScreenElement ||
+      document.webkitFullscreenElement);
   }
 
-  public showFullScreen(element: Element) {
+  public showFullScreen(element: Element): void {
     if (this.isFullScreenEnabled()) {
       return;
     }
 
     if (element.requestFullscreen) {
       element.requestFullscreen().catch(console.error);
-    } else if ((<any>element).mozRequestFullScreen) {
-      (<any>element).mozRequestFullScreen();
-    } else if ((<any>element).webkitRequestFullscreen) {
-      (<any>element).webkitRequestFullscreen();
-    } else if ((<any>element).msRequestFullscreen) {
-      (<any>element).msRequestFullscreen();
+    } else if ((element as any).mozRequestFullScreen) {
+      (element as any).mozRequestFullScreen();
+    } else if ((element as any).webkitRequestFullscreen) {
+      (element as any).webkitRequestFullscreen();
+    } else if ((element as any).msRequestFullscreen) {
+      (element as any).msRequestFullscreen();
     }
     this.OnFullScreenChange.trigger(true);
   }
 
-  public exitFullScreen() {
+  public exitFullScreen(): void {
     if (!this.isFullScreenEnabled()) {
       return;
     }
 
     if (document.exitFullscreen) {
       document.exitFullscreen();
-    } else if (document['mozCancelFullScreen']) {
-      document['mozCancelFullScreen']();
-    } else if (document['webkitExitFullscreen']) {
-      document['webkitExitFullscreen']();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
     }
     this.OnFullScreenChange.trigger(false);
   }

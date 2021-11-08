@@ -3,7 +3,7 @@ import {DefaultsJobs} from '../../../../common/entities/job/JobDTO';
 import {FileJob} from './FileJob';
 import {PhotoProcessing} from '../../fileprocessing/PhotoProcessing';
 import {ThumbnailSourceType} from '../../threading/PhotoWorker';
-import {MediaDTO} from '../../../../common/entities/MediaDTO';
+import {MediaDTO, MediaDTOUtils} from '../../../../common/entities/MediaDTO';
 import {FileDTO} from '../../../../common/entities/FileDTO';
 import {backendTexts} from '../../../../common/BackendTexts';
 
@@ -28,9 +28,9 @@ export class ThumbnailGenerationJob extends FileJob<{ sizes: number[], indexedOn
   }
 
   start(config: { sizes: number[], indexedOnly: boolean }, soloRun = false, allowParallelRun = false): Promise<void> {
-    for (let i = 0; i < config.sizes.length; ++i) {
-      if (Config.Client.Media.Thumbnail.thumbnailSizes.indexOf(config.sizes[i]) === -1) {
-        throw new Error('unknown thumbnails size: ' + config.sizes[i] + '. Add it to the possible thumbnail sizes.');
+    for (const item of config.sizes) {
+      if (Config.Client.Media.Thumbnail.thumbnailSizes.indexOf(item) === -1) {
+        throw new Error('unknown thumbnails size: ' + item + '. Add it to the possible thumbnail sizes.');
       }
     }
 
@@ -46,18 +46,18 @@ export class ThumbnailGenerationJob extends FileJob<{ sizes: number[], indexedOn
   }
 
   protected async shouldProcess(mPath: string): Promise<boolean> {
-    for (let i = 0; i < this.config.sizes.length; ++i) {
-      if (!(await PhotoProcessing.convertedPhotoExist(mPath, this.config.sizes[i]))) {
+    for (const item of this.config.sizes) {
+      if (!(await PhotoProcessing.convertedPhotoExist(mPath, item))) {
         return true;
       }
     }
   }
 
   protected async processFile(mPath: string): Promise<void> {
-    for (let i = 0; i < this.config.sizes.length; ++i) {
+    for (const item of this.config.sizes) {
       await PhotoProcessing.generateThumbnail(mPath,
-        this.config.sizes[i],
-        MediaDTO.isVideoPath(mPath) ? ThumbnailSourceType.Video : ThumbnailSourceType.Photo,
+        item,
+        MediaDTOUtils.isVideoPath(mPath) ? ThumbnailSourceType.Video : ThumbnailSourceType.Photo,
         false);
 
     }

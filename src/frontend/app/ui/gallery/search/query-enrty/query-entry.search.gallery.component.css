@@ -1,0 +1,18 @@
+.query-list {
+  padding-left: 25px;
+}
+
+label {
+  margin-top: 0.3rem;
+}
+
+.match-type {
+  font-size: 2rem;
+  margin-top: -0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.match-type.exact-match {
+  color: #0069d9;
+}

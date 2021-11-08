@@ -5,7 +5,6 @@ import {Utils} from '../../../../common/Utils';
 import * as fs from 'fs';
 import * as path from 'path';
 import {PasswordHelper} from '../../PasswordHelper';
-import {Config} from '../../../../common/config/private/Config';
 
 
 export class UserManager implements IUserManager {
@@ -14,7 +13,7 @@ export class UserManager implements IUserManager {
 
 
   constructor() {
-    this.dbPath = path.join(ProjectPath.getAbsolutePath(Config.Server.Database.dbFolder), 'users.db');
+    this.dbPath = path.join(ProjectPath.DBFolder, 'users.db');
     if (fs.existsSync(this.dbPath)) {
       this.loadDB();
     }
@@ -26,14 +25,14 @@ export class UserManager implements IUserManager {
     if (!this.db.users) {
       this.db.users = [];
       // TODO: remove defaults
-      this.createUser(<UserDTO>{name: 'admin', password: 'admin', role: UserRoles.Admin});
+      this.createUser({name: 'admin', password: 'admin', role: UserRoles.Admin} as UserDTO);
     }
     this.saveDB();
 
   }
 
 
-  public async findOne(filter: any) {
+  public async findOne(filter: any): Promise<UserDTO> {
     const result = await this.find(filter);
 
     if (result.length === 0) {
@@ -42,7 +41,7 @@ export class UserManager implements IUserManager {
     return result[0];
   }
 
-  public async find(filter: any) {
+  public async find(filter: any): Promise<UserDTO[]> {
     const pass = filter.password;
     delete filter.password;
     const users = this.db.users.slice();
@@ -59,7 +58,7 @@ export class UserManager implements IUserManager {
     return users;
   }
 
-  public async createUser(user: UserDTO) {
+  public async createUser(user: UserDTO): Promise<UserDTO> {
     user.id = this.db.idCounter++;
     user.password = PasswordHelper.cryptPassword(user.password);
     this.db.users.push(user);
@@ -67,9 +66,9 @@ export class UserManager implements IUserManager {
     return user;
   }
 
-  public async deleteUser(id: number) {
-    const deleted = this.db.users.filter((u: UserDTO) => u.id === id);
-    this.db.users = this.db.users.filter((u: UserDTO) => u.id !== id);
+  public async deleteUser(id: number): Promise<null | UserDTO> {
+    const deleted = this.db.users.filter((u: UserDTO): boolean => u.id === id);
+    this.db.users = this.db.users.filter((u: UserDTO): boolean => u.id !== id);
     this.saveDB();
     if (deleted.length > 0) {
       return deleted[0];
@@ -78,25 +77,25 @@ export class UserManager implements IUserManager {
   }
 
   public async changeRole(id: number, newRole: UserRoles): Promise<UserDTO> {
-    for (let i = 0; i < this.db.users.length; i++) {
-      if (this.db.users[i].id === id) {
-        this.db.users[i].role = newRole;
+    for (const item of this.db.users) {
+      if (item.id === id) {
+        item.role = newRole;
         this.saveDB();
-        return this.db.users[i];
+        return item;
       }
     }
   }
 
-  public async changePassword(request: any) {
+  public async changePassword(request: any): Promise<void> {
     throw new Error('not implemented'); // TODO: implement
   }
 
-  private loadDB() {
+  private loadDB(): void {
     const data = fs.readFileSync(this.dbPath, 'utf8');
     this.db = JSON.parse(data);
   }
 
-  private saveDB() {
+  private saveDB(): void {
     fs.writeFileSync(this.dbPath, JSON.stringify(this.db));
   }
 

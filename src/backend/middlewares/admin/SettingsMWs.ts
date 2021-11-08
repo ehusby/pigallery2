@@ -8,31 +8,51 @@ import {ConfigDiagnostics} from '../../model/diagnostics/ConfigDiagnostics';
 import {BasicConfigDTO} from '../../../common/entities/settings/BasicConfigDTO';
 import {OtherConfigDTO} from '../../../common/entities/settings/OtherConfigDTO';
 import {ProjectPath} from '../../ProjectPath';
-import {ServerConfig} from '../../../common/config/private/PrivateConfig';
-import {ClientConfig} from '../../../common/config/public/ClientConfig';
+import {
+  DatabaseType,
+  IPrivateConfig,
+  ServerDataBaseConfig,
+  ServerIndexingConfig,
+  ServerJobConfig,
+  ServerPhotoConfig,
+  ServerThumbnailConfig,
+  ServerVideoConfig
+} from '../../../common/config/private/PrivateConfig';
+import {
+  ClientAlbumConfig,
+  ClientFacesConfig,
+  ClientMapConfig,
+  ClientMetaFileConfig,
+  ClientPhotoConfig,
+  ClientRandomPhotoConfig,
+  ClientSearchConfig,
+  ClientSharingConfig,
+  ClientThumbnailConfig,
+  ClientVideoConfig
+} from '../../../common/config/public/ClientConfig';
 
 const LOG_TAG = '[SettingsMWs]';
 
 
 export class SettingsMWs {
 
-  public static async updateDatabaseSettings(req: Request, res: Response, next: NextFunction) {
+  public static async updateDatabaseSettings(req: Request, res: Response, next: NextFunction): Promise<any> {
 
     if ((typeof req.body === 'undefined') || (typeof req.body.settings === 'undefined')) {
       return next(new ErrorDTO(ErrorCodes.INPUT_ERROR, 'settings is needed'));
     }
 
-    const databaseSettings = <ServerConfig.DataBaseConfig>req.body.settings;
+    const databaseSettings = req.body.settings as ServerDataBaseConfig;
 
     try {
-      if (databaseSettings.type !== ServerConfig.DatabaseType.memory) {
+      if (databaseSettings.type !== DatabaseType.memory) {
         await ConfigDiagnostics.testDatabase(databaseSettings);
       }
       Config.Server.Database = databaseSettings;
       // only updating explicitly set config (not saving config set by the diagnostics)
       const original = await Config.original();
       original.Server.Database = databaseSettings;
-      if (databaseSettings.type === ServerConfig.DatabaseType.memory) {
+      if (databaseSettings.type === DatabaseType.memory) {
         original.Client.Sharing.enabled = false;
         original.Client.Search.enabled = false;
       }
@@ -42,7 +62,7 @@ export class SettingsMWs {
       Logger.info(LOG_TAG, JSON.stringify(Config, null, '\t'));
 
       await ObjectManagers.reset();
-      if (Config.Server.Database.type !== ServerConfig.DatabaseType.memory) {
+      if (Config.Server.Database.type !== DatabaseType.memory) {
         await ObjectManagers.InitSQLManagers();
       } else {
         await ObjectManagers.InitMemoryManagers();
@@ -57,18 +77,18 @@ export class SettingsMWs {
     }
   }
 
-  public static async updateMapSettings(req: Request, res: Response, next: NextFunction) {
+  public static async updateMapSettings(req: Request, res: Response, next: NextFunction): Promise<any> {
     if ((typeof req.body === 'undefined') || (typeof req.body.settings === 'undefined')) {
       return next(new ErrorDTO(ErrorCodes.INPUT_ERROR, 'settings is needed'));
     }
 
     try {
-      await ConfigDiagnostics.testMapConfig(<ClientConfig.MapConfig>req.body.settings);
+      await ConfigDiagnostics.testMapConfig(req.body.settings as ClientMapConfig);
 
-      Config.Client.Map = <ClientConfig.MapConfig>req.body.settings;
+      Config.Client.Map = (req.body.settings as ClientMapConfig);
       // only updating explicitly set config (not saving config set by the diagnostics)
       const original = await Config.original();
-      original.Client.Map = <ClientConfig.MapConfig>req.body.settings;
+      original.Client.Map = (req.body.settings as ClientMapConfig);
       original.save();
       await ConfigDiagnostics.runDiagnostics();
       Logger.info(LOG_TAG, 'new config:');
@@ -82,15 +102,15 @@ export class SettingsMWs {
     }
   }
 
-  public static async updateVideoSettings(req: Request, res: Response, next: NextFunction) {
+  public static async updateVideoSettings(req: Request, res: Response, next: NextFunction): Promise<any> {
     if ((typeof req.body === 'undefined') || (typeof req.body.settings === 'undefined')) {
       return next(new ErrorDTO(ErrorCodes.INPUT_ERROR, 'settings is needed'));
     }
 
     try {
       const settings: {
-        server: ServerConfig.VideoConfig,
-        client: ClientConfig.VideoConfig
+        server: ServerVideoConfig,
+        client: ClientVideoConfig
       } = req.body.settings;
 
 
@@ -115,19 +135,19 @@ export class SettingsMWs {
     }
   }
 
-  public static async updateMetaFileSettings(req: Request, res: Response, next: NextFunction) {
+  public static async updateMetaFileSettings(req: Request, res: Response, next: NextFunction): Promise<any> {
     if ((typeof req.body === 'undefined') || (typeof req.body.settings === 'undefined')) {
       return next(new ErrorDTO(ErrorCodes.INPUT_ERROR, 'settings is needed'));
     }
 
     try {
       const original = await Config.original();
-      await ConfigDiagnostics.testMetaFileConfig(<ClientConfig.MetaFileConfig>req.body.settings, original);
+      await ConfigDiagnostics.testMetaFileConfig(req.body.settings as ClientMetaFileConfig, original);
 
-      Config.Client.MetaFile = <ClientConfig.MetaFileConfig>req.body.settings;
+      Config.Client.MetaFile = (req.body.settings as ClientMetaFileConfig);
       // only updating explicitly set config (not saving config set by the diagnostics)
 
-      original.Client.MetaFile = <ClientConfig.MetaFileConfig>req.body.settings;
+      original.Client.MetaFile = (req.body.settings as ClientMetaFileConfig);
       original.save();
       await ConfigDiagnostics.runDiagnostics();
       Logger.info(LOG_TAG, 'new config:');
@@ -141,18 +161,20 @@ export class SettingsMWs {
     }
   }
 
-  public static async updateShareSettings(req: Request, res: Response, next: NextFunction) {
+
+  public static async updateAlbumsSettings(req: Request, res: Response, next: NextFunction): Promise<any> {
     if ((typeof req.body === 'undefined') || (typeof req.body.settings === 'undefined')) {
       return next(new ErrorDTO(ErrorCodes.INPUT_ERROR, 'settings is needed'));
     }
 
     try {
-      // only updating explicitly set config (not saving config set by the diagnostics)
       const original = await Config.original();
-      await ConfigDiagnostics.testSharingConfig(<ClientConfig.SharingConfig>req.body.settings, original);
+      await ConfigDiagnostics.testAlbumsConfig(req.body.settings as ClientAlbumConfig, original);
 
-      Config.Client.Sharing = <ClientConfig.SharingConfig>req.body.settings;
-      original.Client.Sharing = <ClientConfig.SharingConfig>req.body.settings;
+      Config.Client.Album = (req.body.settings as ClientAlbumConfig);
+      // only updating explicitly set config (not saving config set by the diagnostics)
+
+      original.Client.Album = (req.body.settings as ClientAlbumConfig);
       original.save();
       await ConfigDiagnostics.runDiagnostics();
       Logger.info(LOG_TAG, 'new config:');
@@ -166,7 +188,7 @@ export class SettingsMWs {
     }
   }
 
-  public static async updateRandomPhotoSettings(req: Request, res: Response, next: NextFunction) {
+  public static async updateShareSettings(req: Request, res: Response, next: NextFunction): Promise<any> {
     if ((typeof req.body === 'undefined') || (typeof req.body.settings === 'undefined')) {
       return next(new ErrorDTO(ErrorCodes.INPUT_ERROR, 'settings is needed'));
     }
@@ -174,10 +196,10 @@ export class SettingsMWs {
     try {
       // only updating explicitly set config (not saving config set by the diagnostics)
       const original = await Config.original();
-      await ConfigDiagnostics.testRandomPhotoConfig(<ClientConfig.RandomPhotoConfig>req.body.settings, original);
+      await ConfigDiagnostics.testSharingConfig(req.body.settings as ClientSharingConfig, original);
 
-      Config.Client.RandomPhoto = <ClientConfig.RandomPhotoConfig>req.body.settings;
-      original.Client.RandomPhoto = <ClientConfig.RandomPhotoConfig>req.body.settings;
+      Config.Client.Sharing = (req.body.settings as ClientSharingConfig);
+      original.Client.Sharing = (req.body.settings as ClientSharingConfig);
       original.save();
       await ConfigDiagnostics.runDiagnostics();
       Logger.info(LOG_TAG, 'new config:');
@@ -191,7 +213,7 @@ export class SettingsMWs {
     }
   }
 
-  public static async updateSearchSettings(req: Request, res: Response, next: NextFunction) {
+  public static async updateRandomPhotoSettings(req: Request, res: Response, next: NextFunction): Promise<any> {
     if ((typeof req.body === 'undefined') || (typeof req.body.settings === 'undefined')) {
       return next(new ErrorDTO(ErrorCodes.INPUT_ERROR, 'settings is needed'));
     }
@@ -199,10 +221,10 @@ export class SettingsMWs {
     try {
       // only updating explicitly set config (not saving config set by the diagnostics)
       const original = await Config.original();
-      await ConfigDiagnostics.testSearchConfig(<ClientConfig.SearchConfig>req.body.settings, original);
+      await ConfigDiagnostics.testRandomPhotoConfig(req.body.settings as ClientRandomPhotoConfig, original);
 
-      Config.Client.Search = <ClientConfig.SearchConfig>req.body.settings;
-      original.Client.Search = <ClientConfig.SearchConfig>req.body.settings;
+      Config.Client.RandomPhoto = (req.body.settings as ClientRandomPhotoConfig);
+      original.Client.RandomPhoto = (req.body.settings as ClientRandomPhotoConfig);
       original.save();
       await ConfigDiagnostics.runDiagnostics();
       Logger.info(LOG_TAG, 'new config:');
@@ -216,7 +238,7 @@ export class SettingsMWs {
     }
   }
 
-  public static async updateFacesSettings(req: Request, res: Response, next: NextFunction) {
+  public static async updateSearchSettings(req: Request, res: Response, next: NextFunction): Promise<any> {
     if ((typeof req.body === 'undefined') || (typeof req.body.settings === 'undefined')) {
       return next(new ErrorDTO(ErrorCodes.INPUT_ERROR, 'settings is needed'));
     }
@@ -224,10 +246,10 @@ export class SettingsMWs {
     try {
       // only updating explicitly set config (not saving config set by the diagnostics)
       const original = await Config.original();
-      await ConfigDiagnostics.testFacesConfig(<ClientConfig.FacesConfig>req.body.settings, original);
+      await ConfigDiagnostics.testSearchConfig(req.body.settings as ClientSearchConfig, original);
 
-      Config.Client.Faces = <ClientConfig.FacesConfig>req.body.settings;
-      original.Client.Faces = <ClientConfig.FacesConfig>req.body.settings;
+      Config.Client.Search = (req.body.settings as ClientSearchConfig);
+      original.Client.Search = (req.body.settings as ClientSearchConfig);
       original.save();
       await ConfigDiagnostics.runDiagnostics();
       Logger.info(LOG_TAG, 'new config:');
@@ -241,16 +263,41 @@ export class SettingsMWs {
     }
   }
 
-  public static async updateAuthenticationSettings(req: Request, res: Response, next: NextFunction) {
+  public static async updateFacesSettings(req: Request, res: Response, next: NextFunction): Promise<any> {
     if ((typeof req.body === 'undefined') || (typeof req.body.settings === 'undefined')) {
       return next(new ErrorDTO(ErrorCodes.INPUT_ERROR, 'settings is needed'));
     }
 
     try {
-      Config.Client.authenticationRequired = <boolean>req.body.settings;
       // only updating explicitly set config (not saving config set by the diagnostics)
       const original = await Config.original();
-      original.Client.authenticationRequired = <boolean>req.body.settings;
+      await ConfigDiagnostics.testFacesConfig(req.body.settings as ClientFacesConfig, original);
+
+      Config.Client.Faces = (req.body.settings as ClientFacesConfig);
+      original.Client.Faces = (req.body.settings as ClientFacesConfig);
+      original.save();
+      await ConfigDiagnostics.runDiagnostics();
+      Logger.info(LOG_TAG, 'new config:');
+      Logger.info(LOG_TAG, JSON.stringify(Config, null, '\t'));
+      return next();
+    } catch (err) {
+      if (err instanceof Error) {
+        return next(new ErrorDTO(ErrorCodes.SETTINGS_ERROR, 'Settings error: ' + err.toString(), err));
+      }
+      return next(new ErrorDTO(ErrorCodes.SETTINGS_ERROR, 'Settings error: ' + JSON.stringify(err, null, '  '), err));
+    }
+  }
+
+  public static async updateAuthenticationSettings(req: Request, res: Response, next: NextFunction): Promise<any> {
+    if ((typeof req.body === 'undefined') || (typeof req.body.settings === 'undefined')) {
+      return next(new ErrorDTO(ErrorCodes.INPUT_ERROR, 'settings is needed'));
+    }
+
+    try {
+      Config.Client.authenticationRequired = (req.body.settings as boolean);
+      // only updating explicitly set config (not saving config set by the diagnostics)
+      const original = await Config.original();
+      original.Client.authenticationRequired = (req.body.settings as boolean);
       if (original.Client.authenticationRequired === false) {
         original.Client.Sharing.enabled = false;
       }
@@ -267,15 +314,15 @@ export class SettingsMWs {
     }
   }
 
-  public static async updateThumbnailSettings(req: Request, res: Response, next: NextFunction) {
+  public static async updateThumbnailSettings(req: Request, res: Response, next: NextFunction): Promise<any> {
     if ((typeof req.body === 'undefined') || (typeof req.body.settings === 'undefined')) {
       return next(new ErrorDTO(ErrorCodes.INPUT_ERROR, 'settings is needed'));
     }
 
     try {
       const settings: {
-        server: ServerConfig.ThumbnailConfig,
-        client: ClientConfig.ThumbnailConfig
+        server: ServerThumbnailConfig,
+        client: ClientThumbnailConfig
       } = req.body.settings;
 
       await ConfigDiagnostics.testServerThumbnailConfig(settings.server);
@@ -300,27 +347,23 @@ export class SettingsMWs {
     }
   }
 
-  public static async updatePhotoSettings(req: Request, res: Response, next: NextFunction) {
+  public static async updatePhotoSettings(req: Request, res: Response, next: NextFunction): Promise<any> {
     if ((typeof req.body === 'undefined') || (typeof req.body.settings === 'undefined')) {
       return next(new ErrorDTO(ErrorCodes.INPUT_ERROR, 'settings is needed'));
     }
 
     try {
       const settings: {
-        photoProcessingLibrary: ServerConfig.PhotoProcessingLib,
-        server: ServerConfig.PhotoConfig,
-        client: ClientConfig.PhotoConfig
+        server: ServerPhotoConfig,
+        client: ClientPhotoConfig
       } = req.body.settings;
 
-      await ConfigDiagnostics.testThumbnailLib(settings.photoProcessingLibrary);
       await ConfigDiagnostics.testServerPhotoConfig(settings.server);
       await ConfigDiagnostics.testClientPhotoConfig(settings.client);
-      Config.Server.Media.photoProcessingLibrary = settings.photoProcessingLibrary;
       Config.Server.Media.Photo = settings.server;
       Config.Client.Media.Photo = settings.client;
       // only updating explicitly set config (not saving config set by the diagnostics)
       const original = await Config.original();
-      original.Server.Media.photoProcessingLibrary = settings.photoProcessingLibrary;
       original.Server.Media.Photo = settings.server;
       original.Client.Media.Photo = settings.client;
       original.save();
@@ -337,7 +380,7 @@ export class SettingsMWs {
     }
   }
 
-  public static async updateBasicSettings(req: Request, res: Response, next: NextFunction) {
+  public static async updateBasicSettings(req: Request, res: Response, next: NextFunction): Promise<any> {
     if ((typeof req.body === 'undefined') || (typeof req.body.settings === 'undefined')) {
       return next(new ErrorDTO(ErrorCodes.INPUT_ERROR, 'settings is needed'));
     }
@@ -345,20 +388,19 @@ export class SettingsMWs {
     try {
       const settings: BasicConfigDTO = req.body.settings;
       await ConfigDiagnostics.testImageFolder(settings.imagesFolder);
-      Config.Server.port = settings.port;
-      Config.Server.host = settings.host;
-      Config.Server.Media.folder = settings.imagesFolder;
-      Config.Client.publicUrl = settings.publicUrl;
-      Config.Client.urlBase = settings.urlBase;
-      Config.Client.applicationTitle = settings.applicationTitle;
+      const map = (config: IPrivateConfig, input: BasicConfigDTO) => {
+        config.Server.port = input.port;
+        config.Server.host = input.host;
+        config.Server.Media.folder = input.imagesFolder;
+        config.Server.Media.tempFolder = input.tempFolder;
+        config.Client.publicUrl = input.publicUrl;
+        config.Client.urlBase = input.urlBase;
+        config.Client.applicationTitle = input.applicationTitle;
+      };
+      map(Config, settings);
       // only updating explicitly set config (not saving config set by the diagnostics)
       const original = await Config.original();
-      original.Server.port = settings.port;
-      original.Server.host = settings.host;
-      original.Server.Media.folder = settings.imagesFolder;
-      original.Client.publicUrl = settings.publicUrl;
-      original.Client.urlBase = settings.urlBase;
-      original.Client.applicationTitle = settings.applicationTitle;
+      map(original, settings);
       original.save();
       ProjectPath.reset();
       await ConfigDiagnostics.runDiagnostics();
@@ -373,28 +415,18 @@ export class SettingsMWs {
     }
   }
 
-  public static async updateOtherSettings(req: Request, res: Response, next: NextFunction) {
+  public static async updateOtherSettings(req: Request, res: Response, next: NextFunction): Promise<any> {
     if ((typeof req.body === 'undefined') || (typeof req.body.settings === 'undefined')) {
       return next(new ErrorDTO(ErrorCodes.INPUT_ERROR, 'settings is needed'));
     }
 
     try {
       const settings: OtherConfigDTO = req.body.settings;
-      Config.Client.Other.enableCache = settings.Client.enableCache;
-      Config.Client.Other.captionFirstNaming = settings.Client.captionFirstNaming;
-      Config.Client.Other.enableOnScrollRendering = settings.Client.enableOnScrollRendering;
-      Config.Client.Other.enableOnScrollThumbnailPrioritising = settings.Client.enableOnScrollThumbnailPrioritising;
-      Config.Client.Other.defaultPhotoSortingMethod = settings.Client.defaultPhotoSortingMethod;
-      Config.Client.Other.NavBar.showItemCount = settings.Client.NavBar.showItemCount;
+      Config.Client.Other = settings.Client;
 
       // only updating explicitly set config (not saving config set by the diagnostics)
       const original = await Config.original();
-      original.Client.Other.enableCache = settings.Client.enableCache;
-      original.Client.Other.captionFirstNaming = settings.Client.captionFirstNaming;
-      original.Client.Other.enableOnScrollRendering = settings.Client.enableOnScrollRendering;
-      original.Client.Other.enableOnScrollThumbnailPrioritising = settings.Client.enableOnScrollThumbnailPrioritising;
-      original.Client.Other.defaultPhotoSortingMethod = settings.Client.defaultPhotoSortingMethod;
-      original.Client.Other.NavBar.showItemCount = settings.Client.NavBar.showItemCount;
+      original.Client.Other = settings.Client;
       original.Server.Threading.enabled = settings.Server.enabled;
       original.Server.Threading.thumbnailThreads = settings.Server.thumbnailThreads;
       await original.save();
@@ -410,13 +442,13 @@ export class SettingsMWs {
     }
   }
 
-  public static async updateIndexingSettings(req: Request, res: Response, next: NextFunction) {
+  public static async updateIndexingSettings(req: Request, res: Response, next: NextFunction): Promise<any> {
     if ((typeof req.body === 'undefined') || (typeof req.body.settings === 'undefined')) {
       return next(new ErrorDTO(ErrorCodes.INPUT_ERROR, 'settings is needed'));
     }
 
     try {
-      const settings: ServerConfig.IndexingConfig = req.body.settings;
+      const settings: ServerIndexingConfig = req.body.settings;
       Config.Server.Indexing = settings;
 
       // only updating explicitly set config (not saving config set by the diagnostics)
@@ -435,7 +467,7 @@ export class SettingsMWs {
     }
   }
 
-  public static async updateJobSettings(req: Request, res: Response, next: NextFunction) {
+  public static async updateJobSettings(req: Request, res: Response, next: NextFunction): Promise<any> {
     if ((typeof req.body === 'undefined') || (typeof req.body.settings === 'undefined')) {
       return next(new ErrorDTO(ErrorCodes.INPUT_ERROR, 'settings is needed'));
     }
@@ -443,7 +475,7 @@ export class SettingsMWs {
     try {
 
       // only updating explicitly set config (not saving config set by the diagnostics)
-      const settings: ServerConfig.JobConfig = req.body.settings;
+      const settings: ServerJobConfig = req.body.settings;
       const original = await Config.original();
       await ConfigDiagnostics.testTasksConfig(settings, original);
 

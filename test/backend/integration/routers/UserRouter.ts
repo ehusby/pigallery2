@@ -3,8 +3,7 @@ import {Server} from '../../../../src/backend/server';
 import {LoginCredential} from '../../../../src/common/entities/LoginCredential';
 import {UserDTO, UserRoles} from '../../../../src/common/entities/UserDTO';
 import * as path from 'path';
-import * as util from 'util';
-import * as rimraf from 'rimraf';
+import * as fs from 'fs';
 import {SQLConnection} from '../../../../src/backend/model/database/sql/SQLConnection';
 import {ObjectManagers} from '../../../../src/backend/model/ObjectManagers';
 import {QueryParams} from '../../../../src/common/QueryParams';
@@ -12,7 +11,8 @@ import {Utils} from '../../../../src/common/Utils';
 import {SuperAgentStatic} from 'superagent';
 import {RouteTestingHelper} from './RouteTestingHelper';
 import {ErrorCodes} from '../../../../src/common/entities/Error';
-import {ServerConfig} from '../../../../src/common/config/private/PrivateConfig';
+import {DatabaseType, ServerConfig} from '../../../../src/common/config/private/PrivateConfig';
+import {ProjectPath} from '../../../../src/backend/ProjectPath';
 
 
 process.env.NODE_ENV = 'test';
@@ -21,7 +21,6 @@ const chaiHttp = require('chai-http');
 const should = chai.should();
 chai.use(chaiHttp);
 
-const rimrafPR = util.promisify(rimraf);
 describe('UserRouter', () => {
 
   const testUser: UserDTO = {
@@ -35,10 +34,11 @@ describe('UserRouter', () => {
   const tempDir = path.join(__dirname, '../../tmp');
   let server: Server;
   const setUp = async () => {
-    await rimrafPR(tempDir);
+    await fs.promises.rmdir(tempDir, {recursive: true});
     Config.Server.Threading.enabled = false;
-    Config.Server.Database.type = ServerConfig.DatabaseType.sqlite;
+    Config.Server.Database.type = DatabaseType.sqlite;
     Config.Server.Database.dbFolder = tempDir;
+    ProjectPath.reset();
 
 
     server = new Server();
@@ -49,7 +49,7 @@ describe('UserRouter', () => {
   };
   const tearDown = async () => {
     await SQLConnection.close();
-    await rimrafPR(tempDir);
+    await fs.promises.rmdir(tempDir, {recursive: true});
   };
 
   const checkUserResult = (result: any, user: any) => {
@@ -66,11 +66,11 @@ describe('UserRouter', () => {
     const result = await (chai.request(srv.App) as SuperAgentStatic)
       .post('/api/user/login')
       .send({
-        loginCredential: <LoginCredential>{
+        loginCredential: {
           password: testUser.password,
           username: testUser.name,
           rememberMe: false
-        }
+        } as LoginCredential
       });
 
     checkUserResult(result, expectedUser);
@@ -181,10 +181,10 @@ describe('UserRouter', () => {
       const result = await chai.request(server.App)
         .get('/api/user/me');
 
-      const expectedGuestUser = <UserDTO>{
+      const expectedGuestUser = {
         name: UserRoles[Config.Client.unAuthenticatedUserRole],
         role: Config.Client.unAuthenticatedUserRole
-      };
+      } as UserDTO;
 
 
       checkUserResult(result, expectedGuestUser);

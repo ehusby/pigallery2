@@ -4,16 +4,41 @@ import {NotificationManager} from '../NotifocationManager';
 import {SQLConnection} from '../database/sql/SQLConnection';
 import * as fs from 'fs';
 import {FFmpegFactory} from '../FFmpegFactory';
-import {ClientConfig} from '../../../common/config/public/ClientConfig';
-import {IPrivateConfig, ServerConfig} from '../../../common/config/private/PrivateConfig';
-import MapLayers = ClientConfig.MapLayers;
+import {
+  ClientAlbumConfig,
+  ClientFacesConfig,
+  ClientMapConfig,
+  ClientMetaFileConfig,
+  ClientPhotoConfig,
+  ClientRandomPhotoConfig,
+  ClientSearchConfig,
+  ClientSharingConfig,
+  ClientThumbnailConfig,
+  ClientVideoConfig,
+  MapLayers,
+  MapProviders
+} from '../../../common/config/public/ClientConfig';
+import {
+  DatabaseType,
+  IPrivateConfig,
+  ServerDataBaseConfig,
+  ServerJobConfig,
+  ServerPhotoConfig,
+  ServerVideoConfig
+} from '../../../common/config/private/PrivateConfig';
 
 const LOG_TAG = '[ConfigDiagnostics]';
 
 
 export class ConfigDiagnostics {
+  static testAlbumsConfig(albumConfig: ClientAlbumConfig, original: IPrivateConfig): void {
+    if (albumConfig.enabled === true &&
+      original.Server.Database.type === DatabaseType.memory) {
+      throw new Error('Memory Database does not support albums');
+    }
+  }
 
-  static checkReadWritePermission(path: string) {
+  static checkReadWritePermission(path: string): Promise<void> {
     return new Promise((resolve, reject) => {
       // tslint:disable-next-line:no-bitwise
       fs.access(path, fs.constants.R_OK | fs.constants.W_OK, (err) => {
@@ -25,11 +50,11 @@ export class ConfigDiagnostics {
     });
   }
 
-  static async testDatabase(databaseConfig: ServerConfig.DataBaseConfig) {
-    if (databaseConfig.type !== ServerConfig.DatabaseType.memory) {
+  static async testDatabase(databaseConfig: ServerDataBaseConfig): Promise<void> {
+    if (databaseConfig.type !== DatabaseType.memory) {
       await SQLConnection.tryConnection(databaseConfig);
     }
-    if (databaseConfig.type !== ServerConfig.DatabaseType.sqlite) {
+    if (databaseConfig.type === DatabaseType.sqlite) {
       try {
         await this.checkReadWritePermission(SQLConnection.getSQLiteDB(databaseConfig));
       } catch (e) {
@@ -39,7 +64,7 @@ export class ConfigDiagnostics {
   }
 
 
-  static async testMetaFileConfig(metaFileConfig: ClientConfig.MetaFileConfig, config: IPrivateConfig) {
+  static async testMetaFileConfig(metaFileConfig: ClientMetaFileConfig, config: IPrivateConfig): Promise<void> {
     // TODO: now we have metadata for pg2conf files too not only gpx that also runs without map
     if (metaFileConfig.enabled === true &&
       config.Client.Map.enabled === false) {
@@ -48,7 +73,7 @@ export class ConfigDiagnostics {
   }
 
 
-  static testClientVideoConfig(videoConfig: ClientConfig.VideoConfig) {
+  static testClientVideoConfig(videoConfig: ClientVideoConfig): Promise<void> {
     return new Promise((resolve, reject) => {
       try {
         if (videoConfig.enabled === true) {
@@ -73,7 +98,7 @@ export class ConfigDiagnostics {
     });
   }
 
-  static async testServerVideoConfig(videoConfig: ServerConfig.VideoConfig, config: IPrivateConfig) {
+  static async testServerVideoConfig(videoConfig: ServerVideoConfig, config: IPrivateConfig): Promise<void> {
     if (config.Client.Media.Video.enabled === true) {
       if (videoConfig.transcoding.fps <= 0) {
         throw new Error('fps should be grater than 0');
@@ -81,24 +106,17 @@ export class ConfigDiagnostics {
     }
   }
 
-  static async testSharp() {
+  static async testSharp(): Promise<void> {
     const sharp = require('sharp');
     sharp();
   }
 
-  static async testThumbnailLib(processingLibrary: ServerConfig.PhotoProcessingLib) {
-    switch (processingLibrary) {
-      case ServerConfig.PhotoProcessingLib.sharp:
-        await this.testSharp();
-        break;
-    }
-  }
 
-  static async testTempFolder(folder: string) {
+  static async testTempFolder(folder: string): Promise<void> {
     await this.checkReadWritePermission(folder);
   }
 
-  static testImageFolder(folder: string) {
+  static testImageFolder(folder: string): Promise<void> {
     return new Promise((resolve, reject) => {
       if (!fs.existsSync(folder)) {
         reject('Images folder not exists: \'' + folder + '\'');
@@ -113,21 +131,22 @@ export class ConfigDiagnostics {
   }
 
 
-  static async testServerPhotoConfig(server: ServerConfig.PhotoConfig) {
+  static async testServerPhotoConfig(server: ServerPhotoConfig): Promise<void> {
 
   }
 
-  static async testClientPhotoConfig(client: ClientConfig.PhotoConfig) {
+  static async testClientPhotoConfig(client: ClientPhotoConfig): Promise<void> {
 
   }
 
-  public static async testServerThumbnailConfig(server: ServerConfig.ThumbnailConfig) {
+  // @ts-ignore
+  public static async testServerThumbnailConfig(server: ServerThumbnailConfig): Promise<void> {
     if (server.personFaceMargin < 0 || server.personFaceMargin > 1) {
       throw new Error('personFaceMargin should be between 0 and 1');
     }
   }
 
-  static async testClientThumbnailConfig(thumbnailConfig: ClientConfig.ThumbnailConfig) {
+  static async testClientThumbnailConfig(thumbnailConfig: ClientThumbnailConfig): Promise<void> {
     if (isNaN(thumbnailConfig.iconSize) || thumbnailConfig.iconSize <= 0) {
       throw new Error('IconSize has to be >= 0 integer, got: ' + thumbnailConfig.iconSize);
     }
@@ -135,21 +154,21 @@ export class ConfigDiagnostics {
     if (!thumbnailConfig.thumbnailSizes.length) {
       throw new Error('At least one thumbnail size is needed');
     }
-    for (let i = 0; i < thumbnailConfig.thumbnailSizes.length; i++) {
-      if (isNaN(thumbnailConfig.thumbnailSizes[i]) || thumbnailConfig.thumbnailSizes[i] <= 0) {
-        throw new Error('Thumbnail size has to be >= 0 integer, got: ' + thumbnailConfig.thumbnailSizes[i]);
+    for (const item of thumbnailConfig.thumbnailSizes) {
+      if (isNaN(item) || item <= 0) {
+        throw new Error('Thumbnail size has to be >= 0 integer, got: ' + item);
       }
     }
   }
 
 
-  static async testTasksConfig(task: ServerConfig.JobConfig, config: IPrivateConfig) {
+  static async testTasksConfig(task: ServerJobConfig, config: IPrivateConfig): Promise<void> {
 
   }
 
-  static async testFacesConfig(faces: ClientConfig.FacesConfig, config: IPrivateConfig) {
+  static async testFacesConfig(faces: ClientFacesConfig, config: IPrivateConfig): Promise<void> {
     if (faces.enabled === true) {
-      if (config.Server.Database.type === ServerConfig.DatabaseType.memory) {
+      if (config.Server.Database.type === DatabaseType.memory) {
         throw new Error('Memory Database do not support faces');
       }
       if (config.Client.Search.enabled === false) {
@@ -158,17 +177,17 @@ export class ConfigDiagnostics {
     }
   }
 
-  static async testSearchConfig(search: ClientConfig.SearchConfig, config: IPrivateConfig) {
+  static async testSearchConfig(search: ClientSearchConfig, config: IPrivateConfig): Promise<void> {
     if (search.enabled === true &&
-      config.Server.Database.type === ServerConfig.DatabaseType.memory) {
+      config.Server.Database.type === DatabaseType.memory) {
       throw new Error('Memory Database do not support searching');
     }
   }
 
 
-  static async testSharingConfig(sharing: ClientConfig.SharingConfig, config: IPrivateConfig) {
+  static async testSharingConfig(sharing: ClientSharingConfig, config: IPrivateConfig): Promise<void> {
     if (sharing.enabled === true &&
-      config.Server.Database.type === ServerConfig.DatabaseType.memory) {
+      config.Server.Database.type === DatabaseType.memory) {
       throw new Error('Memory Database do not support sharing');
     }
     if (sharing.enabled === true &&
@@ -177,27 +196,27 @@ export class ConfigDiagnostics {
     }
   }
 
-  static async testRandomPhotoConfig(sharing: ClientConfig.RandomPhotoConfig, config: IPrivateConfig) {
+  static async testRandomPhotoConfig(sharing: ClientRandomPhotoConfig, config: IPrivateConfig): Promise<void> {
     if (sharing.enabled === true &&
-      config.Server.Database.type === ServerConfig.DatabaseType.memory) {
+      config.Server.Database.type === DatabaseType.memory) {
       throw new Error('Memory Database do not support random photo');
     }
   }
 
 
-  static async testMapConfig(map: ClientConfig.MapConfig): Promise<void> {
+  static async testMapConfig(map: ClientMapConfig): Promise<void> {
     if (map.enabled === false) {
       return;
     }
-    if (map.mapProvider === ClientConfig.MapProviders.Mapbox &&
+    if (map.mapProvider === MapProviders.Mapbox &&
       (!map.mapboxAccessToken || map.mapboxAccessToken.length === 0)) {
       throw new Error('Mapbox needs a valid api key.');
     }
-    if (map.mapProvider === ClientConfig.MapProviders.Custom &&
+    if (map.mapProvider === MapProviders.Custom &&
       (!map.customLayers || map.customLayers.length === 0)) {
       throw new Error('Custom maps need at least one valid layer');
     }
-    if (map.mapProvider === ClientConfig.MapProviders.Custom) {
+    if (map.mapProvider === MapProviders.Custom) {
       map.customLayers.forEach((l: MapLayers) => {
         if (!l.url || l.url.length === 0) {
           throw new Error('Custom maps url need to be a valid layer');
@@ -207,9 +226,9 @@ export class ConfigDiagnostics {
   }
 
 
-  static async runDiagnostics() {
+  static async runDiagnostics(): Promise<void> {
 
-    if (Config.Server.Database.type !== ServerConfig.DatabaseType.memory) {
+    if (Config.Server.Database.type !== DatabaseType.memory) {
       try {
         await ConfigDiagnostics.testDatabase(Config.Server.Database);
       } catch (ex) {
@@ -220,21 +239,18 @@ export class ConfigDiagnostics {
       }
     }
 
-    if (Config.Server.Media.photoProcessingLibrary !== ServerConfig.PhotoProcessingLib.Jimp) {
-      try {
-        await ConfigDiagnostics.testThumbnailLib(Config.Server.Media.photoProcessingLibrary);
-      } catch (ex) {
-        const err: Error = ex;
-        NotificationManager.warning('Thumbnail hardware acceleration is not possible.' +
-          ' \'' + ServerConfig.PhotoProcessingLib[Config.Server.Media.photoProcessingLibrary] + '\' node module is not found.' +
-          ' Falling back temporally to JS based thumbnail generation', err.toString());
-        Logger.warn(LOG_TAG, '[Thumbnail hardware acceleration] module error: ', err.toString());
-        Logger.warn(LOG_TAG, 'Thumbnail hardware acceleration is not possible.' +
-          ' \'' + ServerConfig.PhotoProcessingLib[Config.Server.Media.photoProcessingLibrary] + '\' node module is not found.' +
-          ' Falling back temporally to JS based thumbnail generation');
-        Config.Server.Media.photoProcessingLibrary = ServerConfig.PhotoProcessingLib.Jimp;
-      }
+    try {
+      await ConfigDiagnostics.testSharp();
+    } catch (ex) {
+      const err: Error = ex;
+
+      Logger.warn(LOG_TAG, '[Thumbnail hardware acceleration] module error: ', err.toString());
+      Logger.warn(LOG_TAG, 'Thumbnail hardware acceleration is not possible.' +
+        ' \'sharp\' node module is not found.' +
+        ' Falling back temporally to JS based thumbnail generation');
+      process.exit(1);
     }
+
 
     try {
       await ConfigDiagnostics.testTempFolder(Config.Server.Media.tempFolder);
@@ -262,6 +278,15 @@ export class ConfigDiagnostics {
       NotificationManager.warning('Meta file support error, switching off..', err.toString());
       Logger.warn(LOG_TAG, 'Meta file support error, switching off..', err.toString());
       Config.Client.MetaFile.enabled = false;
+    }
+
+    try {
+      await ConfigDiagnostics.testAlbumsConfig(Config.Client.Album, Config);
+    } catch (ex) {
+      const err: Error = ex;
+      NotificationManager.warning('Albums support error, switching off..', err.toString());
+      Logger.warn(LOG_TAG, 'Meta file support error, switching off..', err.toString());
+      Config.Client.Album.enabled = false;
     }
 
 
@@ -341,7 +366,7 @@ export class ConfigDiagnostics {
         'Please adjust the config properly.', err.toString());
       Logger.warn(LOG_TAG, 'Maps is not supported with these settings. Using open street maps temporally ' +
         'Please adjust the config properly.', err.toString());
-      Config.Client.Map.mapProvider = ClientConfig.MapProviders.OpenStreetMap;
+      Config.Client.Map.mapProvider = MapProviders.OpenStreetMap;
     }
 
   }

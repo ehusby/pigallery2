@@ -2,7 +2,7 @@ import {getTestBed, inject, TestBed} from '@angular/core/testing';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {NetworkService} from './network.service';
 import {Message} from '../../../../common/entities/Message';
-import {SlimLoadingBarService} from 'ng2-slim-loading-bar';
+import {LoadingBarService} from '@ngx-loading-bar/core';
 import {VersionService} from '../version.service';
 
 
@@ -20,12 +20,12 @@ describe('NetworkService Success tests', () => {
       imports: [HttpClientTestingModule],
       providers: [
         VersionService,
-        SlimLoadingBarService,
+        LoadingBarService,
         NetworkService
       ]
     });
     injector = getTestBed();
-    httpMock = injector.get(HttpTestingController);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {
@@ -133,12 +133,12 @@ describe('NetworkService Fail tests', () => {
       imports: [HttpClientTestingModule],
       providers: [
         VersionService,
-        SlimLoadingBarService,
+        LoadingBarService,
         NetworkService
       ]
     });
     injector = getTestBed();
-    httpMock = injector.get(HttpTestingController);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {

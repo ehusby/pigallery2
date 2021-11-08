@@ -1,42 +1,40 @@
 import {expect} from 'chai';
 import * as path from 'path';
-import * as util from 'util';
-import * as rimraf from 'rimraf';
+import * as fs from 'fs';
 import {Config} from '../../../../../src/common/config/private/Config';
 import {SQLConnection} from '../../../../../src/backend/model/database/sql/SQLConnection';
 import {UserEntity} from '../../../../../src/backend/model/database/sql/enitites/UserEntity';
 import {UserRoles} from '../../../../../src/common/entities/UserDTO';
 import {PasswordHelper} from '../../../../../src/backend/model/PasswordHelper';
 import {DirectoryEntity} from '../../../../../src/backend/model/database/sql/enitites/DirectoryEntity';
+import {PhotoEntity, PhotoMetadataEntity} from '../../../../../src/backend/model/database/sql/enitites/PhotoEntity';
 import {
   CameraMetadataEntity,
   GPSMetadataEntity,
-  PhotoEntity,
-  PhotoMetadataEntity,
+  MediaDimensionEntity,
   PositionMetaDataEntity
-} from '../../../../../src/backend/model/database/sql/enitites/PhotoEntity';
-import {MediaDimensionEntity} from '../../../../../src/backend/model/database/sql/enitites/MediaEntity';
+} from '../../../../../src/backend/model/database/sql/enitites/MediaEntity';
 import {VersionEntity} from '../../../../../src/backend/model/database/sql/enitites/VersionEntity';
-import {ServerConfig} from '../../../../../src/common/config/private/PrivateConfig';
+import {DatabaseType} from '../../../../../src/common/config/private/PrivateConfig';
+import {ProjectPath} from '../../../../../src/backend/ProjectPath';
 
-
-const rimrafPR = util.promisify(rimraf);
 
 describe('Typeorm integration', () => {
 
 
   const tempDir = path.join(__dirname, '../../tmp');
   const setUpSqlDB = async () => {
-    await rimrafPR(tempDir);
+    await fs.promises.rmdir(tempDir, {recursive: true});
 
-    Config.Server.Database.type = ServerConfig.DatabaseType.sqlite;
+    Config.Server.Database.type = DatabaseType.sqlite;
     Config.Server.Database.dbFolder = tempDir;
+    ProjectPath.reset();
 
   };
 
   const teardownUpSqlDB = async () => {
     await SQLConnection.close();
-    await rimrafPR(tempDir);
+    await fs.promises.rmdir(tempDir, {recursive: true});
   };
 
   beforeEach(async () => {

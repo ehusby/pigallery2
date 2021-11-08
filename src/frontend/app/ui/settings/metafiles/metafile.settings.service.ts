@@ -2,18 +2,18 @@ import {Injectable} from '@angular/core';
 import {NetworkService} from '../../../model/network/network.service';
 import {SettingsService} from '../settings.service';
 import {AbstractSettingsService} from '../_abstract/abstract.settings.service';
-import {ClientConfig} from '../../../../../common/config/public/ClientConfig';
+import {ClientConfig, ClientMetaFileConfig} from '../../../../../common/config/public/ClientConfig';
 
 @Injectable()
-export class MetaFileSettingsService extends AbstractSettingsService<ClientConfig.MetaFileConfig> {
-  constructor(private _networkService: NetworkService,
-              _settingsService: SettingsService) {
-    super(_settingsService);
+export class MetaFileSettingsService extends AbstractSettingsService<ClientMetaFileConfig> {
+  constructor(private networkService: NetworkService,
+              settingsService: SettingsService) {
+    super(settingsService);
 
   }
 
   public isSupported(): boolean {
-    return this._settingsService.settings.value.Client.Map.enabled === true;
+    return this.settingsService.settings.value.Client.Map.enabled === true;
   }
 
 
@@ -21,8 +21,8 @@ export class MetaFileSettingsService extends AbstractSettingsService<ClientConfi
     return false;
   }
 
-  public updateSettings(settings: ClientConfig.MetaFileConfig): Promise<void> {
-    return this._networkService.putJson('/settings/metafile', {settings: settings});
+  public updateSettings(settings: ClientMetaFileConfig): Promise<void> {
+    return this.networkService.putJson('/settings/metafile', {settings});
   }
 
 }

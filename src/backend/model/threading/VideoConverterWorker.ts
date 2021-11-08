@@ -2,8 +2,7 @@ import {Logger} from '../../Logger';
 import {promises as fsp} from 'fs';
 import {FfmpegCommand} from 'fluent-ffmpeg';
 import {FFmpegFactory} from '../FFmpegFactory';
-import {ServerConfig} from '../../../common/config/private/PrivateConfig';
-import FFmpegPresets = ServerConfig.FFmpegPresets;
+import {FFmpegPresets, videoCodecType, videoFormatType, videoResolutionType} from '../../../common/config/private/PrivateConfig';
 
 
 export interface VideoConverterInput {
@@ -11,13 +10,13 @@ export interface VideoConverterInput {
   output: {
     path: string,
     bitRate?: number,
-    resolution?: ServerConfig.resolutionType,
+    resolution?: videoResolutionType,
     fps?: number,
     crf?: number,
-    preset?: ServerConfig.FFmpegPresets,
+    preset?: FFmpegPresets,
     customOptions?: string[],
-    codec: ServerConfig.codecType,
-    format: ServerConfig.formatType
+    codec: videoCodecType,
+    format: videoFormatType
   };
 }
 

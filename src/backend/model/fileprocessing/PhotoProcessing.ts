@@ -4,12 +4,11 @@ import * as os from 'os';
 import * as crypto from 'crypto';
 import {ProjectPath} from '../../ProjectPath';
 import {Config} from '../../../common/config/private/Config';
-import {ThumbnailTH} from '../threading/ThreadPool';
 import {PhotoWorker, RendererInput, ThumbnailSourceType} from '../threading/PhotoWorker';
 import {ITaskExecuter, TaskExecuter} from '../threading/TaskExecuter';
 import {FaceRegion, PhotoDTO} from '../../../common/entities/PhotoDTO';
 import {SupportedFormats} from '../../../common/SupportedFormats';
-import {ServerConfig} from '../../../common/config/private/PrivateConfig';
+import {PersonWithSampleRegion} from '../../../common/entities/PersonDTO';
 
 
 export class PhotoProcessing {
@@ -17,7 +16,7 @@ export class PhotoProcessing {
   private static initDone = false;
   private static taskQue: ITaskExecuter<RendererInput, void> = null;
 
-  public static init() {
+  public static init(): void {
     if (this.initDone === true) {
       return;
     }
@@ -33,31 +32,22 @@ export class PhotoProcessing {
       Config.Client.Media.Thumbnail.concurrentThumbnailGenerations = 1;
     }
 
-    if (Config.Server.Threading.enabled === true &&
-      Config.Server.Media.photoProcessingLibrary === ServerConfig.PhotoProcessingLib.Jimp) {
-      this.taskQue = new ThumbnailTH(Config.Client.Media.Thumbnail.concurrentThumbnailGenerations);
-    } else {
-      this.taskQue = new TaskExecuter(Config.Client.Media.Thumbnail.concurrentThumbnailGenerations,
-        (input => PhotoWorker.render(input, Config.Server.Media.photoProcessingLibrary)));
-    }
+
+    this.taskQue = new TaskExecuter(Config.Client.Media.Thumbnail.concurrentThumbnailGenerations,
+      ((input): Promise<void> => PhotoWorker.render(input)));
 
     this.initDone = true;
   }
 
 
-  public static async generatePersonThumbnail(photo: PhotoDTO) {
+  public static async generatePersonThumbnail(person: PersonWithSampleRegion): Promise<string> {
 
     // load parameters
-
-    if (!photo.metadata.faces || photo.metadata.faces.length !== 1) {
-      throw new Error('Photo does not contain  a face');
-    }
-
-    // load parameters
+    const photo: PhotoDTO = person.sampleRegion.media;
     const mediaPath = path.join(ProjectPath.ImageFolder, photo.directory.path, photo.directory.name, photo.name);
     const size: number = Config.Client.Media.Thumbnail.personThumbnailSize;
     // generate thumbnail path
-    const thPath = PhotoProcessing.generatePersonThumbnailPath(mediaPath, photo.metadata.faces[0], size);
+    const thPath = PhotoProcessing.generatePersonThumbnailPath(mediaPath, person.sampleRegion, size);
 
 
     // check if thumbnail already exist
@@ -69,26 +59,26 @@ export class PhotoProcessing {
 
 
     const margin = {
-      x: Math.round(photo.metadata.faces[0].box.width * (Config.Server.Media.Thumbnail.personFaceMargin)),
-      y: Math.round(photo.metadata.faces[0].box.height * (Config.Server.Media.Thumbnail.personFaceMargin))
+      x: Math.round(person.sampleRegion.box.width * (Config.Server.Media.Thumbnail.personFaceMargin)),
+      y: Math.round(person.sampleRegion.box.height * (Config.Server.Media.Thumbnail.personFaceMargin))
     };
 
 
     // run on other thread
-    const input = <RendererInput>{
+    const input = {
       type: ThumbnailSourceType.Photo,
-      mediaPath: mediaPath,
-      size: size,
+      mediaPath,
+      size,
       outPath: thPath,
       makeSquare: false,
       cut: {
-        left: Math.round(Math.max(0, photo.metadata.faces[0].box.left - margin.x / 2)),
-        top: Math.round(Math.max(0, photo.metadata.faces[0].box.top - margin.y / 2)),
-        width: photo.metadata.faces[0].box.width + margin.x,
-        height: photo.metadata.faces[0].box.height + margin.y
+        left: Math.round(Math.max(0, person.sampleRegion.box.left - margin.x / 2)),
+        top: Math.round(Math.max(0, person.sampleRegion.box.top - margin.y / 2)),
+        width: person.sampleRegion.box.width + margin.x,
+        height: person.sampleRegion.box.height + margin.y
       },
       qualityPriority: Config.Server.Media.Thumbnail.qualityPriority
-    };
+    } as RendererInput;
     input.cut.width = Math.min(input.cut.width, photo.metadata.size.width - input.cut.left);
     input.cut.height = Math.min(input.cut.height, photo.metadata.size.height - input.cut.top);
 
@@ -139,7 +129,7 @@ export class PhotoProcessing {
   }
 
 
-  public static async convertPhoto(mediaPath: string) {
+  public static async convertPhoto(mediaPath: string): Promise<string> {
     return this.generateThumbnail(mediaPath,
       Config.Server.Media.Photo.Converting.resolution,
       ThumbnailSourceType.Photo,
@@ -147,7 +137,7 @@ export class PhotoProcessing {
   }
 
 
-  static async convertedPhotoExist(mediaPath: string, size: number) {
+  static async convertedPhotoExist(mediaPath: string, size: number): Promise<boolean> {
 
     // generate thumbnail path
     const outPath = PhotoProcessing.generateConvertedPath(mediaPath, size);
@@ -179,14 +169,14 @@ export class PhotoProcessing {
 
 
     // run on other thread
-    const input = <RendererInput>{
+    const input = {
       type: sourceType,
-      mediaPath: mediaPath,
-      size: size,
-      outPath: outPath,
-      makeSquare: makeSquare,
+      mediaPath,
+      size,
+      outPath,
+      makeSquare,
       qualityPriority: Config.Server.Media.Thumbnail.qualityPriority
-    };
+    } as RendererInput;
 
     const outDir = path.dirname(input.outPath);
 
@@ -195,7 +185,7 @@ export class PhotoProcessing {
     return outPath;
   }
 
-  public static isPhoto(fullPath: string) {
+  public static isPhoto(fullPath: string): boolean {
     const extension = path.extname(fullPath).toLowerCase();
     return SupportedFormats.WithDots.Photos.indexOf(extension) !== -1;
   }

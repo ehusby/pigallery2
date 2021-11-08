@@ -6,14 +6,14 @@ import {BasicConfigDTO} from '../../../../../common/entities/settings/BasicConfi
 
 @Injectable()
 export class BasicSettingsService extends AbstractSettingsService<BasicConfigDTO> {
-  constructor(private _networkService: NetworkService,
-              _settingsService: SettingsService) {
-    super(_settingsService);
+  constructor(private networkService: NetworkService,
+              settingsService: SettingsService) {
+    super(settingsService);
   }
 
 
   public updateSettings(settings: BasicConfigDTO): Promise<void> {
-    return this._networkService.putJson('/settings/basic', {settings: settings});
+    return this.networkService.putJson('/settings/basic', {settings});
   }
 
 }

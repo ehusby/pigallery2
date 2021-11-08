@@ -1,4 +1,4 @@
-import {DirectoryDTO} from './DirectoryDTO';
+import {DirectoryPathDTO} from './DirectoryDTO';
 import {Utils} from '../Utils';
 
 export enum UserRoles {
@@ -19,9 +19,9 @@ export interface UserDTO {
   permissions: string[]; // user can only see these permissions. if ends with *, its recursive
 }
 
-export module UserDTO {
+export const UserDTOUtils = {
 
-  export const isDirectoryPathAvailable = (path: string, permissions: string[]): boolean => {
+  isDirectoryPathAvailable: (path: string, permissions: string[]): boolean => {
     if (permissions == null) {
       return true;
     }
@@ -30,9 +30,8 @@ export module UserDTO {
     if (permissions.length === 0 || permissions[0] === '/*') {
       return true;
     }
-    for (let i = 0; i < permissions.length; i++) {
-      let permission = permissions[i];
-      if (permissions[i] === '/*') {
+    for (let permission of permissions) {
+      if (permission === '/*') {
         return true;
       }
       if (permission[permission.length - 1] === '*') {
@@ -48,10 +47,11 @@ export module UserDTO {
 
     }
     return false;
-  };
+  },
 
-  export const isDirectoryAvailable = (directory: DirectoryDTO, permissions: string[]): boolean => {
-    return isDirectoryPathAvailable(
+
+  isDirectoryAvailable: (directory: DirectoryPathDTO, permissions: string[]): boolean => {
+    return UserDTOUtils.isDirectoryPathAvailable(
       Utils.concatUrls(directory.path, directory.name), permissions);
-  };
-}
+  }
+};

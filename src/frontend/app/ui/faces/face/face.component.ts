@@ -1,12 +1,12 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {RouterLink} from '@angular/router';
 import {PersonDTO} from '../../../../../common/entities/PersonDTO';
-import {SearchTypes} from '../../../../../common/entities/AutoCompleteItem';
-import {DomSanitizer} from '@angular/platform-browser';
+import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 import {PersonThumbnail, ThumbnailManagerService} from '../../gallery/thumbnailManager.service';
 import {FacesService} from '../faces.service';
 import {AuthenticationService} from '../../../model/network/authentication.service';
 import {Config} from '../../../../../common/config/public/Config';
+import {SearchQueryTypes, TextSearch, TextSearchQueryMatchTypes} from '../../../../../common/entities/SearchQueryDTO';
 
 @Component({
   selector: 'app-face',
@@ -18,13 +18,13 @@ export class FaceComponent implements OnInit, OnDestroy {
   @Input() person: PersonDTO;
   @Input() size: number;
 
-  thumbnail: PersonThumbnail = null;
-  SearchTypes = SearchTypes;
+  public thumbnail: PersonThumbnail = null;
+  public searchQueryDTOstr: string;
 
   constructor(private thumbnailService: ThumbnailManagerService,
-              private _sanitizer: DomSanitizer,
+              private sanitizer: DomSanitizer,
               private faceService: FacesService,
-              public  authenticationService: AuthenticationService) {
+              public authenticationService: AuthenticationService) {
 
   }
 
@@ -32,26 +32,30 @@ export class FaceComponent implements OnInit, OnDestroy {
     return this.authenticationService.user.getValue().role >= Config.Client.Faces.writeAccessMinRole;
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.thumbnail = this.thumbnailService.getPersonThumbnail(this.person);
+    this.searchQueryDTOstr = JSON.stringify({
+      type: SearchQueryTypes.person,
+      text: this.person.name,
+      matchType: TextSearchQueryMatchTypes.exact_match
+    } as TextSearch);
 
   }
 
-  getSanitizedThUrl() {
-    return this._sanitizer.bypassSecurityTrustStyle('url(' +
-      encodeURI(this.thumbnail.Src)
-        .replace(/\(/g, '%28')
-        .replace(/'/g, '%27')
-        .replace(/\)/g, '%29') + ')');
+  getSanitizedThUrl(): SafeStyle {
+    return this.sanitizer.bypassSecurityTrustStyle('url(' + this.thumbnail.Src
+      .replace(/\(/g, '%28')
+      .replace(/'/g, '%27')
+      .replace(/\)/g, '%29') + ')');
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     if (this.thumbnail != null) {
       this.thumbnail.destroy();
     }
   }
 
-  async toggleFavourite($event: MouseEvent) {
+  async toggleFavourite($event: MouseEvent): Promise<void> {
     $event.preventDefault();
     $event.stopPropagation();
     await this.faceService.setFavourite(this.person, !this.person.isFavourite).catch(console.error);

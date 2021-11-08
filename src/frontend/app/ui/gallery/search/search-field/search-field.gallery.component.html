@@ -1,0 +1,61 @@
+<div class="input-group">
+  <input type="text"
+         class="form-control search-text"
+         i18n-placeholder
+         placeholder="Search"
+         (keyup)="onSearchChange($event)"
+         (blur)="onFocusLost()"
+         [(ngModel)]="rawSearchText"
+         (ngModelChange)="onChange()"
+         (keydown.enter)="OnEnter($event)"
+         (keydown.arrowRight)="applyHint($event)"
+         (keydown.arrowUp)="selectAutocompleteUp()"
+         (keydown.arrowDown)="selectAutocompleteDown()"
+         (scroll)="Scrolled()"
+         (selectionchange)="Scrolled()"
+         #name="ngModel"
+         size="30"
+         ngControl="search"
+         name="srch-term"
+         id="srch-term"
+         #SearchField
+         autocomplete="off">
+  <input type="text"
+         class="form-control search-hint"
+         [ngModel]="SearchHint"
+         size="30"
+         name="srch-term-hint"
+         id="srch-term-hint"
+         #SearchHintField
+         autocomplete="off">
+
+
+  <div class="autocomplete-list" *ngIf="autoCompleteRenders.length > 0"
+       (mouseover)="setMouseOverAutoComplete(true)" (mouseout)="setMouseOverAutoComplete(false)">
+    <div class="autocomplete-item"
+         [ngClass]="{'autocomplete-item-selected': highlightedAutoCompleteItem === i}"
+         (mouseover)="setMouseOverAutoCompleteItem(i)"
+         (click)="searchAutoComplete(item)"
+         *ngFor="let item of autoCompleteRenders; let i = index">
+      <div>
+                    <span [ngSwitch]="item.type">
+                      <span *ngSwitchCase="SearchQueryTypes.caption" class="oi oi-image"></span>
+                      <span *ngSwitchCase="SearchQueryTypes.directory" class="oi oi-folder"></span>
+                      <span *ngSwitchCase="SearchQueryTypes.file_name" class="oi oi-image"></span>
+                      <span *ngSwitchCase="SearchQueryTypes.keyword" class="oi oi-tag"></span>
+                      <span *ngSwitchCase="SearchQueryTypes.person" class="oi oi-person"></span>
+                      <span *ngSwitchCase="SearchQueryTypes.position" class="oi oi-map-marker"></span>
+                     <span *ngSwitchCase="SearchQueryTypes.distance" class="oi oi-map-marker"></span>
+                    </span>
+        {{item.preText}}<strong>{{item.highLightText}}</strong>{{item.postText}}
+        <span class="oi oi-chevron-right insert-button float-right" (click)="applyAutoComplete(item)"
+              title="Insert"
+              i18n-title>
+        </span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+

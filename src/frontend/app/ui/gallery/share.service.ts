@@ -66,7 +66,7 @@ export class ShareService {
         this.inited = true;
       }
     }
-  };
+  }
 
 
   public wait(): Promise<void> {
@@ -76,27 +76,27 @@ export class ShareService {
     return this.ReadyPR;
   }
 
-  public createSharing(dir: string, includeSubfolders: boolean, valid: number): Promise<SharingDTO> {
+  public createSharing(dir: string, includeSubFolders: boolean, valid: number): Promise<SharingDTO> {
     return this.networkService.postJson('/share/' + dir, {
-      createSharing: <CreateSharingDTO>{
-        includeSubfolders: includeSubfolders,
-        valid: valid
-      }
+      createSharing: {
+        includeSubfolders: includeSubFolders,
+        valid
+      } as CreateSharingDTO
     });
   }
 
-  public updateSharing(dir: string, sharingId: number, includeSubfolders: boolean, password: string, valid: number): Promise<SharingDTO> {
+  public updateSharing(dir: string, sharingId: number, includeSubFolders: boolean, password: string, valid: number): Promise<SharingDTO> {
     return this.networkService.putJson('/share/' + dir, {
-      updateSharing: <CreateSharingDTO>{
+      updateSharing: {
         id: sharingId,
-        includeSubfolders: includeSubfolders,
-        valid: valid,
-        password: password
-      }
+        includeSubfolders: includeSubFolders,
+        valid,
+        password
+      } as CreateSharingDTO
     });
   }
 
-  public getSharingKey() {
+  public getSharingKey(): string {
     return this.sharingKey;
   }
 

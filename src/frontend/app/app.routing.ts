@@ -1,4 +1,4 @@
-import {ModuleWithProviders} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {RouterModule, Routes, UrlMatchResult, UrlSegment} from '@angular/router';
 import {LoginComponent} from './ui/login/login.component';
 import {GalleryComponent} from './ui/gallery/gallery.component';
@@ -8,6 +8,7 @@ import {QueryParams} from '../../common/QueryParams';
 import {DuplicateComponent} from './ui/duplicates/duplicates.component';
 import {FacesComponent} from './ui/faces/faces.component';
 import {AuthGuard} from './model/network/helper/auth.guard';
+import {AlbumsComponent} from './ui/albums/albums.component';
 
 export function galleryMatcherFunction(
   segments: UrlSegment[]): UrlMatchResult | null {
@@ -27,7 +28,7 @@ export function galleryMatcherFunction(
   }
   if (path === 'search') {
     if (segments.length > 1) {
-      posParams[QueryParams.gallery.searchText] = segments[1];
+      posParams[QueryParams.gallery.search.query] = segments[1];
     }
     return {consumed: segments.slice(0, Math.min(segments.length, 2)), posParams};
   }
@@ -40,7 +41,7 @@ export function galleryMatcherFunction(
   return null;
 }
 
-const ROUTES: Routes = [
+const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
@@ -60,6 +61,11 @@ const ROUTES: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'albums',
+    component: AlbumsComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'faces',
     component: FacesComponent,
     canActivate: [AuthGuard]
@@ -73,7 +79,10 @@ const ROUTES: Routes = [
   {path: '**', redirectTo: '/login', pathMatch: 'full'}
 ];
 
-export const appRoutes: ModuleWithProviders = RouterModule.forRoot(ROUTES, {
-  anchorScrolling: 'enabled'
-});
 
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {
+}

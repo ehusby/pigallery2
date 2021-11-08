@@ -1,13 +1,20 @@
-import {DirectoryDTO} from './DirectoryDTO';
+import {DirectoryPathDTO} from './DirectoryDTO';
 import {OrientationTypes} from 'ts-exif-parser';
 import {MediaDimension, MediaDTO, MediaMetadata} from './MediaDTO';
 
-export interface PhotoDTO extends MediaDTO {
+export interface PreviewPhotoDTO extends MediaDTO {
+  name: string;
+  directory: DirectoryPathDTO;
+  readyThumbnails: number[];
+  readyIcon: boolean;
+}
+
+export interface PhotoDTO extends PreviewPhotoDTO, MediaDTO {
   id: number;
   name: string;
-  directory: DirectoryDTO;
+  directory: DirectoryPathDTO;
   metadata: PhotoMetadata;
-  readyThumbnails: Array<number>;
+  readyThumbnails: number[];
   readyIcon: boolean;
 }
 
@@ -24,6 +31,7 @@ export interface FaceRegion {
 }
 
 export interface PhotoMetadata extends MediaMetadata {
+  rating?: 0 | 1 | 2 | 3 | 4 | 5;
   caption?: string;
   keywords?: string[];
   cameraData?: CameraMetadata;

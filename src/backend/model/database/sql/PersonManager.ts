@@ -1,24 +1,53 @@
-import {IPersonManager} from '../interfaces/IPersonManager';
 import {SQLConnection} from './SQLConnection';
 import {PersonEntry} from './enitites/PersonEntry';
-import {PhotoDTO} from '../../../../common/entities/PhotoDTO';
-import {MediaEntity} from './enitites/MediaEntity';
 import {FaceRegionEntry} from './enitites/FaceRegionEntry';
 import {PersonDTO} from '../../../../common/entities/PersonDTO';
-import {Utils} from '../../../../common/Utils';
-import {SelectQueryBuilder} from 'typeorm';
+import {ISQLPersonManager} from './IPersonManager';
+import {Logger} from '../../../Logger';
+import {FaceRegion} from '../../../../common/entities/PhotoDTO';
 
 
-export class PersonManager implements IPersonManager {
-  samplePhotos: { [key: string]: PhotoDTO } = {};
-  persons: PersonEntry[] = [];
+const LOG_TAG = '[PersonManager]';
+
+export class PersonManager implements ISQLPersonManager {
+  persons: PersonEntry[] = null;
+  /**
+   * Person table contains denormalized data that needs to update when isDBValid = false
+   */
+  private isDBValid = false;
+
+  private static async updateCounts(): Promise<void> {
+    const connection = await SQLConnection.getConnection();
+    await connection.query('UPDATE person_entry SET count = ' +
+      ' (SELECT COUNT(1) FROM face_region_entry WHERE face_region_entry.personId = person_entry.id)');
+
+    // remove persons without photo
+    await connection
+      .createQueryBuilder()
+      .delete()
+      .from(PersonEntry)
+      .where('count = 0')
+      .execute();
+  }
+
+  private static async updateSamplePhotos(): Promise<void> {
+    const connection = await SQLConnection.getConnection();
+    await connection.query('update person_entry set sampleRegionId = ' +
+      '(Select face_region_entry.id from  media_entity ' +
+      'left join face_region_entry on media_entity.id = face_region_entry.mediaId ' +
+      'where face_region_entry.personId=person_entry.id ' +
+      'order by media_entity.metadataCreationdate desc ' +
+      'limit 1)');
+
+  }
 
   async updatePerson(name: string, partialPerson: PersonDTO): Promise<PersonEntry> {
+    this.isDBValid = false;
     const connection = await SQLConnection.getConnection();
     const repository = connection.getRepository(PersonEntry);
     const person = await repository.createQueryBuilder('person')
       .limit(1)
-      .where('person.name LIKE :name COLLATE utf8_general_ci', {name: name}).getOne();
+      .where('person.name LIKE :name COLLATE utf8_general_ci', {name}).getOne();
 
 
     if (typeof partialPerson.name !== 'undefined') {
@@ -34,124 +63,90 @@ export class PersonManager implements IPersonManager {
     return person;
   }
 
-  async getSamplePhoto(name: string): Promise<PhotoDTO> {
-    return (await this.getSamplePhotos([name]))[name];
-  }
-
-
-  async getSamplePhotos(names: string[]): Promise<{ [key: string]: PhotoDTO }> {
-    const hasAll = names.reduce((prev, name) => prev && !!this.samplePhotos[name], true);
-    if (!hasAll) {
-      const connection = await SQLConnection.getConnection();
-      const namesObj: any = {};
-      let queryStr = '';
-      names.forEach((n, i) => {
-        if (i > 0) {
-          queryStr += ', ';
-        }
-        queryStr += ':n' + i + ' COLLATE utf8_general_ci';
-        namesObj['n' + i] = n;
-      });
-      const query: SelectQueryBuilder<MediaEntity> = await (connection
-        .getRepository(MediaEntity)
-        .createQueryBuilder('media') as SelectQueryBuilder<MediaEntity>)
-        .select(['media.name', 'media.id', 'person.name', 'directory.name',
-          'directory.path', 'media.metadata.size.width', 'media.metadata.size.height'])
-        .leftJoin('media.directory', 'directory')
-        .leftJoinAndSelect('media.metadata.faces', 'faces')
-        .leftJoin('faces.person', 'person')
-        .groupBy('person.name, media.name, media.id, directory.name, faces.id');
-      // TODO: improve it. SQLITE does not support case-insensitive special characters like ÁÉÚŐ
-      for (let i = 0; i < names.length; ++i) {
-        const opt: any = {};
-        opt['n' + i] = names[i];
-        query.orWhere(`person.name LIKE :n${i} COLLATE utf8_general_ci`, opt);
-      }
-
-      const rawAndEntities = await query.getRawAndEntities();
-      for (let i = 0; i < rawAndEntities.raw.length; ++i) {
-        this.samplePhotos[rawAndEntities.raw[i].person_name.toLowerCase()] =
-          Utils.clone(rawAndEntities.entities.find(m => m.name === rawAndEntities.raw[i].media_name));
-        this.samplePhotos[rawAndEntities.raw[i].person_name.toLowerCase()].metadata.faces =
-          [FaceRegionEntry.fromRawToDTO(rawAndEntities.raw[i])];
-      }
+  public async getAll(): Promise<PersonEntry[]> {
+    if (this.persons === null) {
+      await this.loadAll();
     }
-
-    const photoMap: { [key: string]: PhotoDTO } = {};
-    names.forEach(n => photoMap[n] = this.samplePhotos[n.toLowerCase()]);
-    return photoMap;
-  }
-
-
-  async loadAll(): Promise<void> {
-    const connection = await SQLConnection.getConnection();
-    const personRepository = connection.getRepository(PersonEntry);
-    this.persons = await personRepository.find();
-
-  }
-
-  async getAll(): Promise<PersonEntry[]> {
-    await this.loadAll();
     return this.persons;
   }
 
-
-  async get(name: string): Promise<PersonEntry> {
-
-    let person = this.persons.find(p => p.name === name);
-    if (!person) {
-      const connection = await SQLConnection.getConnection();
-      const personRepository = connection.getRepository(PersonEntry);
-      person = await personRepository.findOne({name: name});
-      if (!person) {
-        person = await personRepository.save(<PersonEntry>{name: name});
-      }
-      this.persons.push(person);
-    }
-    return person;
+  /**
+   * Used for statistic
+   */
+  public async countFaces(): Promise<number> {
+    const connection = await SQLConnection.getConnection();
+    return await connection.getRepository(FaceRegionEntry)
+      .createQueryBuilder('faceRegion')
+      .getCount();
   }
 
+  public async get(name: string): Promise<PersonEntry> {
+    if (this.persons === null) {
+      await this.loadAll();
+    }
+    return this.persons.find((p): boolean => p.name === name);
+  }
 
-  async saveAll(names: string[]): Promise<void> {
-    const toSave: { name: string }[] = [];
+  public async saveAll(persons: { name: string, faceRegion: FaceRegion }[]): Promise<void> {
+    const toSave: { name: string, faceRegion: FaceRegion }[] = [];
     const connection = await SQLConnection.getConnection();
     const personRepository = connection.getRepository(PersonEntry);
-    await this.loadAll();
+    const faceRegionRepository = connection.getRepository(FaceRegionEntry);
 
-    for (let i = 0; i < names.length; i++) {
+    const savedPersons =  await personRepository.find();
+    // filter already existing persons
+    for (const personToSave of persons) {
 
-      const person = this.persons.find(p => p.name === names[i]);
+      const person = savedPersons.find((p): boolean => p.name === personToSave.name);
       if (!person) {
-        toSave.push({name: names[i]});
+        toSave.push(personToSave);
       }
     }
+
 
     if (toSave.length > 0) {
       for (let i = 0; i < toSave.length / 200; i++) {
-        await personRepository.insert(toSave.slice(i * 200, (i + 1) * 200));
+        const saving = toSave.slice(i * 200, (i + 1) * 200);
+        const inserted = await personRepository.insert(saving.map(p => ({name: p.name})));
+        // setting Person id
+        inserted.identifiers.forEach((idObj: { id: number }, j: number) => {
+          (saving[j].faceRegion as FaceRegionEntry).person = idObj as any;
+        });
+        await faceRegionRepository.insert(saving.map(p => p.faceRegion));
       }
-      this.persons = await personRepository.find();
     }
+    this.isDBValid = false;
 
   }
 
-
-  public async onGalleryIndexUpdate() {
-    await this.updateCounts();
-    this.samplePhotos = {};
+  public async onNewDataVersion(): Promise<void> {
+    this.persons = null;
+    this.isDBValid = false;
   }
 
-  public async updateCounts() {
+  private async loadAll(): Promise<void> {
+    await this.updateDerivedValues();
     const connection = await SQLConnection.getConnection();
-    await connection.query('update person_entry set count = ' +
-      ' (select COUNT(1) from face_region_entry where face_region_entry.personId = person_entry.id)');
+    const personRepository = connection.getRepository(PersonEntry);
+    this.persons = await personRepository.find({
+      relations: ['sampleRegion',
+        'sampleRegion.media',
+        'sampleRegion.media.directory']
+    });
+  }
 
-    // remove persons without photo
-    await connection.getRepository(PersonEntry)
-      .createQueryBuilder()
-      .where('count = 0')
-      .delete()
-      .execute();
+  /**
+   * Person table contains derived, denormalized data for faster select, this needs to be updated after data change
+   * @private
+   */
+  private async updateDerivedValues(): Promise<void> {
+    if (this.isDBValid === true) {
+      return;
+    }
+    Logger.debug(LOG_TAG, 'Updating derived persons data');
+    await PersonManager.updateCounts();
+    await PersonManager.updateSamplePhotos();
+    this.isDBValid = false;
   }
 
 }

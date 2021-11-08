@@ -12,8 +12,8 @@ export class WebConfig {
   State: any;
 
   @ConfigProperty()
-  Server: ServerConfig.Config = new ServerConfig.Config();
+  Server: ServerConfig = new ServerConfig();
   @ConfigProperty()
-  Client: ClientConfig.Config = new ClientConfig.Config();
+  Client: ClientConfig = new ClientConfig();
 
 }

@@ -1,18 +1,13 @@
 import {IPersonManager} from '../interfaces/IPersonManager';
-import {PhotoDTO} from '../../../../common/entities/PhotoDTO';
 import {PersonDTO} from '../../../../common/entities/PersonDTO';
+import {FaceRegion} from '../../../../common/entities/PhotoDTO';
 
 export class PersonManager implements IPersonManager {
+  saveAll(person: { name: string; faceRegion: FaceRegion }[]): Promise<void> {
+    throw new Error('not supported by memory DB');
+  }
 
   getAll(): Promise<any[]> {
-    throw new Error('not supported by memory DB');
-  }
-
-  getSamplePhoto(name: string): Promise<PhotoDTO> {
-    throw new Error('not supported by memory DB');
-  }
-
-  getSamplePhotos(names: string[]): Promise<{ [key: string]: PhotoDTO }> {
     throw new Error('not supported by memory DB');
   }
 
@@ -20,9 +15,6 @@ export class PersonManager implements IPersonManager {
     throw new Error('not supported by memory DB');
   }
 
-  saveAll(names: string[]): Promise<void> {
-    throw new Error('not supported by memory DB');
-  }
 
   onGalleryIndexUpdate(): Promise<void> {
     throw new Error('not supported by memory DB');

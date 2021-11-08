@@ -1,9 +1,4 @@
-let bcrypt: any;
-try {
-  bcrypt = require('bcrypt');
-} catch (err) {
-  bcrypt = require('bcryptjs');
-}
+import * as bcrypt from 'bcrypt';
 
 export class PasswordHelper {
   public static cryptPassword(password: string): string {

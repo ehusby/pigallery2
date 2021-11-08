@@ -1,5 +1,4 @@
 import {Component, forwardRef, Input, OnChanges} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator} from '@angular/forms';
 import {Utils} from '../../../../../../common/Utils';
 import {propertyTypes} from 'typeconfig/common';
@@ -43,20 +42,20 @@ export class SettingsEntryComponent implements ControlValueAccessor, Validator, 
   isNumberArray = false;
   isNumber = false;
   type = 'text';
-  _options: { key: number | string; value: string | number; }[] = [];
+  optionsView: { key: number | string; value: string | number; }[] = [];
   title: string;
   idName: string;
-  _disabled: boolean;
+  disabled: boolean;
   private readonly GUID = Utils.GUID();
 
 
   // value: { default: any, setting: any, original: any, readonly?: boolean, onChange: () => void };
 
-  constructor(private i18n: I18n) {
+  constructor() {
   }
 
   get changed(): boolean {
-    if (this._disabled) {
+    if (this.disabled) {
       return false;
     }
     if (this.state.type === 'array') {
@@ -116,7 +115,7 @@ export class SettingsEntryComponent implements ControlValueAccessor, Validator, 
   }
 
   setDisabledState?(isDisabled: boolean): void {
-    this._disabled = isDisabled;
+    this.disabled = isDisabled;
   }
 
   ngOnChanges(): void {
@@ -128,9 +127,9 @@ export class SettingsEntryComponent implements ControlValueAccessor, Validator, 
     }
     this.title = '';
     if (this.state.readonly) {
-      this.title = this.i18n('readonly') + ', ';
+      this.title = $localize`readonly` + ', ';
     }
-    this.title += this.i18n('default value') + ': ' + this.defaultStr;
+    this.title += $localize`default value` + ': ' + this.defaultStr;
     if (this.name) {
       this.idName = this.GUID + this.name.toLowerCase().replace(new RegExp(' ', 'gm'), '-');
     }
@@ -140,12 +139,12 @@ export class SettingsEntryComponent implements ControlValueAccessor, Validator, 
       this.state.type === 'integer' || this.state.type === 'float' || this.state.type === 'positiveFloat';
     if (this.state.isEnumType) {
       if (this.options) {
-        this._options = this.options;
+        this.optionsView = this.options;
       } else {
         if (this.optionMap) {
-          this._options = Utils.enumToArray(this.state.type).map(this.optionMap);
+          this.optionsView = Utils.enumToArray(this.state.type).map(this.optionMap);
         } else {
-          this._options = Utils.enumToArray(this.state.type);
+          this.optionsView = Utils.enumToArray(this.state.type);
         }
       }
     }

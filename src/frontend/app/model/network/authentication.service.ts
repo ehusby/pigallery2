@@ -3,13 +3,15 @@ import {UserDTO, UserRoles} from '../../../../common/entities/UserDTO';
 import {BehaviorSubject} from 'rxjs';
 import {UserService} from './user.service';
 import {LoginCredential} from '../../../../common/entities/LoginCredential';
-import {Cookie} from 'ng2-cookies';
 import {Config} from '../../../../common/config/public/Config';
 import {NetworkService} from './network.service';
 import {ErrorCodes, ErrorDTO} from '../../../../common/entities/Error';
 import {CookieNames} from '../../../../common/CookieNames';
 import {ShareService} from '../../ui/gallery/share.service';
+import {CookieService} from 'ngx-cookie-service';
 
+/* Injected config / user from server side */
+// tslint:disable-next-line:no-internal-module no-namespace
 declare module ServerInject {
   export let user: UserDTO;
 }
@@ -19,30 +21,34 @@ export class AuthenticationService {
 
   public readonly user: BehaviorSubject<UserDTO>;
 
-  constructor(private _userService: UserService,
-              private _networkService: NetworkService,
-              private shareService: ShareService) {
+  constructor(private userService: UserService,
+              private networkService: NetworkService,
+              private shareService: ShareService,
+              private cookieService: CookieService) {
     this.user = new BehaviorSubject(null);
 
     // picking up session..
-    if (this.isAuthenticated() === false && Cookie.get(CookieNames.session) != null) {
+    if (this.isAuthenticated() === false && this.cookieService.get(CookieNames.session) != null) {
       if (typeof ServerInject !== 'undefined' && typeof ServerInject.user !== 'undefined') {
         this.user.next(ServerInject.user);
       }
-      this.getSessionUser();
+      this.getSessionUser().catch(console.error);
     } else {
       if (Config.Client.authenticationRequired === false) {
-        this.user.next(<UserDTO>{name: UserRoles[Config.Client.unAuthenticatedUserRole], role: Config.Client.unAuthenticatedUserRole});
+        this.user.next({
+          name: UserRoles[Config.Client.unAuthenticatedUserRole],
+          role: Config.Client.unAuthenticatedUserRole
+        } as UserDTO);
       }
     }
 
-    _networkService.addGlobalErrorHandler((error: ErrorDTO) => {
+    networkService.addGlobalErrorHandler((error: ErrorDTO) => {
       if (error.code === ErrorCodes.NOT_AUTHENTICATED) {
         this.user.next(null);
         return true;
       }
       if (error.code === ErrorCodes.NOT_AUTHORISED) {
-        this.logout();
+        this.logout().catch(console.error);
         return true;
       }
       return false;
@@ -57,13 +63,13 @@ export class AuthenticationService {
   }
 
   public async login(credential: LoginCredential): Promise<UserDTO> {
-    const user = await this._userService.login(credential);
+    const user = await this.userService.login(credential);
     this.user.next(user);
     return user;
   }
 
   public async shareLogin(password: string): Promise<UserDTO> {
-    const user = await this._userService.shareLogin(password);
+    const user = await this.userService.shareLogin(password);
     this.user.next(user);
     return user;
   }
@@ -75,18 +81,22 @@ export class AuthenticationService {
     return !!this.user.value;
   }
 
-  public isAuthorized(role: UserRoles) {
+  public isAuthorized(role: UserRoles): boolean {
     return this.user.value && this.user.value.role >= role;
   }
 
-  public async logout() {
-    await this._userService.logout();
+  public canSearch(): boolean {
+    return this.isAuthorized(UserRoles.Guest);
+  }
+
+  public async logout(): Promise<void> {
+    await this.userService.logout();
     this.user.next(null);
   }
 
   private async getSessionUser(): Promise<void> {
     try {
-      this.user.next(await this._userService.getSessionUser());
+      this.user.next(await this.userService.getSessionUser());
     } catch (error) {
       console.error(error);
     }

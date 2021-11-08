@@ -4,22 +4,22 @@ import {SettingsService} from '../settings.service';
 import {AbstractSettingsService} from '../_abstract/abstract.settings.service';
 import {BehaviorSubject} from 'rxjs';
 import {JobDTO} from '../../../../../common/entities/job/JobDTO';
-import {ServerConfig} from '../../../../../common/config/private/PrivateConfig';
+import {ServerConfig, ServerJobConfig} from '../../../../../common/config/private/PrivateConfig';
 
 @Injectable()
-export class JobsSettingsService extends AbstractSettingsService<ServerConfig.JobConfig> {
+export class JobsSettingsService extends AbstractSettingsService<ServerJobConfig> {
 
 
   public availableJobs: BehaviorSubject<JobDTO[]>;
 
-  constructor(private _networkService: NetworkService,
-              _settingsService: SettingsService) {
-    super(_settingsService);
+  constructor(private networkService: NetworkService,
+              settingsService: SettingsService) {
+    super(settingsService);
     this.availableJobs = new BehaviorSubject([]);
   }
 
-  public updateSettings(settings: ServerConfig.JobConfig): Promise<void> {
-    return this._networkService.putJson('/settings/jobs', {settings: settings});
+  public updateSettings(settings: ServerJobConfig): Promise<void> {
+    return this.networkService.putJson('/settings/jobs', {settings});
   }
 
 
@@ -32,8 +32,8 @@ export class JobsSettingsService extends AbstractSettingsService<ServerConfig.Jo
   }
 
 
-  public async getAvailableJobs() {
-    this.availableJobs.next(await this._networkService.getJson<JobDTO[]>('/admin/jobs/available'));
+  public async getAvailableJobs(): Promise<void> {
+    this.availableJobs.next(await this.networkService.getJson<JobDTO[]>('/admin/jobs/available'));
   }
 
 }

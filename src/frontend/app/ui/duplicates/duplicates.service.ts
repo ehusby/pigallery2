@@ -13,7 +13,7 @@ export class DuplicateService {
     this.duplicates = new BehaviorSubject<DuplicatesDTO[]>(null);
   }
 
-  public async getDuplicates() {
+  public async getDuplicates(): Promise<void> {
     this.duplicates.next(await this.networkService.getJson<DuplicatesDTO[]>('/admin/duplicates'));
   }
 

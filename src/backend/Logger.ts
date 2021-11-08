@@ -1,42 +1,65 @@
-import * as winston from 'winston';
 import {Config} from '../common/config/private/Config';
-import {ServerConfig} from '../common/config/private/PrivateConfig';
+import {LogLevel} from '../common/config/private/PrivateConfig';
+
+export type logFN = (...args: (string | number)[]) => void;
 
 const forcedDebug = process.env.NODE_ENV === 'debug';
 
 if (forcedDebug === true) {
   console.log('NODE_ENV environmental variable is set to debug, forcing all logs to print');
 }
-export const winstonSettings = {
-  transports: [
-    new winston.transports.Console(<any>{
-      level: forcedDebug === true ? ServerConfig.LogLevel[ServerConfig.LogLevel.silly] : ServerConfig.LogLevel[Config.Server.Log.level],
-      handleExceptions: true,
-      json: false,
-      colorize: true,
-      timestamp: function () {
-        return (new Date()).toLocaleString();
-      },
-      label: 'innerLabel',
-      formatter: (options: any) => {
-        // Return string will be passed to logger.
-        return options.timestamp() + '[' + (<any>winston)['config']['colorize'](options.level, options.level.toUpperCase()) + '] ' +
-          (undefined !== options.message ? options.message : '') +
-          (options.meta && Object.keys(options.meta).length ? '\n\t' + JSON.stringify(options.meta) : '');
-      },
-      debugStdout: true
-    })
-  ],
-  exitOnError: false
-};
 
-type logFN = (...args: (string | number)[]) => {};
+export class Logger {
+  public static silly(...args: (string | number)[]): void {
+    if (!forcedDebug && Config.Server.Log.level < LogLevel.silly) {
+      return;
+    }
+    Logger.log(`[\x1b[35mSILLY\x1b[0m]`, ...args);
+  }
 
-export const Logger: {
-  error: logFN,
-  warn: logFN,
-  info: logFN,
-  verbose: logFN,
-  debug: logFN,
-  silly: logFN
-} = new (<any>winston).Logger(winstonSettings);
+  public static debug(...args: (string | number)[]): void {
+    if (!forcedDebug && Config.Server.Log.level < LogLevel.debug) {
+      return;
+    }
+    Logger.log(`[\x1b[34mDEBUG\x1b[0m]`, ...args);
+
+  }
+
+
+  public static verbose(...args: (string | number)[]): void {
+    if (!forcedDebug && Config.Server.Log.level < LogLevel.verbose) {
+      return;
+    }
+    Logger.log(`[\x1b[36mVERBS\x1b[0m]`, ...args);
+  }
+
+  public static info(...args: (string | number)[]): void {
+    if (!forcedDebug && Config.Server.Log.level < LogLevel.info) {
+      return;
+    }
+    Logger.log(`[\x1b[32mINFO_\x1b[0m]`, ...args);
+
+  }
+
+  public static warn(...args: (string | number)[]): void {
+    if (!forcedDebug && Config.Server.Log.level < LogLevel.warn) {
+      return;
+    }
+    Logger.log(`[\x1b[33mWARN_\x1b[0m]`, ...args);
+  }
+
+  public static error(...args: (string | number)[]): void {
+
+    Logger.log(`[\x1b[31mERROR\x1b[0m]`, ...args);
+  }
+
+  private static log(tag: string, ...args: (string | number)[]): void {
+    const date = (new Date()).toLocaleString();
+    let LOG_TAG = '';
+    if (args.length > 0 && typeof args[0] === 'string' && args[0].startsWith('[') && args[0].endsWith(']')) {
+      LOG_TAG = args[0];
+      args.shift();
+    }
+    console.log(date + tag + LOG_TAG, ...args);
+  }
+}

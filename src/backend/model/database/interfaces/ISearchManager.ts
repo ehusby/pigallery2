@@ -1,10 +1,13 @@
-import {AutoCompleteItem, SearchTypes} from '../../../../common/entities/AutoCompleteItem';
+import {AutoCompleteItem} from '../../../../common/entities/AutoCompleteItem';
 import {SearchResultDTO} from '../../../../common/entities/SearchResultDTO';
+import {SearchQueryDTO, SearchQueryTypes} from '../../../../common/entities/SearchQueryDTO';
+import {PhotoDTO} from '../../../../common/entities/PhotoDTO';
+import {IObjectManager} from './IObjectManager';
 
-export interface ISearchManager {
-  autocomplete(text: string): Promise<AutoCompleteItem[]>;
+export interface ISearchManager  extends IObjectManager{
+  autocomplete(text: string, type: SearchQueryTypes): Promise<AutoCompleteItem[]>;
 
-  search(text: string, searchType: SearchTypes): Promise<SearchResultDTO>;
+  search(query: SearchQueryDTO): Promise<SearchResultDTO>;
 
-  instantSearch(text: string): Promise<SearchResultDTO>;
+  getRandomPhoto(queryFilter: SearchQueryDTO): Promise<PhotoDTO>;
 }

@@ -1,5 +1,5 @@
 import {Media} from '../Media';
-import {MediaDTO} from '../../../../../common/entities/MediaDTO';
+import {MediaDTO, MediaDTOUtils} from '../../../../../common/entities/MediaDTO';
 import {PhotoDTO} from '../../../../../common/entities/PhotoDTO';
 import {VideoDTO} from '../../../../../common/entities/VideoDTO';
 
@@ -11,22 +11,22 @@ export class GridMedia extends Media {
   }
 
   get Video(): VideoDTO {
-    return <VideoDTO>this.media;
+    return this.media as VideoDTO;
   }
 
   get Photo(): PhotoDTO {
-    return <PhotoDTO>this.media;
+    return this.media as PhotoDTO;
   }
 
   isPhoto(): boolean {
-    return MediaDTO.isPhoto(this.media);
+    return MediaDTOUtils.isPhoto(this.media);
   }
 
   isVideo(): boolean {
-    return MediaDTO.isVideo(this.media);
+    return MediaDTOUtils.isVideo(this.media);
   }
 
-  public isVideoTranscodingNeeded() {
-    return MediaDTO.isVideoTranscodingNeeded(this.media);
+  public isVideoTranscodingNeeded(): boolean {
+    return MediaDTOUtils.isVideoTranscodingNeeded(this.media);
   }
 }

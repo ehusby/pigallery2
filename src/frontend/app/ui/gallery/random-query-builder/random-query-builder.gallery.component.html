@@ -3,10 +3,11 @@
   <ng-container i18n>Random link</ng-container>
 </button>
 
+
 <ng-template #randomModal>
   <!-- sharing Modal-->
   <div class="modal-header">
-    <h5 class="modal-title" i18n>Random Link generator</h5>
+    <h5 class="modal-title" i18n>Random Link creator</h5>
     <button type="button" class="close" (click)="hideModal()" data-dismiss="modal" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -30,105 +31,15 @@
       </div>
     </div>
     <hr/>
-    <div class="row">
-      <div class="col-4">
-        <label class="control-label" i18n>In Folder:</label>
-      </div>
-      <div class="col-8">
-        <input disabled type="text"
-               class="full-width form-control"
-               [ngModel]="data.directory">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-4">
-        <label class="control-label" i18n>Include subfolders:</label>
-      </div>
-      <div class="col-8">
-        <bSwitch
-          class="switch"
-          name="includeSubfolders"
-          [switch-on-color]="'success'"
-          [switch-inverse]="'inverse'"
-          [switch-off-text]="text.No"
-          [switch-on-text]="text.Yes"
-          [switch-handle-width]="'100'"
-          [switch-label-width]="'20'"
-          (change)="update()"
-          [(ngModel)]="data.recursive">
-        </bSwitch>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-4">
-        <label class="control-label" i18n>Orientation:</label>
-      </div>
-      <div class="col-4">
-        <select class="form-control" [(ngModel)]="data.orientation" (change)="update()" name="orientation"
-                required>
-          <option [ngValue]="OrientationType.any" i18n>Any</option>
-          <option [ngValue]="OrientationType.landscape" i18n>Landscape</option>
-          <option [ngValue]="OrientationType.portrait" i18n>Portrait</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="row">
-
-      <div class="col-4">
-        <label class="control-label" i18n>Date:</label>
-      </div>
-      <div class="col-4 form-group">
-        <input type="text"
-               placeholder="from: YYYY-MM-DD"
-               class="form-control"
-               bsDatepicker
-               (bsValueChange)="update()"
-               [(ngModel)]="data.fromDate"
-               [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }">
-      </div>
-      <div class="col-4 form-group">
-        <input type="text"
-               placeholder="to: YYYY-MM-DD"
-               class="form-control"
-               bsDatepicker
-               (bsValueChange)="update()"
-               [(ngModel)]="data.toDate"
-               [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-4">
-        <label class="control-label" i18n>Resolution:</label>
-      </div>
-      <div class="col-4">
-        <div class="input-group">
-          <input type="number" class="form-control"
-                 (change)="update()"
-                 [(ngModel)]="data.minResolution"
-                 id="minResolution" placeholder="min" step="1" min="0">
-
-          <div class="input-group-append">
-            <div class="input-group-text">Mpx</div>
-          </div>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="input-group">
-          <input type="number" class="form-control"
-                 (change)="update()"
-                 [(ngModel)]="data.maxResolution"
-                 id="maxResolution" placeholder="max" step="1" min="0">
-          <div class="input-group-append">
-            <div class="input-group-text">Mpx</div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <form #searchPanelForm="ngForm" class="form-horizontal">
+      <app-gallery-search-query-builder
+        id="album-search-query-builder"
+        name="album-search-query-builder"
+        [(ngModel)]="searchQueryDTO"
+        (change)="onQueryChange()" >
+      </app-gallery-search-query-builder>
 
 
+    </form>
   </div>
 </ng-template>

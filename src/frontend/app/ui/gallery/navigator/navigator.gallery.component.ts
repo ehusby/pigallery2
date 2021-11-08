@@ -1,16 +1,15 @@
 import {Component, Input, OnChanges} from '@angular/core';
-import {DirectoryDTO} from '../../../../../common/entities/DirectoryDTO';
-import {Router, RouterLink} from '@angular/router';
-import {UserDTO} from '../../../../../common/entities/UserDTO';
+import {ParentDirectoryDTO} from '../../../../../common/entities/DirectoryDTO';
+import {RouterLink} from '@angular/router';
+import {UserDTOUtils} from '../../../../../common/entities/UserDTO';
 import {AuthenticationService} from '../../../model/network/authentication.service';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {QueryService} from '../../../model/query.service';
 import {GalleryService} from '../gallery.service';
 import {Utils} from '../../../../../common/Utils';
 import {SortingMethods} from '../../../../../common/entities/SortingMethods';
 import {Config} from '../../../../../common/config/public/Config';
 import {SearchResultDTO} from '../../../../../common/entities/SearchResultDTO';
-import {SearchTypes} from '../../../../../common/entities/AutoCompleteItem';
+import {SearchQueryTypes} from '../../../../../common/entities/SearchQueryDTO';
 
 @Component({
   selector: 'app-gallery-navbar',
@@ -19,7 +18,7 @@ import {SearchTypes} from '../../../../../common/entities/AutoCompleteItem';
   providers: [RouterLink],
 })
 export class GalleryNavigatorComponent implements OnChanges {
-  @Input() directory: DirectoryDTO;
+  @Input() directory: ParentDirectoryDTO;
   @Input() searchResult: SearchResultDTO;
 
   routes: NavigatorPath[] = [];
@@ -27,23 +26,21 @@ export class GalleryNavigatorComponent implements OnChanges {
   sortingMethodsType: { key: number; value: string }[] = [];
   config = Config;
   DefaultSorting = Config.Client.Other.defaultPhotoSortingMethod;
-  readonly SearchTypes = SearchTypes;
+  readonly SearchQueryTypes = SearchQueryTypes;
   private readonly RootFolderName: string;
 
-  constructor(private _authService: AuthenticationService,
+  constructor(private authService: AuthenticationService,
               public queryService: QueryService,
-              public galleryService: GalleryService,
-              private router: Router,
-              private i18n: I18n) {
+              public galleryService: GalleryService) {
     this.sortingMethodsType = Utils.enumToArray(SortingMethods);
-    this.RootFolderName = this.i18n('Images');
+    this.RootFolderName = $localize`Images`;
   }
 
   get ItemCount(): number {
     return this.directory ? this.directory.mediaCount : this.searchResult.media.length;
   }
 
-  ngOnChanges() {
+  ngOnChanges(): void {
     this.getPath();
     this.DefaultSorting = this.galleryService.getDefaultSorting(this.directory);
   }
@@ -66,23 +63,23 @@ export class GalleryNavigatorComponent implements OnChanges {
       }
     }
 
-    const user = this._authService.user.value;
+    const user = this.authService.user.value;
     const arr: NavigatorPath[] = [];
 
     // create root link
     if (dirs.length === 0) {
       arr.push({name: this.RootFolderName, route: null});
     } else {
-      arr.push({name: this.RootFolderName, route: UserDTO.isDirectoryPathAvailable('/', user.permissions) ? '/' : null});
+      arr.push({name: this.RootFolderName, route: UserDTOUtils.isDirectoryPathAvailable('/', user.permissions) ? '/' : null});
     }
 
     // create rest navigation
     dirs.forEach((name, index) => {
       const route = dirs.slice(0, dirs.indexOf(name) + 1).join('/');
       if (dirs.length - 1 === index) {
-        arr.push({name: name, route: null});
+        arr.push({name, route: null});
       } else {
-        arr.push({name: name, route: UserDTO.isDirectoryPathAvailable(route, user.permissions) ? route : null});
+        arr.push({name, route: UserDTOUtils.isDirectoryPathAvailable(route, user.permissions) ? route : null});
       }
     });
 
@@ -92,24 +89,24 @@ export class GalleryNavigatorComponent implements OnChanges {
 
   }
 
-  setSorting(sorting: SortingMethods) {
+  setSorting(sorting: SortingMethods): void {
     this.galleryService.setSorting(sorting);
   }
 
-  /*
+  getDownloadZipLink(): string {
+    let queryParams = '';
+    Object.entries(this.queryService.getParams()).forEach(e => {
+      queryParams += e[0] + '=' + e[1];
+    });
+    return Utils.concatUrls(Config.Client.urlBase,
+      '/api/gallery/zip/',
+      this.getDirectoryPath(), '?' + queryParams);
+  }
 
-    @HostListener('window:keydown', ['$event'])
-    onKeyPress(e: KeyboardEvent) {
-      if (this.routes.length < 2) {
-        return;
-      }
-      const event: KeyboardEvent = window.event ? <any>window.event : e;
-      if (event.altKey === true && event.key === 'ArrowUp') {
-        const path = this.routes[this.routes.length - 2];
-        this.router.navigate(['/gallery', path.route],
-          {queryParams: this.queryService.getParams()}).catch(console.error);
-      }
-    }*/
+  getDirectoryPath(): string {
+    return Utils.concatUrls(this.directory.path, this.directory.name);
+  }
+
 }
 
 interface NavigatorPath {

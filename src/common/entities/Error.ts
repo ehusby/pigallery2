@@ -1,3 +1,5 @@
+import {Request} from 'express';
+
 export enum ErrorCodes {
   NOT_AUTHENTICATED = 1,
   ALREADY_AUTHENTICATED = 2,
@@ -20,14 +22,26 @@ export enum ErrorCodes {
 
   SETTINGS_ERROR = 13,
   TASK_ERROR = 14,
-  JOB_ERROR = 15
+  JOB_ERROR = 15,
+  LocationLookUp_ERROR = 16,
+
+  ALBUM_ERROR = 17,
 }
 
 export class ErrorDTO {
   public detailsStr: string;
+  public request: {
+    method: string, url: string
+  } = {method: '', url: ''};
 
-  constructor(public code: ErrorCodes, public message?: string, public details?: any) {
+  constructor(public code: ErrorCodes, public message?: string, public details?: any, req?: Request) {
     this.detailsStr = (this.details ? this.details.toString() : '') || ErrorCodes[code];
+    if (req) {
+      this.request = {
+        method: req.method,
+        url: req.url
+      };
+    }
   }
 
   toString(): string {

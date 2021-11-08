@@ -59,12 +59,13 @@
 
     </div>
     <div class="github-button-wrapper">
-    <!-- Place this tag where you want the button to render. -->
-    <a class="github-button" href="https://github.com/bpatrik/pigallery2" data-size="large" data-icon="octicon-star"
-       data-show-count="true" aria-label="Star bpatrik/pigallery2 on GitHub">Star</a>
-    <!-- Place this tag where you want the button to render. -->
-    <a class="github-button" href="https://github.com/bpatrik/pigallery2/fork" data-size="large" data-icon="octicon-repo-forked"
-       data-show-count="true" aria-label="Fork bpatrik/pigallery2 on GitHub">Fork</a>
+      <!-- Place this tag where you want the button to render. -->
+      <a class="github-button" href="https://github.com/bpatrik/pigallery2" data-size="large" data-icon="octicon-star"
+         data-show-count="true" aria-label="Star bpatrik/pigallery2 on GitHub">Star</a>
+      <!-- Place this tag where you want the button to render. -->
+      <a class="github-button" href="https://github.com/bpatrik/pigallery2/fork" data-size="large"
+         data-icon="octicon-repo-forked"
+         data-show-count="true" aria-label="Fork bpatrik/pigallery2 on GitHub">Fork</a>
     </div>
     <img class="banner-photo" src="assets/main_page.jpg" style="width: 100%">
     <div class="row">
@@ -102,12 +103,56 @@
 
     <div class="row feature">
       <div class="col">
-        <h3>Searching</h3>
-        Searching based on keywords, location, file or directory name.
-        The gallery supports autocomplete and instant search too.
+        <h3>Advanced searching</h3>
+        App supports full <a href="https://en.wikipedia.org/wiki/Boolean_algebra">boolean logic</a> with negation and
+        exact or wildcard search.
+        It also provides handy suggestions with autocomplete.
+        <br/>
+
+        Match types:
+        <code class="code-block p-2 text-light rounded bg-secondary d-block">
+          person:"John" # exact match <br/>
+          person:(John) # wildcard match <br/>
+          person:John # same as person:(John) <br/>
+          person!:John # negation
+        </code>
+
+
       </div>
       <div class="col-12 col-md-8">
         <img class="card-img-right" src="assets/search.jpg">
+      </div>
+    </div>
+    <div class="row feature">
+      <div class="col">
+        Supported keywords: <br/>
+        <code class="code-block p-2 text-light rounded bg-secondary d-block">
+
+          after:2020<br/>
+          before:2021<br/>
+          orientation:portrait<br/>
+          orientation:landscape<br/>
+          maxRating:1<br/>
+          maxRating:5<br/>
+          minResolution:1<br/>
+          maxResolution:10<br/>
+
+          keyword:"house"<br/>
+          caption:"caption"<br/>
+          directory:"dir name/an other dir"<br/>
+          file_name:"img.jpg",<br/>
+          person:"John",<br/>
+          position:"USA" # use city, state, country names<br/>
+          5-km-from:(New York) # photos 5 km from the center of New York <br/>
+          any_text:"apple", # searches for apple everywhere, "any_text:" can be omitted
+        </code>
+        Bool expressions: <br/>
+        <code class="code-block p-2 text-light rounded bg-secondary d-block">
+          John and Kate # photos with "John" and "Kate" (any string match) <br/>
+          John Kate # same as "John and Kate" <br/>
+          John or Kate # photos with "John" or "Kate" (any string match) <br/>
+          2-of:(John, Kate, Steve) # lists photos that satisfies at least 2 out of the 3 names (any string match)
+        </code>
       </div>
     </div>
 
@@ -183,9 +228,7 @@
           <li>prioritizes thumbnail generation (generating thumbnail first for the visible photos)</li>
           <li>saving generated thumbnails to TEMP folder for reuse</li>
           <li>supporting several core CPU</li>
-          <li>supporting hardware acceleration (<a href="https://github.com/lovell/sharp">sharp</a> and <a
-            href="https://github.com/aheckmann/gm">gm</a> as optional and JS-based <a
-            href="https://github.com/oliver-moran/jimp">Jimp</a> as fallback)
+          <li>supporting hardware acceleration (<a href="https://github.com/lovell/sharp">sharp</a>)
           </li>
         </ul>
       </li>

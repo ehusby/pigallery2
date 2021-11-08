@@ -7,36 +7,97 @@
       "root": "",
       "sourceRoot": "src/frontend",
       "projectType": "application",
+      "schematics": {},
+      "prefix": "app",
+      "i18n": {
+        "sourceLocale": {
+          "code": "en",
+          "baseHref": ""
+        },
+        "locales": {
+          "cn": {
+            "baseHref": "",
+            "translation": "src/frontend/translate/messages.cn.xlf"
+          },
+          "es": {
+            "baseHref": "",
+            "translation": "src/frontend/translate/messages.es.xlf"
+          },
+          "fr": {
+            "baseHref": "",
+            "translation": "src/frontend/translate/messages.fr.xlf"
+          },
+          "hu": {
+            "baseHref": "",
+            "translation": "src/frontend/translate/messages.hu.xlf"
+          },
+          "it": {
+            "baseHref": "",
+            "translation": "src/frontend/translate/messages.it.xlf"
+          },
+          "ro": {
+            "baseHref": "",
+            "translation": "src/frontend/translate/messages.ro.xlf"
+          },
+          "ru": {
+            "baseHref": "",
+            "translation": "src/frontend/translate/messages.ru.xlf"
+          },
+          "sv": {
+            "baseHref": "",
+            "translation": "src/frontend/translate/messages.sv.xlf"
+          },
+          "pl": {
+            "baseHref": "",
+            "translation": "src/frontend/translate/messages.pl.xlf"
+          }
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "localize": true,
+            "aot": true,
             "crossOrigin": "anonymous",
             "outputPath": "dist",
             "index": "src/frontend/index.html",
+            "progress": true,
             "main": "src/frontend/main.ts",
             "tsConfig": "src/frontend/tsconfig.app.json",
             "polyfills": "src/frontend/polyfills.ts",
             "assets": [
-              "src/frontend/assets"
+              "src/frontend/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/leaflet/dist/images/",
+                "output": "./assets/"
+              }
             ],
             "styles": [
-              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
-              "./node_modules/open-iconic/font/css/open-iconic-bootstrap.css",
-              "./node_modules/ngx-toastr/toastr.css",
+              "bootstrap/dist/css/bootstrap.min.css",
+              "ngx-bootstrap/datepicker/bs-datepicker.css",
+              "open-iconic/font/css/open-iconic-bootstrap.css",
+              "ngx-toastr/toastr.css",
+              "leaflet/dist/leaflet.css",
+              "leaflet.markercluster/dist/MarkerCluster.css",
+              "leaflet.markercluster/dist/MarkerCluster.Default.css",
               "src/frontend/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "i18nMissingTranslation": "warning"
           },
           "configurations": {
+            "dev": {
+              "outputPath": "dist/en",
+              "localize": false,
+              "watch": true
+            },
             "production": {
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -44,6 +105,18 @@
                 {
                   "replace": "src/frontend/environments/environment.ts",
                   "with": "src/frontend/environments/environment.prod.ts"
+                }
+              ],
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
                 }
               ]
             }
@@ -75,15 +148,23 @@
             "tsConfig": "src/frontend/tsconfig.spec.json",
             "scripts": [],
             "styles": [
-              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/ngx-toastr/toastr.css",
-              "node_modules/bootstrap/dist/css/bootstrap.css",
-              "node_modules/open-iconic/font/css/open-iconic-bootstrap.css",
-              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
+              "bootstrap/dist/css/bootstrap.min.css",
+              "ngx-toastr/toastr.css",
+              "bootstrap/dist/css/bootstrap.css",
+              "open-iconic/font/css/open-iconic-bootstrap.css",
+              "ngx-bootstrap/datepicker/bs-datepicker.css",
+              "leaflet/dist/leaflet.css",
+              "leaflet.markercluster/dist/MarkerCluster.css",
+              "leaflet.markercluster/dist/MarkerCluster.Default.css",
               "src/frontend/styles.css"
             ],
             "assets": [
-              "src/frontend/assets"
+              "src/frontend/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/leaflet/dist/images/",
+                "output": "./assets/"
+              }
             ]
           }
         },

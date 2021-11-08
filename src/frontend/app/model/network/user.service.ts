@@ -9,33 +9,33 @@ import {QueryParams} from '../../../../common/QueryParams';
 @Injectable()
 export class UserService {
 
-  constructor(private _networkService: NetworkService,
-              private _shareService: ShareService) {
+  constructor(private networkService: NetworkService,
+              private shareService: ShareService) {
   }
 
   public async logout(): Promise<string> {
-    return this._networkService.postJson('/user/logout');
+    return this.networkService.postJson('/user/logout');
   }
 
   public async login(credential: LoginCredential): Promise<UserDTO> {
-    return this._networkService.postJson<UserDTO>('/user/login', {loginCredential: credential});
+    return this.networkService.postJson<UserDTO>('/user/login', {loginCredential: credential});
   }
 
   public async shareLogin(password: string): Promise<UserDTO> {
-    return this._networkService.postJson<UserDTO>('/share/login?' + QueryParams.gallery.sharingKey_query
-      + '=' + this._shareService.getSharingKey(), {'password': password});
+    return this.networkService.postJson<UserDTO>('/share/login?' + QueryParams.gallery.sharingKey_query
+      + '=' + this.shareService.getSharingKey(), {password});
   }
 
   public async getSessionUser(): Promise<UserDTO> {
-    await this._shareService.wait();
+    await this.shareService.wait();
     if (Config.Client.Sharing.enabled === true) {
-      if (this._shareService.isSharing()) {
+      if (this.shareService.isSharing()) {
         const query: any = {};
-        query[QueryParams.gallery.sharingKey_query] = this._shareService.getSharingKey();
-        return this._networkService.getJson<UserDTO>('/user/me', query);
+        query[QueryParams.gallery.sharingKey_query] = this.shareService.getSharingKey();
+        return this.networkService.getJson<UserDTO>('/user/me', query);
       }
     }
-    return this._networkService.getJson<UserDTO>('/user/me');
+    return this.networkService.getJson<UserDTO>('/user/me');
   }
 
 }

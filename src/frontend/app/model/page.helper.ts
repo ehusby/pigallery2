@@ -25,7 +25,7 @@ export class PageHelper {
     return this.supportPageOffset ? window.pageXOffset : this.isCSS1Compat ? document.documentElement.scrollLeft : document.body.scrollLeft;
   }
 
-  public static showScrollY() {
+  public static showScrollY(): void {
     PageHelper.body.style.overflowY = 'scroll';
   }
 
@@ -33,7 +33,7 @@ export class PageHelper {
     return PageHelper.body.style.overflowY === 'scroll';
   }
 
-  public static hideScrollY() {
+  public static hideScrollY(): void {
     PageHelper.body.style.overflowY = 'hidden';
   }
 }

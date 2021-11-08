@@ -13,7 +13,7 @@ export class TimeStampDatePickerComponent {
   @Input() name: string;
 
   @Input()
-  public get timestamp() {
+  public get timestamp(): number {
     return this.timestampValue;
   }
 
@@ -26,7 +26,7 @@ export class TimeStampDatePickerComponent {
     this.timestampChange.emit(this.timestampValue);
   }
 
-  onChange(date: Date | string) {
+  onChange(date: Date | string): void {
     this.timestamp = (new Date(date)).getTime();
   }
 

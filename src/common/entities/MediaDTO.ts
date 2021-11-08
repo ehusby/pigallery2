@@ -1,14 +1,15 @@
-import {DirectoryDTO} from './DirectoryDTO';
+import {DirectoryPathDTO} from './DirectoryDTO';
 import {PhotoDTO} from './PhotoDTO';
 import {FileDTO} from './FileDTO';
 import {SupportedFormats} from '../SupportedFormats';
 
+
 export interface MediaDTO extends FileDTO {
   id: number;
   name: string;
-  directory: DirectoryDTO;
+  directory: DirectoryPathDTO;
   metadata: MediaMetadata;
-  readyThumbnails: Array<number>;
+  readyThumbnails: number[];
   readyIcon: boolean;
 
 }
@@ -26,23 +27,22 @@ export interface MediaDimension {
   height: number;
 }
 
-export module MediaDTO {
-  export const hasPositionData = (media: MediaDTO): boolean => {
-    return !!(<PhotoDTO>media).metadata.positionData &&
-      !!((<PhotoDTO>media).metadata.positionData.city ||
-        (<PhotoDTO>media).metadata.positionData.state ||
-        (<PhotoDTO>media).metadata.positionData.country ||
-        ((<PhotoDTO>media).metadata.positionData.GPSData &&
-          (<PhotoDTO>media).metadata.positionData.GPSData.altitude &&
-          (<PhotoDTO>media).metadata.positionData.GPSData.latitude &&
-          (<PhotoDTO>media).metadata.positionData.GPSData.longitude));
-  };
+export const MediaDTOUtils = {
+  hasPositionData: (media: MediaDTO): boolean => {
+    return !!(media as PhotoDTO).metadata.positionData &&
+      !!((media as PhotoDTO).metadata.positionData.city ||
+        (media as PhotoDTO).metadata.positionData.state ||
+        (media as PhotoDTO).metadata.positionData.country ||
+        ((media as PhotoDTO).metadata.positionData.GPSData &&
+          (media as PhotoDTO).metadata.positionData.GPSData.altitude &&
+          (media as PhotoDTO).metadata.positionData.GPSData.latitude &&
+          (media as PhotoDTO).metadata.positionData.GPSData.longitude));
+  },
+  isPhoto: (media: FileDTO): boolean => {
+    return !MediaDTOUtils.isVideo(media);
+  },
 
-  export const isPhoto = (media: FileDTO): boolean => {
-    return !MediaDTO.isVideo(media);
-  };
-
-  export const isVideo = (media: FileDTO): boolean => {
+  isVideo: (media: FileDTO): boolean => {
     const lower = media.name.toLowerCase();
     for (const ext of SupportedFormats.WithDots.Videos) {
       if (lower.endsWith(ext)) {
@@ -50,9 +50,9 @@ export module MediaDTO {
       }
     }
     return false;
-  };
+  },
 
-  export const isVideoPath = (path: string): boolean => {
+  isVideoPath: (path: string): boolean => {
     const lower = path.toLowerCase();
     for (const ext of SupportedFormats.WithDots.Videos) {
       if (lower.endsWith(ext)) {
@@ -60,9 +60,9 @@ export module MediaDTO {
       }
     }
     return false;
-  };
+  },
 
-  export const isVideoTranscodingNeeded = (media: FileDTO): boolean => {
+  isVideoTranscodingNeeded: (media: FileDTO): boolean => {
     const lower = media.name.toLowerCase();
     for (const ext of SupportedFormats.WithDots.TranscodeNeed.Videos) {
       if (lower.endsWith(ext)) {
@@ -70,10 +70,10 @@ export module MediaDTO {
       }
     }
     return false;
-  };
+  },
 
 
-  export const calcAspectRatio = (photo: MediaDTO): number => {
+  calcAspectRatio: (photo: MediaDTO): number => {
     return photo.metadata.size.width / photo.metadata.size.height;
-  };
-}
+  }
+};

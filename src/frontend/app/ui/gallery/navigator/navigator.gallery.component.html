@@ -10,23 +10,27 @@
   <ol *ngIf="searchResult" class="breadcrumb">
     <li class="active">
       <ng-container i18n>Searching for:</ng-container>
-      <span class="search-type" [ngSwitch]="searchResult.searchType">
-                      <span *ngSwitchCase="SearchTypes.photo" class="oi oi-image"></span>
-                      <span *ngSwitchCase="SearchTypes.video" class="oi oi-video"></span>
-                      <span *ngSwitchCase="SearchTypes.directory" class="oi oi-folder"></span>
-                      <span *ngSwitchCase="SearchTypes.keyword" class="oi oi-tag"></span>
-                      <span *ngSwitchCase="SearchTypes.person" class="oi oi-person"></span>
-                      <span *ngSwitchCase="SearchTypes.position" class="oi oi-map-marker"></span>
-                    </span>
-      <strong> {{searchResult.searchText}}</strong>
+      <strong> {{searchResult.searchQuery | searchQuery}}</strong>
     </li>
   </ol>
 
   <div class="right-side">
-    <div class="photos-count" *ngIf="ItemCount > 0 && config.Client.Other.NavBar.showItemCount">
-      {{ItemCount}} <span i18n>items</span>
-    </div>
-    <div class="divider" *ngIf="ItemCount > 0 && config.Client.Other.NavBar.showItemCount">&nbsp;</div>
+    <ng-container *ngIf="ItemCount > 0 && config.Client.Other.NavBar.showItemCount">
+      <div class="photos-count">
+        {{ItemCount}} <span i18n>items</span>
+      </div>
+      <div class="divider">&nbsp;</div>
+    </ng-container>
+
+    <ng-container *ngIf="config.Client.Other.enableDownloadZip && directory && ItemCount > 0">
+      <a *ngIf="config.Client.Other.enableDownloadZip && directory && ItemCount > 0"
+         [href]="getDownloadZipLink()"
+         class="btn  btn-download">
+         <span class="oi oi-data-transfer-download"
+               title="download" i18n-title></span>
+      </a>
+      <div class="divider">&nbsp;</div>
+    </ng-container>
     <div class="btn-group" dropdown placement="bottom right">
       <button id="button-alignment" dropdownToggle type="button"
               class="btn btn-secondary dropdown-toggle"
@@ -39,7 +43,9 @@
         <li class="row dropdown-item" role="menuitem"
             *ngFor="let type of sortingMethodsType"
             (click)="setSorting(type.key)">
-          <div class="col-3" [outerHTML]="type.key | iconizeSorting"></div>
+          <div class="col-3">
+            <div [outerHTML]="type.key | iconizeSorting"></div>
+          </div>
           <div class="col-9">{{type.key | stringifySorting}}</div>
         </li>
       </ul>

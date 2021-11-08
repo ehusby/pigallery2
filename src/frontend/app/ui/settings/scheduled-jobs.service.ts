@@ -3,10 +3,9 @@ import {BehaviorSubject} from 'rxjs';
 import {JobProgressDTO, JobProgressStates} from '../../../../common/entities/job/JobProgressDTO';
 import {NetworkService} from '../../model/network/network.service';
 import {JobScheduleDTO} from '../../../../common/entities/job/JobScheduleDTO';
-import {JobDTO} from '../../../../common/entities/job/JobDTO';
+import {JobDTO, JobDTOUtils} from '../../../../common/entities/job/JobDTO';
 import {BackendtextService} from '../../model/backendtext.service';
 import {NotificationService} from '../../model/notification.service';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Injectable()
 export class ScheduledJobsService {
@@ -18,15 +17,14 @@ export class ScheduledJobsService {
   public jobStartingStopping: { [key: string]: boolean } = {};
   private subscribers = 0;
 
-  constructor(private _networkService: NetworkService,
+  constructor(private networkService: NetworkService,
               private notification: NotificationService,
-              private backendTextService: BackendtextService,
-              private i18n: I18n) {
+              private backendTextService: BackendtextService) {
     this.progress = new BehaviorSubject({});
   }
 
   getProgress(schedule: JobScheduleDTO): JobProgressDTO {
-    return this.progress.value[JobDTO.getHashName(schedule.jobName, schedule.config)];
+    return this.progress.value[JobDTOUtils.getHashName(schedule.jobName, schedule.config)];
   }
 
   subscribeToProgress(): void {
@@ -44,11 +42,11 @@ export class ScheduledJobsService {
   public async start(jobName: string, config?: any, soloStart: boolean = false, allowParallelRun = false): Promise<void> {
     try {
       this.jobStartingStopping[jobName] = true;
-      await this._networkService.postJson('/admin/jobs/scheduled/' + jobName + '/start',
+      await this.networkService.postJson('/admin/jobs/scheduled/' + jobName + '/start',
         {
-          config: config,
-          allowParallelRun: allowParallelRun,
-          soloStart: soloStart
+          config,
+          allowParallelRun,
+          soloStart
         });
       // placeholder to force showing running job
       this.addDummyProgress(jobName, config);
@@ -62,14 +60,14 @@ export class ScheduledJobsService {
 
   public async stop(jobName: string): Promise<void> {
     this.jobStartingStopping[jobName] = true;
-    await this._networkService.postJson('/admin/jobs/scheduled/' + jobName + '/stop');
+    await this.networkService.postJson('/admin/jobs/scheduled/' + jobName + '/stop');
     delete this.jobStartingStopping[jobName];
     this.forceUpdate();
   }
 
   protected async loadProgress(): Promise<void> {
     const prevPrg = this.progress.value;
-    this.progress.next(await this._networkService.getJson<{ [key: string]: JobProgressDTO }>('/admin/jobs/scheduled/progress'));
+    this.progress.next(await this.networkService.getJson<{ [key: string]: JobProgressDTO }>('/admin/jobs/scheduled/progress'));
     for (const prg of Object.keys(prevPrg)) {
       if (!this.progress.value.hasOwnProperty(prg) ||
         // state changed from running to finished
@@ -79,12 +77,12 @@ export class ScheduledJobsService {
             this.progress.value[prg].state === JobProgressStates.cancelling)
         )) {
         this.onJobFinish.emit(prg);
-        this.notification.success(this.i18n('Job finished') + ': ' + this.backendTextService.getJobName(prevPrg[prg].jobName));
+        this.notification.success($localize`Job finished` + ': ' + this.backendTextService.getJobName(prevPrg[prg].jobName));
       }
     }
   }
 
-  protected getProgressPeriodically() {
+  protected getProgressPeriodically(): void {
     if (this.timer != null || this.subscribers === 0) {
       return;
     }
@@ -99,12 +97,12 @@ export class ScheduledJobsService {
     this.loadProgress().catch(console.error);
   }
 
-  private addDummyProgress(jobName: string, config: any) {
+  private addDummyProgress(jobName: string, config: any): void {
     const prgs = this.progress.value;
-    prgs[JobDTO.getHashName(jobName, config)] = {
-      jobName: jobName,
+    prgs[JobDTOUtils.getHashName(jobName, config)] = {
+      jobName,
       state: JobProgressStates.running,
-      HashName: JobDTO.getHashName(jobName, config),
+      HashName: JobDTOUtils.getHashName(jobName, config),
       logs: [], steps: {
         skipped: 0,
         processed: 0,
@@ -118,12 +116,12 @@ export class ScheduledJobsService {
     this.progress.next(prgs);
   }
 
-  private incSubscribers() {
+  private incSubscribers(): void {
     this.subscribers++;
     this.getProgressPeriodically();
   }
 
-  private decSubscribers() {
+  private decSubscribers(): void {
     this.subscribers--;
   }
 

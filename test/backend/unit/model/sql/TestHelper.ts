@@ -1,35 +1,51 @@
-import {MediaDimensionEntity} from '../../../../../src/backend/model/database/sql/enitites/MediaEntity';
 import {
   CameraMetadataEntity,
   GPSMetadataEntity,
-  PhotoEntity,
-  PhotoMetadataEntity,
+  MediaDimensionEntity,
   PositionMetaDataEntity
-} from '../../../../../src/backend/model/database/sql/enitites/PhotoEntity';
+} from '../../../../../src/backend/model/database/sql/enitites/MediaEntity';
+import {PhotoEntity, PhotoMetadataEntity} from '../../../../../src/backend/model/database/sql/enitites/PhotoEntity';
 import {OrientationTypes} from 'ts-exif-parser';
 import {DirectoryEntity} from '../../../../../src/backend/model/database/sql/enitites/DirectoryEntity';
 import {VideoEntity, VideoMetadataEntity} from '../../../../../src/backend/model/database/sql/enitites/VideoEntity';
-import {MediaDimension} from '../../../../../src/common/entities/MediaDTO';
-import {CameraMetadata, FaceRegion, GPSMetadata, PhotoDTO, PhotoMetadata, PositionMetaData} from '../../../../../src/common/entities/PhotoDTO';
-import {DirectoryDTO} from '../../../../../src/common/entities/DirectoryDTO';
+import {MediaDimension, MediaDTO} from '../../../../../src/common/entities/MediaDTO';
+import {
+  CameraMetadata,
+  FaceRegion,
+  GPSMetadata,
+  PhotoDTO,
+  PhotoMetadata,
+  PositionMetaData,
+  PreviewPhotoDTO
+} from '../../../../../src/common/entities/PhotoDTO';
+import {DirectoryBaseDTO} from '../../../../../src/common/entities/DirectoryDTO';
 import {FileDTO} from '../../../../../src/common/entities/FileDTO';
 import {DiskMangerWorker} from '../../../../../src/backend/model/threading/DiskMangerWorker';
 
 export class TestHelper {
 
-  public static getDirectoryEntry() {
+  static creationCounter = 0;
+
+  public static getDirectoryEntry(parent: DirectoryBaseDTO = null, name = 'wars dir'): DirectoryEntity {
 
     const dir = new DirectoryEntity();
-    dir.name = 'wars dir';
-    dir.path = '.';
+    dir.name = name;
+    dir.path = DiskMangerWorker.pathFromParent({path: '', name: '.'});
     dir.mediaCount = 0;
+    dir.directories = [];
+    dir.metaFile = [];
+    dir.media = [];
     dir.lastModified = Date.now();
-    dir.lastScanned = null;
-
+    dir.lastScanned = Date.now();
+    // dir.parent = null;
+    if (parent !== null) {
+      dir.path = DiskMangerWorker.pathFromParent(parent);
+      parent.directories.push(dir);
+    }
     return dir;
   }
 
-  public static getPhotoEntry(dir: DirectoryEntity) {
+  public static getPhotoEntry(dir: DirectoryBaseDTO): PhotoEntity {
     const sd = new MediaDimensionEntity();
     sd.height = 200;
     sd.width = 200;
@@ -59,6 +75,7 @@ export class TestHelper {
     m.creationDate = Date.now();
     m.fileSize = 123456789;
     m.orientation = OrientationTypes.TOP_LEFT;
+    // m.rating = 0; no rating by default
 
     // TODO: remove when typeorm is fixed
     m.duration = null;
@@ -67,13 +84,14 @@ export class TestHelper {
 
     const d = new PhotoEntity();
     d.name = 'test media.jpg';
-    d.directory = dir;
+    d.directory = (dir as any);
+    dir.media.push(d);
     d.metadata = m;
     dir.mediaCount++;
     return d;
   }
 
-  public static getVideoEntry(dir: DirectoryEntity) {
+  public static getVideoEntry(dir: DirectoryBaseDTO): VideoEntity {
     const sd = new MediaDimensionEntity();
     sd.height = 200;
     sd.width = 200;
@@ -81,6 +99,7 @@ export class TestHelper {
     const m = new VideoMetadataEntity();
     m.caption = null;
     m.keywords = null;
+    m.rating = null;
     m.size = sd;
     m.creationDate = Date.now();
     m.fileSize = 123456789;
@@ -90,81 +109,161 @@ export class TestHelper {
 
 
     const d = new VideoEntity();
-    d.name = 'test video.jpg';
-    d.directory = dir;
+    d.name = 'test video.mp4';
+    dir.media.push(d);
     d.metadata = m;
     return d;
   }
 
-  public static getPhotoEntry1(dir: DirectoryEntity) {
+  public static getVideoEntry1(dir: DirectoryBaseDTO): VideoEntity {
+    const p = TestHelper.getVideoEntry(dir);
+    p.name = 'swVideo.mp4';
+    return p;
+  }
+
+  public static getPhotoEntry1(dir: DirectoryBaseDTO): PhotoEntity {
     const p = TestHelper.getPhotoEntry(dir);
 
     p.metadata.caption = 'Han Solo\'s dice';
     p.metadata.keywords = ['Boba Fett', 'star wars', 'Anakin', 'death star'];
     p.metadata.positionData.city = 'Mos Eisley';
     p.metadata.positionData.country = 'Tatooine';
-    p.name = 'sw1';
+    p.name = 'sw1.jpg';
+    p.metadata.positionData.GPSData.latitude = 10;
+    p.metadata.positionData.GPSData.longitude = 10;
+    p.metadata.creationDate = Date.now() - 1000;
+    p.metadata.rating = 1;
+    p.metadata.size.height = 1000;
+    p.metadata.size.width = 1000;
 
-    p.metadata.faces = [<FaceRegion>{
+    p.metadata.faces = [{
       box: {height: 10, width: 10, left: 10, top: 10},
       name: 'Boba Fett'
-    }, <FaceRegion>{
+    } as FaceRegion, {
       box: {height: 10, width: 10, left: 102, top: 102},
       name: 'Luke Skywalker'
-    }, <FaceRegion>{
+    } as FaceRegion, {
       box: {height: 10, width: 10, left: 103, top: 103},
       name: 'Han Solo'
-    }, <FaceRegion>{
+    } as FaceRegion, {
       box: {height: 10, width: 10, left: 104, top: 104},
       name: 'Unkle Ben'
-    }, <FaceRegion>{
+    } as FaceRegion, {
       box: {height: 10, width: 10, left: 105, top: 105},
       name: 'Arvíztűrő Tükörfúrógép'
-    }] as any[];
+    } as FaceRegion, {
+      box: {height: 10, width: 10, left: 201, top: 201},
+      name: 'R2-D2'
+    } as FaceRegion] as any[];
     return p;
   }
 
-  public static getVideoEntry1(dir: DirectoryEntity) {
-    const p = TestHelper.getVideoEntry(dir);
-    p.name = 'swVideo';
-    return p;
-  }
-
-  public static getPhotoEntry2(dir: DirectoryEntity) {
+  public static getPhotoEntry2(dir: DirectoryBaseDTO): PhotoEntity {
     const p = TestHelper.getPhotoEntry(dir);
 
-    p.metadata.keywords = ['Padmé Amidala', 'star wars', 'Natalie Portman', 'death star'];
+    p.metadata.caption = 'Light saber';
+    p.metadata.keywords = ['Padmé Amidala', 'star wars', 'Natalie Portman', 'death star', 'wookiee'];
     p.metadata.positionData.city = 'Derem City';
     p.metadata.positionData.state = 'Research City';
     p.metadata.positionData.country = 'Kamino';
-    p.name = 'sw2';
-    p.metadata.faces = [<FaceRegion>{
+    p.name = 'sw2.jpg';
+    p.metadata.positionData.GPSData.latitude = -10;
+    p.metadata.positionData.GPSData.longitude = -10;
+    p.metadata.creationDate = Date.now() - 2000;
+    p.metadata.rating = 2;
+    p.metadata.size.height = 2000;
+    p.metadata.size.width = 1000;
+
+    p.metadata.faces = [{
       box: {height: 10, width: 10, left: 10, top: 10},
       name: 'Padmé Amidala'
-    }, <FaceRegion>{
+    } as FaceRegion, {
       box: {height: 10, width: 10, left: 101, top: 101},
       name: 'Anakin Skywalker'
-    }, <FaceRegion>{
+    } as FaceRegion, {
       box: {height: 10, width: 10, left: 101, top: 101},
       name: 'Obivan Kenobi'
-    }] as any[];
+    } as FaceRegion, {
+      box: {height: 10, width: 10, left: 201, top: 201},
+      name: 'R2-D2'
+    } as FaceRegion] as any[];
     return p;
   }
 
+  public static getPhotoEntry3(dir: DirectoryBaseDTO): PhotoEntity {
+    const p = TestHelper.getPhotoEntry(dir);
 
-  public static getRandomizedDirectoryEntry(parent: DirectoryDTO = null, forceStr: string = null) {
+    p.metadata.caption = 'Amber stone';
+    p.metadata.keywords = ['star wars', 'wookiees'];
+    p.metadata.positionData.city = 'Castilon';
+    p.metadata.positionData.state = 'Devaron';
+    p.metadata.positionData.country = 'Ajan Kloss';
+    p.name = 'sw3.jpg';
+    p.metadata.positionData.GPSData.latitude = 10;
+    p.metadata.positionData.GPSData.longitude = 15;
+    p.metadata.creationDate = Date.now() - 3000;
+    p.metadata.rating = 3;
+    p.metadata.size.height = 1000;
+    p.metadata.size.width = 2000;
+    p.metadata.faces = [{
+      box: {height: 10, width: 10, left: 10, top: 10},
+      name: 'Kylo Ren'
+    } as FaceRegion, {
+      box: {height: 10, width: 10, left: 101, top: 101},
+      name: 'Leia Organa'
+    } as FaceRegion, {
+      box: {height: 10, width: 10, left: 103, top: 103},
+      name: 'Han Solo'
+    } as FaceRegion] as any[];
+    return p;
+  }
 
-    const dir: DirectoryDTO = {
+  public static getPhotoEntry4(dir: DirectoryBaseDTO): PhotoEntity {
+    const p = TestHelper.getPhotoEntry(dir);
+
+    p.metadata.caption = 'Millennium falcon';
+    p.metadata.keywords = ['star wars', 'ewoks'];
+    p.metadata.positionData.city = 'Tipoca City';
+    p.metadata.positionData.state = 'Exegol';
+    p.metadata.positionData.country = 'Jedha';
+    p.name = 'sw4.jpg';
+    p.metadata.positionData.GPSData.latitude = 15;
+    p.metadata.positionData.GPSData.longitude = 10;
+    p.metadata.creationDate = Date.now() - 4000;
+    p.metadata.size.height = 3000;
+    p.metadata.size.width = 2000;
+
+    p.metadata.faces = [{
+      box: {height: 10, width: 10, left: 10, top: 10},
+      name: 'Kylo Ren'
+    } as FaceRegion, {
+      box: {height: 10, width: 10, left: 101, top: 101},
+      name: 'Anakin Skywalker'
+    } as FaceRegion, {
+      box: {height: 10, width: 10, left: 101, top: 101},
+      name: 'Obivan Kenobi'
+    } as FaceRegion, {
+      box: {height: 10, width: 10, left: 201, top: 201},
+      name: 'R2-D2'
+    } as FaceRegion] as any[];
+
+    return p;
+  }
+
+  public static getRandomizedDirectoryEntry(parent: DirectoryBaseDTO = null, forceStr: string = null): DirectoryBaseDTO<MediaDTO> {
+
+    const dir: DirectoryBaseDTO = {
       id: null,
       name: DiskMangerWorker.dirName(forceStr || Math.random().toString(36).substring(7)),
       path: DiskMangerWorker.pathFromParent({path: '', name: '.'}),
       mediaCount: 0,
       directories: [],
       metaFile: [],
+      preview: null,
       media: [],
       lastModified: Date.now(),
       lastScanned: null,
-      parent: null
+      parent
     };
     if (parent !== null) {
       dir.path = DiskMangerWorker.pathFromParent(parent);
@@ -173,8 +272,7 @@ export class TestHelper {
     return dir;
   }
 
-
-  public static getRandomizedGPXEntry(dir: DirectoryDTO, forceStr: string = null): FileDTO {
+  public static getRandomizedGPXEntry(dir: DirectoryBaseDTO, forceStr: string = null): FileDTO {
     const d: FileDTO = {
       id: null,
       name: forceStr + '_' + Math.random().toString(36).substring(7) + '.gpx',
@@ -184,13 +282,12 @@ export class TestHelper {
     return d;
   }
 
-
-  public static getRandomizedFace(media: PhotoDTO, forceStr: string = null) {
-    const rndStr = () => {
+  public static getRandomizedFace(media: PhotoDTO, forceStr: string = null): FaceRegion {
+    const rndStr = (): string => {
       return forceStr + '_' + Math.random().toString(36).substring(7);
     };
 
-    const rndInt = (max = 5000) => {
+    const rndInt = (max = 5000): number => {
       return Math.floor(Math.random() * max);
     };
 
@@ -208,14 +305,14 @@ export class TestHelper {
     return f;
   }
 
-  public static getRandomizedPhotoEntry(dir: DirectoryDTO, forceStr: string = null, faces: number = 2): PhotoDTO {
+  public static getRandomizedPhotoEntry(dir: DirectoryBaseDTO, forceStr: string = null, faces: number = 2): PhotoDTO {
 
 
-    const rndStr = () => {
+    const rndStr = (): string => {
       return forceStr + '_' + Math.random().toString(36).substring(7);
     };
 
-    const rndInt = (max = 5000) => {
+    const rndInt = (max = 5000): number => {
       return Math.floor(Math.random() * max);
     };
 
@@ -249,14 +346,15 @@ export class TestHelper {
       cameraData: cd,
       positionData: pd,
       size: sd,
-      creationDate: Date.now(),
+      creationDate: Date.now() + ++TestHelper.creationCounter,
       fileSize: rndInt(10000),
       orientation: OrientationTypes.TOP_LEFT,
-      caption: rndStr()
+      caption: rndStr(),
+      rating: rndInt(5) as any,
     };
 
 
-    const d: PhotoDTO = {
+    const p: PhotoDTO = {
       id: null,
       name: rndStr() + '.jpg',
       directory: dir,
@@ -266,11 +364,27 @@ export class TestHelper {
     };
 
     for (let i = 0; i < faces; i++) {
-      this.getRandomizedFace(d, 'Person ' + i);
+      this.getRandomizedFace(p, 'Person ' + i);
     }
 
-    dir.media.push(d);
-    return d;
+    dir.media.push(p);
+    TestHelper.updatePreview(dir);
+    return p;
+  }
+
+  static updatePreview(dir: DirectoryBaseDTO): void {
+    if (dir.media.length > 0) {
+      dir.preview = dir.media.sort((a, b): number => b.metadata.creationDate - a.metadata.creationDate)[0];
+    } else {
+      const filtered = dir.directories.filter((d): PreviewPhotoDTO => d.preview).map((d): PreviewPhotoDTO => d.preview);
+      if (filtered.length > 0) {
+        dir.preview = filtered.sort((a, b): number => b.metadata.creationDate - a.metadata.creationDate)[0];
+      }
+    }
+    if (dir.parent) {
+      TestHelper.updatePreview(dir.parent);
+    }
+
   }
 
 

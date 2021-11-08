@@ -10,6 +10,8 @@
   cursor: pointer;
   font-size: xx-large;
   left: 0;
+  background-color:rgba(0,0,0,0.2);
+  border-radius: 5px !important;
 }
 
 .navigation-arrow span {
@@ -82,14 +84,15 @@
 }
 
 .controls-caption {
-  opacity: 0.5;
+  opacity: 0.7;
   top: 0;
   position: absolute;
   height: initial;
   text-align: left;
-  width: 75%;
   padding: 5px 13px;
   font-size: 1.5rem;
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 5px !important;
 }
 
 .controls-zoom {
@@ -218,7 +221,7 @@ input[type="range"].zoom-progress::-moz-range-track {
 }
 
 .face {
-  opacity: 0.5;
+  opacity: 0.7;
   position: absolute;
   transition: opacity 0.5s;
 }
@@ -231,10 +234,11 @@ input[type="range"].zoom-progress::-moz-range-track {
 .face-name {
   white-space: nowrap;
   color: white;
-  margin-left: -100%;
-  margin-right: -100%;
   text-align: center;
-  display: block;
+  display: table;
+  font-weight: bold;
+  background-color:rgba(0,0,0,0.2);
+  border-radius: 5px !important;
 }
 
 .face-box {

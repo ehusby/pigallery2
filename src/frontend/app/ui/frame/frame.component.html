@@ -1,6 +1,6 @@
-<ng2-slim-loading-bar color="#337ab7" height="3px"></ng2-slim-loading-bar>
+<ngx-loading-bar [includeSpinner]="false" color="#337ab7" height="3px"></ngx-loading-bar>
 <nav class="navbar  navbar-dark bg-dark  navbar-expand-md">
-  <a class="navbar-brand" [routerLink]="['/gallery','/']"
+  <a class="navbar-brand" [routerLink]="['/gallery']"
      [queryParams]="queryService.getParams()">
     <img src="assets/icon_inv.png" width="30" height="30" class="d-inline-block align-top" alt="">
     <strong>{{title}}</strong>
@@ -12,13 +12,16 @@
 
   <div class="collapse navbar-collapse" id="navbarNav" [collapse]="collapsed">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item" [routerLinkActive]="['active']">
+      <li class="nav-item" >
         <a class="nav-link"
            [routerLink]="['/gallery']"
-           [queryParams]="queryService.getParams()" i18n>Gallery</a>
+           [queryParams]="queryService.getParams()" [class.active]="isLinkActive('/gallery')" i18n>Gallery</a>
       </li>
-      <li class="nav-item" [routerLinkActive]="['active']" *ngIf="isFacesAvailable()">
-        <a class="nav-link" [routerLink]="['/faces']" i18n>Faces</a>
+      <li class="nav-item" *ngIf="isAlbumsAvailable()">
+        <a class="nav-link" [routerLink]="['/albums']" [class.active]="isLinkActive('/albums')" i18n>Albums</a>
+      </li>
+      <li class="nav-item" *ngIf="isFacesAvailable()">
+        <a class="nav-link" [routerLink]="['/faces']" [class.active]="isLinkActive('/faces')" i18n>Faces</a>
       </li>
     </ul>
     <ul class="navbar-nav navbar-right ml-auto">
@@ -38,8 +41,8 @@
                 type="button" class="btn btn-dark dropdown-toggle"
                 aria-controls="dropdown-alignment">
           <span class="oi oi-menu"></span>
-          <span *ngIf="isAdmin() && notificationService.notifications.length>0"
-                class="navbar-badge badge badge-warning">{{notificationService.notifications.length}}</span>
+          <span *ngIf="isAdmin() && notificationService.numberOfNotifications>0"
+                class="navbar-badge badge badge-warning">{{notificationService.numberOfNotifications}}</span>
         </button>
         <ul id="dropdown-alignment" *dropdownMenu
             class="dropdown-menu dropdown-menu-right"
@@ -54,8 +57,8 @@
           <li role="menuitem" *ngIf="isAdmin()">
             <a class="dropdown-item" [routerLink]="['/admin']">
               <span class="oi oi-wrench"></span>
-              <span *ngIf="notificationService.notifications.length>0"
-                    class="badge">{{notificationService.notifications.length}}</span>
+              <span *ngIf="notificationService.numberOfNotifications>0"
+                    class="badge">{{notificationService.numberOfNotifications}}</span>
               <ng-container i18n>Settings</ng-container>
             </a>
           </li>
