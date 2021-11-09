@@ -6,10 +6,10 @@ services:
     environment:
       - NODE_ENV=production
     volumes:
-      - "/media/pi/CRUST/config:/app/data/config" # CHANGE ME
+      - "/media/pi/CRUST/piserve/config:/app/data/config" # CHANGE ME
       - "db-data:/app/data/db"
-      - "/media/pi/CRUST/images:/app/data/images" # CHANGE ME
-      - "/media/pi/CRUST/tmp:/app/data/tmp" # CHANGE ME
+      - "/media/pi/CRUST/piserve/images:/app/data/images" # CHANGE ME
+      - "/media/pi/CRUST/piserve/tmp:/app/data/tmp" # CHANGE ME
     ports:
       - 80:80
     restart: always
