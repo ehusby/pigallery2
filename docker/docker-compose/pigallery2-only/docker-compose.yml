@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   pigallery2:
-    image: bpatrik/pigallery2:latest
+    image: pigallery2:debian-bullseye
     container_name: pigallery2
     deploy:
       resources:
@@ -11,10 +11,10 @@ services:
       - NODE_ENV=production # set to 'debug' for full debug logging
       # - NODE_OPTIONS=--enable-source-maps # enable source map support on the backend  for development
     volumes:
-      - "./pigallery2/config:/app/data/config" # CHANGE ME
+      - "/media/pi/CRUST/piserve/config:/app/data/config" # CHANGE ME
       - "db-data:/app/data/db"
-      - "./pigallery2/images:/app/data/images:ro" # CHANGE ME, ':ro' means read-only
-      - "./pigallery2/tmp:/app/data/tmp" # CHANGE ME
+      - "/media/pi/CRUST/piserve/images:/app/data/images:ro" # CHANGE ME, ':ro' means read-only
+      - "/media/pi/CRUST/piserve/tmp:/app/data/tmp" # CHANGE ME
     ports:
       - 80:80
     restart: always
